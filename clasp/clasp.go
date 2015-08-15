@@ -87,9 +87,17 @@ func Parse(argv []string, params ParseParams) *Arguments {
 				arg.Type			=	Value
 				arg.Value			=	s
 			default:
+				nv					:=	strings.SplitN(s, "=", 2)
+				if len(nv) > 1 {
+				arg.Type			=	Option
+				arg.GivenName		=	nv[0]
+				arg.ResolvedName	=	nv[0]
+				arg.Value			=	nv[1]
+				} else {
 				arg.Type			=	Flag
 				arg.GivenName		=	s
 				arg.ResolvedName	=	s
+				}
 		}
 
 		args.Arguments	=	append(args.Arguments, arg)

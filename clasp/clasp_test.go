@@ -342,3 +342,63 @@ func Test_flags_and_values(t *testing.T) {
 }
 
 
+func Test_flags_values_and_option(t *testing.T) {
+
+	case1_argv := []string { "path/blah", "abc", "-f", "def", "--opt1=value1", "--", "--value-really" }
+
+	args1 := Parse(case1_argv, ParseParams{})
+
+	if expected, actual := 5, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+		argument0 := args1.Arguments[0]
+		argument1 := args1.Arguments[1]
+		argument2 := args1.Arguments[2]
+		argument3 := args1.Arguments[3]
+		argument4 := args1.Arguments[4]
+		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
+		check(t, 2 == argument1.CmdLineIndex, "arguments has wrong argument")
+		check(t, 3 == argument2.CmdLineIndex, "arguments has wrong argument")
+		check(t, 4 == argument3.CmdLineIndex, "arguments has wrong argument")
+		check(t, 6 == argument4.CmdLineIndex, "arguments has wrong argument")
+		check(t, "abc" == argument0.Value, "arguments has wrong value")
+		check(t, "def" == argument2.Value, "arguments has wrong value")
+		check(t, "value1" == argument3.Value, "arguments has wrong value")
+		check(t, "--value-really" == argument4.Value, "arguments has wrong value")
+	}
+	if expected := 1; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+		flag0 := args1.Flags[0]
+		check(t, 2 == flag0.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Flag == flag0.Type, "argument has wrong type: expected: %v; received %v", Flag, flag0.Type)
+		check(t, "-f" == flag0.ResolvedName, "arguments has wrong resolved name")
+		check(t, "-f" == flag0.GivenName, "arguments has wrong given name")
+		check(t, "" == flag0.Value, "arguments has wrong value")
+	}
+	if expected, actual := 1, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
+		option0 := args1.Options[0]
+		check(t, 4 == option0.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Option == option0.Type, "argument has wrong type: expected: %v; received %v", Option, option0.Type)
+		check(t, "--opt1" == option0.ResolvedName, "arguments has wrong resolved name")
+		check(t, "--opt1" == option0.GivenName, "arguments has wrong given name")
+		check(t, "value1" == option0.Value, "arguments has wrong value")
+	}
+	if expected, actual := 3, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+		value0 := args1.Values[0]
+		value1 := args1.Values[1]
+		value2 := args1.Values[2]
+		check(t, 1 == value0.CmdLineIndex, "values has wrong value")
+		check(t, 3 == value1.CmdLineIndex, "values has wrong value")
+		check(t, 6 == value2.CmdLineIndex, "values has wrong value")
+		check(t, "abc" == value0.Value, "values has wrong value")
+		check(t, "def" == value1.Value, "values has wrong value")
+		check(t, "--value-really" == value2.Value, "values has wrong value")
+	}
+	if expected, actual := 7, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+		for i, expected := range case1_argv {
+			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
+			}
+		}
+	}
+	if expected, actual := "blah", args1.ProgramName; check(t, expected == actual, "arguments object has wrong program name: expected '%v'; actual '%v'", expected, actual) {
+	}
+}
+
+
