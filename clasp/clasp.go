@@ -3,6 +3,7 @@ package clasp
 
 import (
 	"path"
+	"strings"
 )
 
 type ArgType int
@@ -57,13 +58,31 @@ func Parse(argv []string, params ParseParams) *Arguments {
 	args.Argv			=	argv
 	args.ProgramName	=	path.Base(argv[0])
 
+	treatingAsValues	:=	false
+
 	for i, s := range argv[1:] {
+
+		if !treatingAsValues && "--" == s {
+			treatingAsValues = true
+			continue
+		}
 
 		arg := new(Argument)
 
+		arg.CmdLineIndex	=	i + 1
+		arg.Flags			=	params.Flags
+		arg.AliasIndex		=	-1
+
+		numHyphens			:=	0
+
+		if !treatingAsValues {
+			numHyphens		=	strings.IndexFunc(s, func(c rune) bool { return '-' != c })
+		}
+
+		arg.NumGivenHyphens	=	numHyphens
+
 		arg.Value			=	s
 		arg.Type			=	Value
-		arg.CmdLineIndex	=	i + 1
 
 		args.Arguments	=	append(args.Arguments, arg)
 	}
