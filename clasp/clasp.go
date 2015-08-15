@@ -48,16 +48,28 @@ type ParseParams struct {
 }
 
 func Parse(argv []string, params ParseParams) *Arguments {
-	a := new(Arguments)
+	args := new(Arguments)
 
-	a.Arguments		=	make([]*Argument, 0)
-	a.Flags			=	make([]*Argument, 0)
-	a.Options		=	make([]*Argument, 0)
-	a.Values		=	make([]*Argument, 0)
-	a.Argv			=	argv
-	a.ProgramName	=	path.Base(argv[0])
+	args.Arguments		=	make([]*Argument, 0)
+	args.Flags			=	make([]*Argument, 0)
+	args.Options		=	make([]*Argument, 0)
+	args.Values			=	make([]*Argument, 0)
+	args.Argv			=	argv
+	args.ProgramName	=	path.Base(argv[0])
 
+	for i, s := range argv[1:] {
 
-	return a
+		arg := new(Argument)
+
+		arg.Value			=	s
+		arg.Type			=	Value
+		arg.CmdLineIndex	=	i + 1
+
+		args.Arguments	=	append(args.Arguments, arg)
+	}
+
+	args.Values			=	args.Arguments
+
+	return args
 }
 
