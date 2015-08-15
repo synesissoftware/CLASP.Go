@@ -402,3 +402,71 @@ func Test_flags_values_and_option(t *testing.T) {
 }
 
 
+func Test_single_hyphen_default(t *testing.T) {
+
+	case1_argv := []string { "path/blah", "-" }
+
+	args1 := Parse(case1_argv, ParseParams{})
+
+	if expected, actual := 1, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+		argument0 := args1.Arguments[0]
+		check(t, "" == argument0.Value, "arguments has wrong argument")
+		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
+	}
+	if expected := 1; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+		flag0 := args1.Flags[0]
+		check(t, 1 == flag0.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Flag == flag0.Type, "argument has wrong type: expected: %v; received %v", Flag, flag0.Type)
+		check(t, "-" == flag0.ResolvedName, "arguments has wrong resolved name")
+		check(t, "-" == flag0.GivenName, "arguments has wrong given name")
+		check(t, "" == flag0.Value, "arguments has wrong value")
+	}
+	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
+	}
+	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+	}
+	if expected, actual := 2, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+		for i, expected := range case1_argv {
+			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
+			}
+		}
+	}
+	if expected, actual := "blah", args1.ProgramName; check(t, expected == actual, "arguments object has wrong program name: expected '%v'; actual '%v'", expected, actual) {
+	}
+}
+
+
+func Test_single_hyphen_as_value(t *testing.T) {
+
+	case1_argv := []string { "path/blah", "-" }
+
+	args1 := Parse(case1_argv, ParseParams{ Flags : ParseTreatSingleHyphenAsValue })
+
+	if expected, actual := 1, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+		argument0 := args1.Arguments[0]
+		check(t, "-" == argument0.Value, "arguments has wrong argument")
+		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
+	}
+	if expected := 0; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	}
+	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
+	}
+	if expected, actual := 1, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+		value0 := args1.Values[0]
+		check(t, 1 == value0.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Value == value0.Type, "argument has wrong type: expected: %v; received %v", Value, value0.Type)
+		check(t, "-" == value0.ResolvedName, "arguments has wrong resolved name")
+		check(t, "-" == value0.GivenName, "arguments has wrong given name")
+		check(t, "-" == value0.Value, "arguments has wrong value")
+	}
+	if expected, actual := 2, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+		for i, expected := range case1_argv {
+			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
+			}
+		}
+	}
+	if expected, actual := "blah", args1.ProgramName; check(t, expected == actual, "arguments object has wrong program name: expected '%v'; actual '%v'", expected, actual) {
+	}
+}
+
+

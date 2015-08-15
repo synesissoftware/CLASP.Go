@@ -2,8 +2,15 @@
 package clasp
 
 import (
+	"fmt"
 	"path"
 	"strings"
+)
+
+type ParseFlag int
+
+const (
+	ParseTreatSingleHyphenAsValue ParseFlag = 1 << iota
 )
 
 type ArgType int
@@ -44,8 +51,8 @@ type Arguments struct {
 }
 
 type ParseParams struct {
-	Aliases	[]Alias
-	Flags	int
+	Aliases		[]Alias
+	Flags		ParseFlag
 }
 
 func Parse(argv []string, params ParseParams) *Arguments {
@@ -70,13 +77,19 @@ func Parse(argv []string, params ParseParams) *Arguments {
 		arg := new(Argument)
 
 		arg.CmdLineIndex	=	i + 1
-		arg.Flags			=	params.Flags
+		arg.Flags			=	int(params.Flags)
 		arg.AliasIndex		=	-1
 
 		numHyphens			:=	0
+		isSingle			:=	false
 
 		if !treatingAsValues {
-			numHyphens		=	strings.IndexFunc(s, func(c rune) bool { return '-' != c })
+			if 1 == len(s) && "-" == s {
+				numHyphens	=	1
+				isSingle	=	true
+			} else {
+				numHyphens	=	strings.IndexFunc(s, func(c rune) bool { return '-' != c })
+			}
 		}
 
 		arg.NumGivenHyphens	=	numHyphens
@@ -84,19 +97,23 @@ func Parse(argv []string, params ParseParams) *Arguments {
 		switch numHyphens {
 
 			case 0:
-				arg.Type			=	Value
-				arg.Value			=	s
+				arg.Type				=	Value
+				arg.Value				=	s
 			default:
 				nv					:=	strings.SplitN(s, "=", 2)
 				if len(nv) > 1 {
-				arg.Type			=	Option
-				arg.GivenName		=	nv[0]
-				arg.ResolvedName	=	nv[0]
-				arg.Value			=	nv[1]
+					arg.Type			=	Option
+					arg.GivenName		=	nv[0]
+					arg.ResolvedName	=	nv[0]
+					arg.Value			=	nv[1]
 				} else {
-				arg.Type			=	Flag
-				arg.GivenName		=	s
-				arg.ResolvedName	=	s
+					arg.Type			=	Flag
+					arg.GivenName		=	s
+					arg.ResolvedName	=	s
+					if isSingle	&& (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
+						arg.Type		=	Value
+						arg.Value		=	s
+					}
 				}
 		}
 
