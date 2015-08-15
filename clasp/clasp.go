@@ -81,13 +81,31 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 		arg.NumGivenHyphens	=	numHyphens
 
-		arg.Value			=	s
-		arg.Type			=	Value
+		switch numHyphens {
+
+			case 0:
+				arg.Type			=	Value
+				arg.Value			=	s
+			default:
+				arg.Type			=	Flag
+				arg.GivenName		=	s
+				arg.ResolvedName	=	s
+		}
 
 		args.Arguments	=	append(args.Arguments, arg)
 	}
 
-	args.Values			=	args.Arguments
+	for _, arg := range args.Arguments {
+
+		switch(arg.Type) {
+			case Flag:
+				args.Flags		=	append(args.Flags, arg)
+			case Option:
+				args.Options	=	append(args.Options, arg)
+			case Value:
+				args.Values		=	append(args.Values, arg)
+		}
+	}
 
 	return args
 }
