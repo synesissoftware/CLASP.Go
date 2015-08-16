@@ -107,9 +107,11 @@ func Parse(argv []string, params ParseParams) *Arguments {
 					arg.ResolvedName	=	nv[0]
 					arg.Value			=	nv[1]
 				} else {
+					resolvedName		:=	s
+
 					arg.Type			=	Flag
 					arg.GivenName		=	s
-					arg.ResolvedName	=	s
+					arg.ResolvedName	=	resolvedName
 					if isSingle	&& (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
 						arg.Type		=	Value
 						arg.Value		=	s
