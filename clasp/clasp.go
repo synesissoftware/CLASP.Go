@@ -24,7 +24,7 @@ const (
 type Alias struct {
 	Type			ArgType
 	Name			string
-	MappedArgument	string
+	Aliases			[]string
 	Help			string
 	ValueSet		[]string
 	BitFlags		int
@@ -53,6 +53,33 @@ type Arguments struct {
 type ParseParams struct {
 	Aliases		[]Alias
 	Flags		ParseFlag
+}
+
+func (params ParseParams) findAlias(name string) (found bool, alias Alias) {
+
+	// Algorithm:
+	//
+	// 1. search for alias with that name
+	// 2. search for alias with that alias
+	// 3. return nil
+
+	for _, a := range params.Aliases {
+		if name == a.Name {
+			return true, a
+		}
+	}
+
+	for _, a := range params.Aliases {
+		for _, n := range a.Aliases {
+			if name == n {
+				return true, a
+			}
+		}
+	}
+
+	var dummy Alias
+
+	return false, dummy
 }
 
 func Parse(argv []string, params ParseParams) *Arguments {
@@ -107,7 +134,15 @@ func Parse(argv []string, params ParseParams) *Arguments {
 					arg.ResolvedName	=	nv[0]
 					arg.Value			=	nv[1]
 				} else {
+					// Here we have to be flexible, and examine
+					// whether the apparent flag is, in fact, a
+					// an option
+
 					resolvedName		:=	s
+
+					if found, alias := params.findAlias(s); found {
+						resolvedName	=	alias.Name
+					}
 
 					arg.Type			=	Flag
 					arg.GivenName		=	s
