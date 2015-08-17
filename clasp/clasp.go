@@ -93,11 +93,18 @@ func Parse(argv []string, params ParseParams) *Arguments {
 	args.ProgramName	=	path.Base(argv[0])
 
 	treatingAsValues	:=	false
+	nextIsOptValue		:=	false
 
 	for i, s := range argv[1:] {
 
 		if !treatingAsValues && "--" == s {
 			treatingAsValues = true
+			continue
+		}
+
+		if nextIsOptValue {
+			nextIsOptValue = false
+			args.Arguments[len(args.Arguments) - 1].Value = s
 			continue
 		}
 
@@ -139,17 +146,24 @@ func Parse(argv []string, params ParseParams) *Arguments {
 					// an option
 
 					resolvedName		:=	s
+					argType				:=	Flag
 
 					if found, alias := params.findAlias(s); found {
 						resolvedName	=	alias.Name
+						argType			=	alias.Type
 					}
 
-					arg.Type			=	Flag
+					arg.Type			=	argType
 					arg.GivenName		=	s
 					arg.ResolvedName	=	resolvedName
-					if isSingle	&& (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
-						arg.Type		=	Value
-						arg.Value		=	s
+
+					if Option == argType {
+						nextIsOptValue	=	true
+					} else {
+						if isSingle	&& (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
+							arg.Type	=	Value
+							arg.Value	=	s
+						}
 					}
 				}
 		}
