@@ -48,7 +48,7 @@ import (
 
 const (
 	VersionMajor int16		=	0
-	VersionMinor int16		=	1
+	VersionMinor int16		=	2
 	VersionRevision int16	=	1
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionRevision) << 16)
 )
@@ -61,6 +61,7 @@ type ParseFlag int
 
 const (
 	ParseTreatSingleHyphenAsValue ParseFlag = 1 << iota
+	ParseDontRecogniseDoubleHyphenToStartValues ParseFlag = 1 << iota
 )
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -159,7 +160,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 	for i, s := range argv[1:] {
 
-		if !treatingAsValues && "--" == s {
+		if !treatingAsValues && "--" == s && (0 == (params.Flags & ParseDontRecogniseDoubleHyphenToStartValues)) {
 			treatingAsValues = true
 			continue
 		}
@@ -181,9 +182,12 @@ func Parse(argv []string, params ParseParams) *Arguments {
 		isSingle			:=	false
 
 		if !treatingAsValues {
-			if 1 == len(s) && "-" == s {
+			l				:=	len(s)
+			if 1 == l && "-" == s {
 				numHyphens	=	1
 				isSingle	=	true
+			} else if 2 == l && "--" == s {
+				numHyphens	=	2
 			} else {
 				numHyphens	=	strings.IndexFunc(s, func(c rune) bool { return '-' != c })
 			}

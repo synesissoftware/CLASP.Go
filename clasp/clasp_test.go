@@ -203,6 +203,71 @@ func Test_several_values_with_double_hyphen(t *testing.T) {
 }
 
 
+func Test_several_values_with_double_hyphen_suppressed(t *testing.T) {
+
+	case1_argv := []string { "path/blah", "abc", "def", "--", "-g", "--hi" }
+
+	args1 := Parse(case1_argv, ParseParams{ Flags : ParseDontRecogniseDoubleHyphenToStartValues })
+
+	if expected, actual := 5, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+		argument0 := args1.Arguments[0]
+		argument1 := args1.Arguments[1]
+		argument2 := args1.Arguments[2]
+		argument3 := args1.Arguments[3]
+		argument4 := args1.Arguments[4]
+		check(t, "abc" == argument0.Value, "arguments has wrong value: actual '%v'", argument0.Value)
+		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, "def" == argument1.Value, "arguments has wrong value: actual '%v'", argument1.Value)
+		check(t, 2 == argument1.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, "--" == argument2.GivenName, "arguments has wrong given name: actual '%v'", argument2.GivenName)
+		check(t, 3 == argument2.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, "-g" == argument3.GivenName, "arguments has wrong given name: actual '%v'", argument3.GivenName)
+		check(t, 4 == argument3.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, "--hi" == argument4.GivenName, "arguments has wrong given name: actual '%v'", argument4.GivenName)
+		check(t, 5 == argument4.CmdLineIndex, "arguments has wrong command-line index")
+	}
+	if expected, actual := 3, len(args1.Flags); check(t, expected == actual, "arguments object has wrong number of Flags: expected %v; actual %v", expected, actual) {
+		flag0 := args1.Flags[0]
+		flag1 := args1.Flags[1]
+		flag2 := args1.Flags[2]
+		check(t, 3 == flag0.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Flag == flag0.Type, "argument has wrong type: expected: %v; received %v", Flag, flag0.Type)
+		check(t, "--" == flag0.GivenName, "arguments has wrong given name")
+		check(t, 2 == flag0.NumGivenHyphens, "arguments has wrong number of hyphens: received %v", flag0.NumGivenHyphens)
+		check(t, 4 == flag1.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Flag == flag1.Type, "argument has wrong type: expected: %v; received %v", Flag, flag1.Type)
+		check(t, "-g" == flag1.GivenName, "arguments has wrong given name")
+		check(t, 1 == flag1.NumGivenHyphens, "arguments has wrong number of hyphens")
+		check(t, 5 == flag2.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Flag == flag2.Type, "argument has wrong type: expected: %v; received %v", Flag, flag2.Type)
+		check(t, "--hi" == flag2.GivenName, "arguments has wrong given name")
+		check(t, 2 == flag2.NumGivenHyphens, "arguments has wrong number of hyphens")
+	}
+	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
+	}
+	if expected, actual := 2, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+		value0 := args1.Values[0]
+		value1 := args1.Values[1]
+		check(t, 1 == value0.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Value == value0.Type, "argument has wrong type: expected: %v; received %v", Value, value0.Type)
+		check(t, "abc" == value0.Value, "arguments has wrong value")
+		check(t, 0 == value0.NumGivenHyphens, "arguments has wrong number of hyphens")
+		check(t, 2 == value1.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Value == value1.Type, "argument has wrong type: expected: %v; received %v", Value, value1.Type)
+		check(t, "def" == value1.Value, "arguments has wrong value")
+		check(t, 0 == value1.NumGivenHyphens, "arguments has wrong number of hyphens")
+	}
+	if expected, actual := 6, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+		for i, expected := range case1_argv {
+			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
+			}
+		}
+	}
+	if expected, actual := "blah", args1.ProgramName; check(t, expected == actual, "arguments object has wrong program name: expected '%v'; actual '%v'", expected, actual) {
+	}
+}
+
+
 func Test_single_flag(t *testing.T) {
 
 	case1_argv := []string { "path/blah", "-f" }
