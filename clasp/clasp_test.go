@@ -522,7 +522,6 @@ func Test_alias_1(t *testing.T) {
 
 	aliases := []Alias {
 		{ Flag, "--flag2", []string { "-f2" }, "second flag", nil, 0 },
-//		{ clasp.Flag, "--flag2", []{ "-f2" }, "second flag", nil, 0 }
 	}
 	case1_argv := []string { "path/blah", "-f", "-f2", "---flag3" }
 
