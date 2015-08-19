@@ -49,7 +49,7 @@ import (
 
 const (
 	VersionMajor int16		=	0
-	VersionMinor int16		=	4
+	VersionMinor int16		=	5
 	VersionRevision int16	=	1
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionRevision) << 16)
 )
@@ -105,6 +105,7 @@ type Arguments struct {
 	Values		[]*Argument
 	Argv		[]string
 	ProgramName	string
+	aliases_	[]Alias
 }
 
 type ParseParams struct {
@@ -253,6 +254,8 @@ func Parse(argv []string, params ParseParams) *Arguments {
 		}
 	}
 
+	args.aliases_	=	params.Aliases
+
 	return args
 }
 
@@ -381,6 +384,32 @@ func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
 	}
 
 	return unused
+}
+
+func (args *Arguments) CheckAllFlagBits(flags *int) int {
+
+	var dummy_ int
+
+	if nil == flags {
+		flags = &dummy_
+	}
+
+	*flags = 0
+
+	for _, arg := range args.Flags {
+
+		if 0 == arg.used_ {
+
+			for _, al := range args.aliases_ {
+				if al.Name == arg.ResolvedName {
+					*flags |= al.BitFlags
+					arg.used_ = 1
+				}
+			}
+		}
+	}
+
+	return *flags
 }
 
 /* ///////////////////////////// end of file //////////////////////////// */

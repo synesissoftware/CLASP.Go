@@ -783,4 +783,22 @@ func Test_find_unused_options_1(t *testing.T) {
 }
 
 
+func Test_CheckAllFlagBits(t *testing.T) {
+
+	aliases := []Alias {
+		{ Flag, "-f1", nil, "", nil, 0x01 },
+		{ Flag, "-f2", nil, "", nil, 0x02 },
+		{ Flag, "-f4", nil, "", nil, 0x04 },
+	}
+
+	argv1 := []string { "path/blah", "-f1", "-f2", "-f4" }
+	args1 := Parse(argv1, ParseParams{ Aliases: aliases })
+	if expected, actual := 0x7, args1.CheckAllFlagBits(nil); check(t, expected == actual, "flags not as expected: expected %x; actual %x", expected, actual) {
+	}
+
+	argv2 := []string { "path/blah", "-f1", "-f4" }
+	args2 := Parse(argv2, ParseParams{ Aliases: aliases })
+	if expected, actual := 0x5, args2.CheckAllFlagBits(nil); check(t, expected == actual, "flags not as expected: expected %x; actual %x", expected, actual) {
+	}
+}
 
