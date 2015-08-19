@@ -4,7 +4,7 @@
  * Purpose:     CLASP library in Go
  *
  * Created:     15th August 2015
- * Updated:     17th August 2015
+ * Updated:     19th August 2015
  *
  * Home:        http://synesis.com.au/software
  *
@@ -42,13 +42,14 @@
 package clasp
 
 import (
+	"fmt"
 	"path"
 	"strings"
 )
 
 const (
 	VersionMajor int16		=	0
-	VersionMinor int16		=	2
+	VersionMinor int16		=	3
 	VersionRevision int16	=	1
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionRevision) << 16)
 )
@@ -252,6 +253,79 @@ func Parse(argv []string, params ParseParams) *Arguments {
 	}
 
 	return args
+}
+
+func (args *Arguments) FlagIsSpecified(id interface{}) bool {
+
+	name	:=	""
+	found	:=	false
+
+	if s, is_string := id.(string); is_string {
+		name	=	s
+		found	=	true
+	}
+
+	if a, is_Alias := id.(Alias); is_Alias {
+		switch a.Type {
+			case Option:
+				// TODO: issue warning
+				fallthrough
+			case Flag:
+				name	=	a.Name
+				found	=	true
+			default:
+				panic(fmt.Sprintf("invoked FlagIsSpecified() passing a non-Flag (and non-Option) Alias '%v'", a))
+		}
+	}
+
+	if !found && nil != id {
+		panic(fmt.Sprintf("invoked FlagIsSpecified() passing a value - '%v' - that is neither string nor alias", id))
+	}
+
+	for i, f := range args.Flags {
+		// TODO: mark as used
+		_ = i
+		if name == f.ResolvedName {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
+
+	name	:=	""
+	found	:=	false
+
+	if s, is_string := id.(string); is_string {
+		name	=	s
+		found	=	true
+	}
+
+	if a, is_Alias := id.(Alias); is_Alias {
+		switch a.Type {
+			case Option:
+				name	=	a.Name
+				found	=	true
+			default:
+				panic(fmt.Sprintf("invoked LookupOption() passing a non-Option Alias '%v'", a))
+		}
+	}
+
+	if !found && nil != id {
+		panic(fmt.Sprintf("invoked LookupOption() passing a value - '%v' - that is neither string nor alias", id))
+	}
+
+	for i, o := range args.Options {
+		// TODO: mark as used
+		_ = i
+		if name == o.ResolvedName {
+			return o, true
+		}
+	}
+
+	return nil, false
 }
 
 /* ///////////////////////////// end of file //////////////////////////// */
