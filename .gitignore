@@ -3,6 +3,8 @@
 
 # directories (by pattern)
 
+.DS_Store
+
 # files (by name)
 
 # files (by pattern)
