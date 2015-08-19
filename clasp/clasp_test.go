@@ -6,6 +6,46 @@ import "path"
 import "runtime"
 import "testing"
 
+func equalInNonNillLhs(lhs Argument, rhs Argument) bool {
+
+	if lhs.Type != rhs.Type {
+
+		return false
+	}
+
+	if "" != lhs.ResolvedName && lhs.ResolvedName != rhs.ResolvedName {
+
+		return false
+	}
+
+	if "" != lhs.GivenName && lhs.GivenName != rhs.GivenName {
+
+		return false
+	}
+
+	if "" != lhs.Value && lhs.Value != rhs.Value {
+
+		return false
+	}
+
+	if 0 != lhs.CmdLineIndex && lhs.CmdLineIndex != rhs.CmdLineIndex {
+
+		return false
+	}
+
+	if 0 != lhs.NumGivenHyphens && lhs.NumGivenHyphens != rhs.NumGivenHyphens {
+
+		return false
+	}
+
+	if 0 != lhs.Flags && lhs.Flags != rhs.Flags {
+
+		return false
+	}
+
+	return true
+}
+
 func require(t *testing.T, cond bool, format string, args... interface{}) {
 	if !cond {
 		_, file, line, hasCallInfo := runtime.Caller(1)
@@ -685,5 +725,62 @@ func Test_alias_2(t *testing.T) {
 	if expected, actual := "blah", args1.ProgramName; check(t, expected == actual, "arguments object has wrong program name: expected '%v'; actual '%v'", expected, actual) {
 	}
 }
+
+
+func Test_find_unused_flags_1(t *testing.T) {
+
+	case1_argv := []string { "path/blah", "-f1", "-f2", "abc", "---flag3" }
+
+	args1 := Parse(case1_argv, ParseParams{})
+
+	unused := args1.GetUnusedFlags()
+	if expected, actual := 3, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
+		if expected, actual := (Argument{ Type : Flag, ResolvedName : "-f1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		}
+		if expected, actual := (Argument{ Type : Flag, ResolvedName : "-f2", CmdLineIndex : 2 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		}
+		if expected, actual := (Argument{ Type : Flag, ResolvedName : "---flag3", CmdLineIndex : 4 }), *unused[2]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		}
+	}
+
+	if check(t, args1.FlagIsSpecified("-f2"), "flag '-f2' should be present") {
+		unused = args1.GetUnusedFlags()
+		if expected, actual := 2, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
+			if expected, actual := (Argument{ Type : Flag, ResolvedName : "-f1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+			}
+			if expected, actual := (Argument{ Type : Flag, ResolvedName : "---flag3", CmdLineIndex : 4 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+			}
+		}
+	}
+}
+
+
+func Test_find_unused_options_1(t *testing.T) {
+
+	case1_argv := []string { "path/blah", "-o1=v1", "-o2=v2", "abc", "---option3=value3" }
+
+	args1 := Parse(case1_argv, ParseParams{})
+
+	unused := args1.GetUnusedOptions()
+	if expected, actual := 3, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
+		if expected, actual := (Argument{ Type : Option, ResolvedName : "-o1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		}
+		if expected, actual := (Argument{ Type : Option, ResolvedName : "-o2", CmdLineIndex : 2 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		}
+		if expected, actual := (Argument{ Type : Option, ResolvedName : "---option3", CmdLineIndex : 4 }), *unused[2]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		}
+	}
+
+	if _, isFound := args1.LookupOption("-o2"); check(t, isFound, "option '-o2' should be present") {
+		unused = args1.GetUnusedOptions()
+		if expected, actual := 2, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
+			if expected, actual := (Argument{ Type : Option, ResolvedName : "-o1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+			}
+			if expected, actual := (Argument{ Type : Option, ResolvedName : "---option3", CmdLineIndex : 4 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+			}
+		}
+	}
+}
+
 
 
