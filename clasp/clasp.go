@@ -49,7 +49,7 @@ import (
 
 const (
 	VersionMajor int16		=	0
-	VersionMinor int16		=	3
+	VersionMinor int16		=	4
 	VersionRevision int16	=	1
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionRevision) << 16)
 )
@@ -95,6 +95,7 @@ type Argument struct {
 	NumGivenHyphens	int
 	AliasIndex		int
 	Flags			int
+	used_			int
 }
 
 type Arguments struct {
@@ -286,6 +287,7 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 		// TODO: mark as used
 		_ = i
 		if name == f.ResolvedName {
+			f.used_ = 1
 			return true
 		}
 	}
@@ -321,11 +323,64 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 		// TODO: mark as used
 		_ = i
 		if name == o.ResolvedName {
+			o.used_ = 1
 			return o, true
 		}
 	}
 
 	return nil, false
+}
+
+func (args *Arguments) GetUnusedFlags() []*Argument {
+
+	var unused []*Argument
+
+	for _, f := range args.Flags {
+
+		if 0 == f.used_ {
+
+			unused = append(unused, f)
+		}
+	}
+
+	return unused
+}
+
+func (args *Arguments) GetUnusedOptions() []*Argument {
+
+	var unused []*Argument
+
+	for _, o := range args.Options {
+
+		if 0 == o.used_ {
+
+			unused = append(unused, o)
+		}
+	}
+
+	return unused
+}
+
+func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
+
+	var unused []*Argument
+
+	for _, a := range args.Arguments {
+
+		switch a.Type {
+
+			case Flag:
+				fallthrough
+			case Option:
+				if 0 == a.used_ {
+
+					unused = append(unused, a)
+				}
+				break;
+		}
+	}
+
+	return unused
 }
 
 /* ///////////////////////////// end of file //////////////////////////// */
