@@ -50,8 +50,8 @@ import (
 
 const (
 	VersionMajor int16		=	0
-	VersionMinor int16		=	5
-	VersionRevision int16	=	2
+	VersionMinor int16		=	6
+	VersionRevision int16	=	1
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionRevision) << 16)
 )
 
@@ -416,6 +416,18 @@ func (args *Arguments) CheckAllFlagBits(flags *int) int {
 	}
 
 	return *flags
+}
+
+func Aliases(aliases...string) []string {
+
+	r := make([]string, len(aliases))
+
+	for i, alias := range aliases {
+
+		r[i] = alias
+	}
+
+	return r
 }
 
 /* ///////////////////////////// end of file //////////////////////////// */
