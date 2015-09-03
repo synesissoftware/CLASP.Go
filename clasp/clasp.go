@@ -4,7 +4,7 @@
  * Purpose:     CLASP library in Go
  *
  * Created:     15th August 2015
- * Updated:     19th August 2015
+ * Updated:     3rd September 2015
  *
  * Home:        http://synesis.com.au/software
  *
@@ -44,13 +44,14 @@ package clasp
 import (
 	"fmt"
 	"path"
+	_ "os"
 	"strings"
 )
 
 const (
 	VersionMajor int16		=	0
 	VersionMinor int16		=	5
-	VersionRevision int16	=	1
+	VersionRevision int16	=	2
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionRevision) << 16)
 )
 
@@ -117,7 +118,7 @@ type ParseParams struct {
  * helpers
  */
 
-func (params ParseParams) findAlias(name string) (found bool, alias Alias) {
+func (params ParseParams) findAlias(name string) (found bool, alias Alias, aliasIndex int) {
 
 	// Algorithm:
 	//
@@ -125,23 +126,27 @@ func (params ParseParams) findAlias(name string) (found bool, alias Alias) {
 	// 2. search for alias with that alias
 	// 3. return nil
 
-	for _, a := range params.Aliases {
+	for i, a := range params.Aliases {
+
 		if name == a.Name {
-			return true, a
+
+			return true, a, i
 		}
 	}
 
-	for _, a := range params.Aliases {
+	for i, a := range params.Aliases {
+
 		for _, n := range a.Aliases {
 			if name == n {
-				return true, a
+
+				return true, a, i
 			}
 		}
 	}
 
 	var dummy Alias
 
-	return false, dummy
+	return false, dummy, -1
 }
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -219,9 +224,10 @@ func Parse(argv []string, params ParseParams) *Arguments {
 					resolvedName		:=	s
 					argType				:=	Flag
 
-					if found, alias := params.findAlias(s); found {
+					if found, alias, aliasIndex := params.findAlias(s); found {
 						resolvedName	=	alias.Name
 						argType			=	alias.Type
+						arg.AliasIndex	=	aliasIndex
 					}
 
 					arg.Type			=	argType
