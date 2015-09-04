@@ -155,6 +155,7 @@ func (params ParseParams) findAlias(name string) (found bool, alias Alias, alias
  */
 
 func Parse(argv []string, params ParseParams) *Arguments {
+
 	args := new(Arguments)
 
 	args.Arguments		=	make([]*Argument, 0)
@@ -219,19 +220,22 @@ func Parse(argv []string, params ParseParams) *Arguments {
 			default:
 				nv					:=	strings.SplitN(s, "=", 2)
 				if len(nv) > 1 {
+
 					arg.Type			=	Option
 					arg.GivenName		=	nv[0]
 					arg.ResolvedName	=	nv[0]
 					arg.Value			=	nv[1]
 				} else {
+
 					// Here we have to be flexible, and examine
-					// whether the apparent flag is, in fact, a
-					// an option
+					// whether the apparent flag is, in fact, an
+					// option
 
 					resolvedName		:=	s
 					argType				:=	Flag
 
 					if found, alias, aliasIndex := params.findAlias(s); found {
+
 						resolvedName	=	alias.Name
 						argType			=	alias.Type
 						arg.AliasIndex	=	aliasIndex
@@ -242,9 +246,12 @@ func Parse(argv []string, params ParseParams) *Arguments {
 					arg.ResolvedName	=	resolvedName
 
 					if Option == argType {
+
 						nextIsOptValue	=	true
 					} else {
+
 						if isSingle	&& (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
+
 							arg.Type	=	Value
 							arg.Value	=	s
 						}
@@ -278,11 +285,13 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 	found	:=	false
 
 	if s, is_string := id.(string); is_string {
+
 		name	=	s
 		found	=	true
 	}
 
 	if a, is_Alias := id.(Alias); is_Alias {
+
 		switch a.Type {
 			case Option:
 				// TODO: issue warning
@@ -305,6 +314,7 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 		// TODO: mark as used
 		_ = i
 		if name == f.ResolvedName {
+
 			f.used_ = 1
 			return true
 		}
@@ -319,11 +329,13 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 	found	:=	false
 
 	if s, is_string := id.(string); is_string {
+
 		name	=	s
 		found	=	true
 	}
 
 	if a, is_Alias := id.(Alias); is_Alias {
+
 		switch a.Type {
 			case Option:
 				name	=	a.Name
@@ -339,9 +351,11 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 	}
 
 	for i, o := range args.Options {
+
 		// TODO: mark as used
 		_ = i
 		if name == o.ResolvedName {
+
 			o.used_ = 1
 			return o, true
 		}
@@ -407,6 +421,7 @@ func (args *Arguments) CheckAllFlagBits(flags *int) int {
 	var dummy_ int
 
 	if nil == flags {
+
 		flags = &dummy_
 	}
 
@@ -417,7 +432,9 @@ func (args *Arguments) CheckAllFlagBits(flags *int) int {
 		if 0 == arg.used_ {
 
 			for _, al := range args.aliases_ {
+
 				if al.Name == arg.ResolvedName {
+
 					*flags |= al.BitFlags
 					arg.used_ = 1
 				}
