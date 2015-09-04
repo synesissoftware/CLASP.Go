@@ -4,7 +4,7 @@
  * Purpose:     CLASP library in Go
  *
  * Created:     15th August 2015
- * Updated:     3rd September 2015
+ * Updated:     4th September 2015
  *
  * Home:        http://synesis.com.au/software
  *
@@ -50,7 +50,7 @@ import (
 
 const (
 	VersionMajor int16		=	0
-	VersionMinor int16		=	6
+	VersionMinor int16		=	7
 	VersionRevision int16	=	1
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionRevision) << 16)
 )
@@ -239,6 +239,51 @@ func Parse(argv []string, params ParseParams) *Arguments {
 						resolvedName	=	alias.Name
 						argType			=	alias.Type
 						arg.AliasIndex	=	aliasIndex
+					} else {
+
+						// Now we test to see whether every character yields
+						// an alias. If so, we convert all, add them in, then
+						// skip to the next input
+
+						validCompoundFlag	:=	len(s) > 1
+
+						compoundArguments	:=	make([]*Argument, 0, len(s) - 1)
+
+						for i, c := range s {
+
+							if 0 == i {
+
+								continue
+							}
+
+							// TODO: find better way than this
+							testAlias	:=	fmt.Sprintf("-%c", c)
+
+							if compoundFound, compoundAlias, compoundAliasIndex := params.findAlias(testAlias); compoundFound && compoundAlias.Type == Flag {
+
+								var compoundArg Argument
+
+								compoundArg.ResolvedName	=	compoundAlias.Name
+								compoundArg.GivenName		=	s
+								compoundArg.Value			=	""
+								compoundArg.Type			=	Flag
+								compoundArg.CmdLineIndex	=	arg.CmdLineIndex
+								compoundArg.AliasIndex		=	compoundAliasIndex
+								compoundArg.Flags			=	arg.Flags
+
+								compoundArguments			=	append(compoundArguments, &compoundArg)
+							} else {
+
+								validCompoundFlag = false
+								break
+							}
+						}
+
+						if validCompoundFlag {
+
+							args.Arguments	=	append(args.Arguments, compoundArguments...)
+							continue
+						}
 					}
 
 					arg.Type			=	argType

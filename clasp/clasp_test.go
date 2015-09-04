@@ -802,3 +802,100 @@ func Test_CheckAllFlagBits(t *testing.T) {
 	}
 }
 
+
+func Test_groupedFlags_1(t *testing.T) {
+
+	aliases := []Alias {
+		{ Flag, "--high", []string { "-h" }, "second flag", nil, 0 },
+		{ Flag, "--mid",  []string { "-m" }, "second flag", nil, 0 },
+		{ Flag, "--low",  []string { "-l" }, "second flag", nil, 0 },
+	}
+	argv := []string { "path/blah", "-hm", "-l" }
+
+	args1 := Parse(argv, ParseParams{ Aliases: aliases })
+
+	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+		argument0 := args1.Arguments[0]
+		check(t, "" == argument0.Value, "arguments has wrong argument")
+		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
+	}
+	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+		flag0 := args1.Flags[0]
+		flag1 := args1.Flags[1]
+		flag2 := args1.Flags[2]
+		check(t, 1 == flag0.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Flag == flag0.Type, "argument has wrong type: expected: %v; received %v", Flag, flag0.Type)
+		check(t, "--high" == flag0.ResolvedName, "arguments has wrong resolved name")
+		check(t, "-hm" == flag0.GivenName, "arguments has wrong given name")
+		check(t, "" == flag0.Value, "arguments has wrong value")
+		check(t, 1 == flag1.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Flag == flag1.Type, "argument has wrong type: expected: %v; received %v", Flag, flag1.Type)
+		check(t, "--mid" == flag1.ResolvedName, "arguments has wrong resolved name")
+		check(t, "-hm" == flag1.GivenName, "arguments has wrong given name")
+		check(t, "" == flag1.Value, "arguments has wrong value")
+		check(t, 2 == flag2.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Flag == flag2.Type, "argument has wrong type: expected: %v; received %v", Flag, flag2.Type)
+		check(t, "--low" == flag2.ResolvedName, "arguments has wrong resolved name")
+		check(t, "-l" == flag2.GivenName, "arguments has wrong given name")
+		check(t, "" == flag2.Value, "arguments has wrong value")
+	}
+	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
+	}
+	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+	}
+	if expected, actual := 3, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+		for i, expected := range argv {
+			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
+			}
+		}
+	}
+	if expected, actual := "blah", args1.ProgramName; check(t, expected == actual, "arguments object has wrong program name: expected '%v'; actual '%v'", expected, actual) {
+	}
+}
+
+
+func Test_groupedFlags_2(t *testing.T) {
+
+	aliases := []Alias {
+		{ Flag, "--high", []string { "-h" }, "second flag", nil, 0 },
+		{ Flag, "--mid",  []string { "-m" }, "second flag", nil, 0 },
+		{ Flag, "--low",  []string { "-l" }, "second flag", nil, 0 },
+	}
+	argv := []string { "path/blah", "-hmx", "-l" }
+
+	args1 := Parse(argv, ParseParams{ Aliases: aliases })
+
+	if expected, actual := 2, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+		argument0 := args1.Arguments[0]
+		check(t, "" == argument0.Value, "arguments has wrong argument")
+		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
+	}
+	if expected := 2; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+		flag0 := args1.Flags[0]
+		flag1 := args1.Flags[1]
+		check(t, 1 == flag0.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Flag == flag0.Type, "argument has wrong type: expected: %v; received %v", Flag, flag0.Type)
+		check(t, "-hmx" == flag0.ResolvedName, "arguments has wrong resolved name")
+		check(t, "-hmx" == flag0.GivenName, "arguments has wrong given name")
+		check(t, "" == flag0.Value, "arguments has wrong value")
+		check(t, 2 == flag1.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, Flag == flag1.Type, "argument has wrong type: expected: %v; received %v", Flag, flag1.Type)
+		check(t, "--low" == flag1.ResolvedName, "arguments has wrong resolved name")
+		check(t, "-l" == flag1.GivenName, "arguments has wrong given name")
+		check(t, "" == flag1.Value, "arguments has wrong value")
+	}
+	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
+	}
+	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+	}
+	if expected, actual := 3, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+		for i, expected := range argv {
+			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
+			}
+		}
+	}
+	if expected, actual := "blah", args1.ProgramName; check(t, expected == actual, "arguments object has wrong program name: expected '%v'; actual '%v'", expected, actual) {
+	}
+}
+
+
