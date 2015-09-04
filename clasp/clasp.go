@@ -137,6 +137,7 @@ func (params ParseParams) findAlias(name string) (found bool, alias Alias, alias
 	for i, a := range params.Aliases {
 
 		for _, n := range a.Aliases {
+
 			if name == n {
 
 				return true, a, i
@@ -169,11 +170,13 @@ func Parse(argv []string, params ParseParams) *Arguments {
 	for i, s := range argv[1:] {
 
 		if !treatingAsValues && "--" == s && (0 == (params.Flags & ParseDontRecogniseDoubleHyphenToStartValues)) {
+
 			treatingAsValues = true
 			continue
 		}
 
 		if nextIsOptValue {
+
 			nextIsOptValue = false
 			args.Arguments[len(args.Arguments) - 1].Value = s
 			continue
@@ -190,13 +193,17 @@ func Parse(argv []string, params ParseParams) *Arguments {
 		isSingle			:=	false
 
 		if !treatingAsValues {
+
 			l				:=	len(s)
 			if 1 == l && "-" == s {
+
 				numHyphens	=	1
 				isSingle	=	true
 			} else if 2 == l && "--" == s {
+
 				numHyphens	=	2
 			} else {
+
 				numHyphens	=	strings.IndexFunc(s, func(c rune) bool { return '-' != c })
 			}
 		}
@@ -289,10 +296,12 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 	}
 
 	if !found && nil != id {
+
 		panic(fmt.Sprintf("invoked FlagIsSpecified() passing a value - '%v' - that is neither string nor alias", id))
 	}
 
 	for i, f := range args.Flags {
+
 		// TODO: mark as used
 		_ = i
 		if name == f.ResolvedName {
@@ -325,6 +334,7 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 	}
 
 	if !found && nil != id {
+
 		panic(fmt.Sprintf("invoked LookupOption() passing a value - '%v' - that is neither string nor alias", id))
 	}
 
