@@ -42,24 +42,29 @@
 package clasp
 
 import (
+
 	"fmt"
 	"path"
-	_ "os"
 	"strings"
 )
 
 const (
+
 	VersionMajor int16		=	0
-	VersionMinor int16		=	7
+	VersionMinor int16		=	8
 	VersionRevision int16	=	1
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionRevision) << 16)
 )
 
 /* /////////////////////////////////////////////////////////////////////////
- * constants
+ * types
  */
 
 type ParseFlag int
+
+/* /////////////////////////////////////////////////////////////////////////
+ * constants
+ */
 
 const (
 	ParseTreatSingleHyphenAsValue ParseFlag = 1 << iota
@@ -73,9 +78,12 @@ const (
 type ArgType int
 
 const (
-	Flag ArgType = 1
-	Option ArgType = 2
-	Value ArgType = 3
+
+	Flag	ArgType = 1
+	Option	ArgType = 2
+	Value	ArgType = 3
+
+	int_1_	ArgType = -99
 )
 
 type Alias struct {
