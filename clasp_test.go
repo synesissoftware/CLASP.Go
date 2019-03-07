@@ -47,12 +47,16 @@ func equalInNonNillLhs(lhs Argument, rhs Argument) bool {
 }
 
 func require(t *testing.T, cond bool, format string, args... interface{}) {
+
 	if !cond {
+
 		_, file, line, hasCallInfo := runtime.Caller(1)
 
 		if hasCallInfo {
+
 			fmt.Printf("\t%s:%d: %s\n", path.Base(file), line, fmt.Sprintf(format, args...))
 		} else {
+
 			fmt.Printf("\t%s\n", fmt.Sprintf(format, args...))
 		}
 
@@ -61,12 +65,16 @@ func require(t *testing.T, cond bool, format string, args... interface{}) {
 }
 
 func check(t *testing.T, cond bool, format string, args... interface{}) bool {
+
 	if !cond {
+
 		_, file, line, hasCallInfo := runtime.Caller(1)
 
 		if hasCallInfo {
+
 			fmt.Printf("\t%s:%d: %s\n", path.Base(file), line, fmt.Sprintf(format, args...))
 		} else {
+
 			fmt.Printf("\t%s\n", fmt.Sprintf(format, args...))
 		}
 
@@ -91,7 +99,9 @@ func Test_no_args(t *testing.T) {
 	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 1, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -108,6 +118,7 @@ func Test_single_value(t *testing.T) {
 	args1 := Parse(argv, ParseParams{})
 
 	if expected, actual := 1, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		check(t, "abc" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
@@ -117,13 +128,16 @@ func Test_single_value(t *testing.T) {
 	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 1, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+
 		value0 := args1.Values[0]
 		check(t, 1 == value0.CmdLineIndex, "arguments has wrong command-line index")
 		check(t, Value == value0.Type, "argument has wrong type: expected: %v; received %v", Value, value0.Type)
 		check(t, "abc" == value0.Value, "arguments has wrong value")
 	}
 	if expected, actual := 2, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -140,6 +154,7 @@ func Test_several_values(t *testing.T) {
 	args1 := Parse(argv, ParseParams{})
 
 	if expected, actual := 4, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		argument1 := args1.Arguments[1]
 		argument2 := args1.Arguments[2]
@@ -158,6 +173,7 @@ func Test_several_values(t *testing.T) {
 	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 4, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+
 		value0 := args1.Values[0]
 		value1 := args1.Values[1]
 		value2 := args1.Values[2]
@@ -176,7 +192,9 @@ func Test_several_values(t *testing.T) {
 		check(t, "hi" == value3.Value, "arguments has wrong value")
 	}
 	if expected, actual := 5, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -193,6 +211,7 @@ func Test_several_values_with_double_hyphen(t *testing.T) {
 	args1 := Parse(argv, ParseParams{})
 
 	if expected, actual := 4, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		argument1 := args1.Arguments[1]
 		argument2 := args1.Arguments[2]
@@ -211,6 +230,7 @@ func Test_several_values_with_double_hyphen(t *testing.T) {
 	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 4, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+
 		value0 := args1.Values[0]
 		value1 := args1.Values[1]
 		value2 := args1.Values[2]
@@ -233,7 +253,9 @@ func Test_several_values_with_double_hyphen(t *testing.T) {
 		check(t, 0 == value3.NumGivenHyphens, "arguments has wrong number of hyphens")
 	}
 	if expected, actual := 6, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -250,6 +272,7 @@ func Test_several_values_with_double_hyphen_suppressed(t *testing.T) {
 	args1 := Parse(argv, ParseParams{ Flags : ParseDontRecogniseDoubleHyphenToStartValues })
 
 	if expected, actual := 5, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		argument1 := args1.Arguments[1]
 		argument2 := args1.Arguments[2]
@@ -267,6 +290,7 @@ func Test_several_values_with_double_hyphen_suppressed(t *testing.T) {
 		check(t, 5 == argument4.CmdLineIndex, "arguments has wrong command-line index")
 	}
 	if expected, actual := 3, len(args1.Flags); check(t, expected == actual, "arguments object has wrong number of Flags: expected %v; actual %v", expected, actual) {
+
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
 		flag2 := args1.Flags[2]
@@ -286,6 +310,7 @@ func Test_several_values_with_double_hyphen_suppressed(t *testing.T) {
 	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 2, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+
 		value0 := args1.Values[0]
 		value1 := args1.Values[1]
 		check(t, 1 == value0.CmdLineIndex, "arguments has wrong command-line index")
@@ -298,7 +323,9 @@ func Test_several_values_with_double_hyphen_suppressed(t *testing.T) {
 		check(t, 0 == value1.NumGivenHyphens, "arguments has wrong number of hyphens")
 	}
 	if expected, actual := 6, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -315,11 +342,13 @@ func Test_single_flag(t *testing.T) {
 	args1 := Parse(argv, ParseParams{})
 
 	if expected, actual := 1, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
 	if expected := 1; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+
 		flag0 := args1.Flags[0]
 		check(t, 1 == flag0.CmdLineIndex, "arguments has wrong command-line index")
 		check(t, Flag == flag0.Type, "argument has wrong type: expected: %v; received %v", Flag, flag0.Type)
@@ -332,7 +361,9 @@ func Test_single_flag(t *testing.T) {
 	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 2, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -349,11 +380,13 @@ func Test_several_flags(t *testing.T) {
 	args1 := Parse(argv, ParseParams{})
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
 	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
 		flag2 := args1.Flags[2]
@@ -378,7 +411,9 @@ func Test_several_flags(t *testing.T) {
 	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 4, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -395,6 +430,7 @@ func Test_flags_and_values(t *testing.T) {
 	args1 := Parse(argv, ParseParams{})
 
 	if expected, actual := 5, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		argument1 := args1.Arguments[1]
 		argument2 := args1.Arguments[2]
@@ -410,6 +446,7 @@ func Test_flags_and_values(t *testing.T) {
 		check(t, "--value-really" == argument4.Value, "arguments has wrong argument")
 	}
 	if expected := 2; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
 		check(t, 2 == flag0.CmdLineIndex, "arguments has wrong command-line index")
@@ -426,6 +463,7 @@ func Test_flags_and_values(t *testing.T) {
 	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 3, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+
 		value0 := args1.Values[0]
 		value1 := args1.Values[1]
 		value2 := args1.Values[2]
@@ -437,7 +475,9 @@ func Test_flags_and_values(t *testing.T) {
 		check(t, "--value-really" == value2.Value, "values has wrong value")
 	}
 	if expected, actual := 7, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -454,6 +494,7 @@ func Test_flags_values_and_option(t *testing.T) {
 	args1 := Parse(argv, ParseParams{})
 
 	if expected, actual := 5, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		argument1 := args1.Arguments[1]
 		argument2 := args1.Arguments[2]
@@ -470,6 +511,7 @@ func Test_flags_values_and_option(t *testing.T) {
 		check(t, "--value-really" == argument4.Value, "arguments has wrong value")
 	}
 	if expected := 1; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+
 		flag0 := args1.Flags[0]
 		check(t, 2 == flag0.CmdLineIndex, "arguments has wrong command-line index")
 		check(t, Flag == flag0.Type, "argument has wrong type: expected: %v; received %v", Flag, flag0.Type)
@@ -478,6 +520,7 @@ func Test_flags_values_and_option(t *testing.T) {
 		check(t, "" == flag0.Value, "arguments has wrong value")
 	}
 	if expected, actual := 1, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
+
 		option0 := args1.Options[0]
 		check(t, 4 == option0.CmdLineIndex, "arguments has wrong command-line index")
 		check(t, Option == option0.Type, "argument has wrong type: expected: %v; received %v", Option, option0.Type)
@@ -486,6 +529,7 @@ func Test_flags_values_and_option(t *testing.T) {
 		check(t, "value1" == option0.Value, "arguments has wrong value")
 	}
 	if expected, actual := 3, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+
 		value0 := args1.Values[0]
 		value1 := args1.Values[1]
 		value2 := args1.Values[2]
@@ -497,7 +541,9 @@ func Test_flags_values_and_option(t *testing.T) {
 		check(t, "--value-really" == value2.Value, "values has wrong value")
 	}
 	if expected, actual := 7, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -514,11 +560,13 @@ func Test_single_hyphen_default(t *testing.T) {
 	args1 := Parse(argv, ParseParams{})
 
 	if expected, actual := 1, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
 	if expected := 1; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+
 		flag0 := args1.Flags[0]
 		check(t, 1 == flag0.CmdLineIndex, "arguments has wrong command-line index")
 		check(t, Flag == flag0.Type, "argument has wrong type: expected: %v; received %v", Flag, flag0.Type)
@@ -531,7 +579,9 @@ func Test_single_hyphen_default(t *testing.T) {
 	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 2, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -548,6 +598,7 @@ func Test_single_hyphen_as_value(t *testing.T) {
 	args1 := Parse(argv, ParseParams{ Flags : ParseTreatSingleHyphenAsValue })
 
 	if expected, actual := 1, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		check(t, "-" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
@@ -557,6 +608,7 @@ func Test_single_hyphen_as_value(t *testing.T) {
 	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 1, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
+
 		value0 := args1.Values[0]
 		check(t, 1 == value0.CmdLineIndex, "arguments has wrong command-line index")
 		check(t, Value == value0.Type, "argument has wrong type: expected: %v; received %v", Value, value0.Type)
@@ -565,7 +617,9 @@ func Test_single_hyphen_as_value(t *testing.T) {
 		check(t, "-" == value0.Value, "arguments has wrong value")
 	}
 	if expected, actual := 2, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -584,11 +638,13 @@ func Test_alias_0(t *testing.T) {
 	args1 := Parse(argv, ParseParams{ Aliases: aliases })
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
 	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
 		flag2 := args1.Flags[2]
@@ -613,7 +669,9 @@ func Test_alias_0(t *testing.T) {
 	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 4, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -626,6 +684,7 @@ func Test_alias_0(t *testing.T) {
 func Test_alias_1(t *testing.T) {
 
 	aliases := []Alias {
+
 		{ Flag, "--flag2", []string { "-f2" }, "second flag", nil, 0 },
 	}
 	argv := []string { "path/blah", "-f", "-f2", "---flag3" }
@@ -633,11 +692,13 @@ func Test_alias_1(t *testing.T) {
 	args1 := Parse(argv, ParseParams{ Aliases: aliases })
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
 	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
 		flag2 := args1.Flags[2]
@@ -662,7 +723,9 @@ func Test_alias_1(t *testing.T) {
 	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 4, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -675,6 +738,7 @@ func Test_alias_1(t *testing.T) {
 func Test_alias_2(t *testing.T) {
 
 	aliases := []Alias {
+
 		{ Option, "--flag2", []string { "-f2" }, "f2-option", nil, 0 },
 	}
 	argv := []string { "path/blah", "-f", "-f2", "abc", "---flag3" }
@@ -682,6 +746,7 @@ func Test_alias_2(t *testing.T) {
 	args1 := Parse(argv, ParseParams{ Aliases: aliases })
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		argument1 := args1.Arguments[1]
 		argument2 := args1.Arguments[2]
@@ -693,6 +758,7 @@ func Test_alias_2(t *testing.T) {
 		check(t, 4 == argument2.CmdLineIndex, "arguments has wrong argument")
 	}
 	if expected := 2; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
 		check(t, 1 == flag0.CmdLineIndex, "arguments has wrong command-line index")
@@ -707,6 +773,7 @@ func Test_alias_2(t *testing.T) {
 		check(t, "" == flag1.Value, "arguments has wrong value")
 	}
 	if expected, actual := 1, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
+
 		option0 := args1.Options[0]
 		check(t, 2 == option0.CmdLineIndex, "arguments has wrong command-line index")
 		check(t, Option == option0.Type, "argument has wrong type: expected: %v; received %v", Option, option0.Type)
@@ -717,7 +784,9 @@ func Test_alias_2(t *testing.T) {
 	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 5, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -735,6 +804,7 @@ func Test_find_unused_flags_1(t *testing.T) {
 
 	unused := args1.GetUnusedFlags()
 	if expected, actual := 3, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
+
 		if expected, actual := (Argument{ Type : Flag, ResolvedName : "-f1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 		}
 		if expected, actual := (Argument{ Type : Flag, ResolvedName : "-f2", CmdLineIndex : 2 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
@@ -744,8 +814,10 @@ func Test_find_unused_flags_1(t *testing.T) {
 	}
 
 	if check(t, args1.FlagIsSpecified("-f2"), "flag '-f2' should be present") {
+
 		unused = args1.GetUnusedFlags()
 		if expected, actual := 2, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
+
 			if expected, actual := (Argument{ Type : Flag, ResolvedName : "-f1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 			}
 			if expected, actual := (Argument{ Type : Flag, ResolvedName : "---flag3", CmdLineIndex : 4 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
@@ -763,6 +835,7 @@ func Test_find_unused_options_1(t *testing.T) {
 
 	unused := args1.GetUnusedOptions()
 	if expected, actual := 3, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
+
 		if expected, actual := (Argument{ Type : Option, ResolvedName : "-o1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 		}
 		if expected, actual := (Argument{ Type : Option, ResolvedName : "-o2", CmdLineIndex : 2 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
@@ -772,8 +845,10 @@ func Test_find_unused_options_1(t *testing.T) {
 	}
 
 	if _, isFound := args1.LookupOption("-o2"); check(t, isFound, "option '-o2' should be present") {
+
 		unused = args1.GetUnusedOptions()
 		if expected, actual := 2, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
+
 			if expected, actual := (Argument{ Type : Option, ResolvedName : "-o1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 			}
 			if expected, actual := (Argument{ Type : Option, ResolvedName : "---option3", CmdLineIndex : 4 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
@@ -786,6 +861,7 @@ func Test_find_unused_options_1(t *testing.T) {
 func Test_CheckAllFlagBits(t *testing.T) {
 
 	aliases := []Alias {
+
 		{ Flag, "-f1", nil, "", nil, 0x01 },
 		{ Flag, "-f2", nil, "", nil, 0x02 },
 		{ Flag, "-f4", nil, "", nil, 0x04 },
@@ -806,6 +882,7 @@ func Test_CheckAllFlagBits(t *testing.T) {
 func Test_groupedFlags_1(t *testing.T) {
 
 	aliases := []Alias {
+
 		{ Flag, "--high", []string { "-h" }, "second flag", nil, 0 },
 		{ Flag, "--mid",  []string { "-m" }, "second flag", nil, 0 },
 		{ Flag, "--low",  []string { "-l" }, "second flag", nil, 0 },
@@ -815,11 +892,13 @@ func Test_groupedFlags_1(t *testing.T) {
 	args1 := Parse(argv, ParseParams{ Aliases: aliases })
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
 	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
 		flag2 := args1.Flags[2]
@@ -844,7 +923,9 @@ func Test_groupedFlags_1(t *testing.T) {
 	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 3, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
@@ -857,6 +938,7 @@ func Test_groupedFlags_1(t *testing.T) {
 func Test_groupedFlags_2(t *testing.T) {
 
 	aliases := []Alias {
+
 		{ Flag, "--high", []string { "-h" }, "second flag", nil, 0 },
 		{ Flag, "--mid",  []string { "-m" }, "second flag", nil, 0 },
 		{ Flag, "--low",  []string { "-l" }, "second flag", nil, 0 },
@@ -866,11 +948,13 @@ func Test_groupedFlags_2(t *testing.T) {
 	args1 := Parse(argv, ParseParams{ Aliases: aliases })
 
 	if expected, actual := 2, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
 		argument0 := args1.Arguments[0]
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
 	if expected := 2; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
 		check(t, 1 == flag0.CmdLineIndex, "arguments has wrong command-line index")
@@ -889,7 +973,9 @@ func Test_groupedFlags_2(t *testing.T) {
 	if expected, actual := 0, len(args1.Values); check(t, expected == actual, "arguments object has wrong number of Values: expected %v; actual %v", expected, actual) {
 	}
 	if expected, actual := 3, len(args1.Argv); check(t, expected == actual, "arguments object has wrong number of Argv members: expected %v; actual %v", expected, actual) {
+
 		for i, expected := range argv {
+
 			if actual := args1.Argv[i]; check(t, expected == actual, "arguments has wrong Argv member: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}

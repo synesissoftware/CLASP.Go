@@ -4,11 +4,11 @@
  * Purpose:     CLASP library in Go
  *
  * Created:     4th September 2015
- * Updated:     4th September 2015
+ * Updated:     7th March 2019
  *
  * Home:        http://synesis.com.au/software
  *
- * Copyright (c) 2015, Matthew Wilson
+ * Copyright (c) 2015-2019, Matthew Wilson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -46,19 +46,13 @@ import (
 	"fmt"
 	"io"
 	"os"
-
-/*
-	"fmt"
-	"path"
-	"strings"
- */
 )
 
 /* /////////////////////////////////////////////////////////////////////////
  * types
  */
 
-type UsageFlag	int
+type UsageFlag int
 
 type UsageParams struct {
 
@@ -76,9 +70,9 @@ type UsageParams struct {
 
 const (
 
-	SkipBlanksBetweenLines	UsageFlag	=	1 << iota
-	CallExitWhenDone		UsageFlag	=	1 << iota
-	CallExitIfNoneZero		UsageFlag	=	1 << iota
+	SkipBlanksBetweenLines  UsageFlag = 1 << iota
+	CallExitWhenDone        UsageFlag = 1 << iota
+	CallExitIfNoneZero      UsageFlag = 1 << iota
 )
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -92,9 +86,13 @@ func ShowUsage(arguments *Arguments, params UsageParams) (rc int, err error) {
 	for i, a := range aliases {
 
 		switch a.Type {
+
 		case Flag, Option:
+
 			;
+
 		default:
+
 			panic(fmt.Sprintf("alias[%d] - '%v' - is an instance of type %T, and must be instance of either %T or %T!", i, a, a, Flag, Option))
 		}
 	}
@@ -115,7 +113,6 @@ func ShowUsage(arguments *Arguments, params UsageParams) (rc int, err error) {
 		params.ProgramName = arguments.ProgramName
 	}
 
-
 	fmt.Fprintf(params.Stream, "USAGE: %s [ ... flags and options ... ] %s\n", params.ProgramName, params.Values)
 	fmt.Fprintf(params.Stream, "\n")
 	fmt.Fprintf(params.Stream, "flags/options:\n")
@@ -124,6 +121,7 @@ func ShowUsage(arguments *Arguments, params UsageParams) (rc int, err error) {
 	for _, a := range aliases {
 
 		switch a.Type {
+
 		case Flag:
 
 			for _, b := range a.Aliases {
@@ -146,7 +144,6 @@ func ShowUsage(arguments *Arguments, params UsageParams) (rc int, err error) {
 			fmt.Fprintf(params.Stream, "\n")
 		}
 	}
-
 
 	if 0 != (CallExitWhenDone & params.Flags) || (0 != params.ExitCode && 0 != (CallExitIfNoneZero & params.Flags)) {
 

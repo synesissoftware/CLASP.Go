@@ -4,11 +4,11 @@
  * Purpose:     CLASP library in Go
  *
  * Created:     15th August 2015
- * Updated:     4th September 2015
+ * Updated:     7th March 2019
  *
  * Home:        http://synesis.com.au/software
  *
- * Copyright (c) 2015, Matthew Wilson
+ * Copyright (c) 2015-2019, Matthew Wilson
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,6 +67,7 @@ type ParseFlag int
  */
 
 const (
+
 	ParseTreatSingleHyphenAsValue ParseFlag = 1 << iota
 	ParseDontRecogniseDoubleHyphenToStartValues ParseFlag = 1 << iota
 )
@@ -87,6 +88,7 @@ const (
 )
 
 type Alias struct {
+
 	Type			ArgType
 	Name			string
 	Aliases			[]string
@@ -96,6 +98,7 @@ type Alias struct {
 }
 
 type Argument struct {
+
 	ResolvedName	string
 	GivenName		string
 	Value			string
@@ -104,10 +107,12 @@ type Argument struct {
 	NumGivenHyphens	int
 	AliasIndex		int
 	Flags			int
+
 	used_			int
 }
 
 type Arguments struct {
+
 	Arguments	[]*Argument
 	Flags		[]*Argument
 	Options		[]*Argument
@@ -118,6 +123,7 @@ type Arguments struct {
 }
 
 type ParseParams struct {
+
 	Aliases		[]Alias
 	Flags		ParseFlag
 }
@@ -223,9 +229,11 @@ func Parse(argv []string, params ParseParams) *Arguments {
 		switch numHyphens {
 
 			case 0:
+
 				arg.Type				=	Value
 				arg.Value				=	s
 			default:
+
 				nv					:=	strings.SplitN(s, "=", 2)
 				if len(nv) > 1 {
 
@@ -318,11 +326,15 @@ func Parse(argv []string, params ParseParams) *Arguments {
 	for _, arg := range args.Arguments {
 
 		switch(arg.Type) {
+
 			case Flag:
+
 				args.Flags		=	append(args.Flags, arg)
 			case Option:
+
 				args.Options	=	append(args.Options, arg)
 			case Value:
+
 				args.Values		=	append(args.Values, arg)
 		}
 	}
@@ -346,13 +358,17 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 	if a, is_Alias := id.(Alias); is_Alias {
 
 		switch a.Type {
+
 			case Option:
+
 				// TODO: issue warning
 				fallthrough
 			case Flag:
+
 				name	=	a.Name
 				found	=	true
 			default:
+
 				panic(fmt.Sprintf("invoked FlagIsSpecified() passing a non-Flag (and non-Option) Alias '%v'", a))
 		}
 	}
@@ -390,10 +406,13 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 	if a, is_Alias := id.(Alias); is_Alias {
 
 		switch a.Type {
+
 			case Option:
+
 				name	=	a.Name
 				found	=	true
 			default:
+
 				panic(fmt.Sprintf("invoked LookupOption() passing a non-Option Alias '%v'", a))
 		}
 	}
@@ -456,8 +475,10 @@ func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
 		switch a.Type {
 
 			case Flag:
+
 				fallthrough
 			case Option:
+
 				if 0 == a.used_ {
 
 					unused = append(unused, a)
@@ -511,4 +532,5 @@ func Aliases(aliases...string) []string {
 }
 
 /* ///////////////////////////// end of file //////////////////////////// */
+
 
