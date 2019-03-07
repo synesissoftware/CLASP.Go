@@ -1,13 +1,15 @@
 
 # directories (by name)
 
-# directories (by pattern)
-
 .DS_Store
+
+# directories (by pattern)
 
 # files (by name)
 
 # files (by pattern)
 
 *~
+*.swp
+*.tmp
 
