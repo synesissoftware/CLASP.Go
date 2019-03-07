@@ -46,6 +46,8 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path"
+	"strings"
 )
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -54,14 +56,20 @@ import (
 
 type UsageFlag int
 
+type Exiter interface {
+
+	Exit(exitCode int)
+}
+
 type UsageParams struct {
 
-	Aliases		[]Alias
-	Stream		io.Writer
-	ProgramName	string
-	Flags		UsageFlag
-	Values		string
-	ExitCode	int
+	Stream					io.Writer
+	ProgramName				string
+	Flags					UsageFlag
+	ExitCode				int
+	Exiter					Exiter
+	Version					interface{}
+	VersionPrefix			string
 }
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -74,6 +82,77 @@ const (
 	CallExitWhenDone        UsageFlag = 1 << iota
 	CallExitIfNoneZero      UsageFlag = 1 << iota
 )
+
+/* /////////////////////////////////////////////////////////////////////////
+ * locals
+ */
+
+type default_exiter struct {
+}
+
+func (de *default_exiter) Exit(exitCode int) {
+
+	os.Exit(exitCode)
+}
+
+func collect_array_as_strings(a []interface{}) []string {
+
+	r	:=	make([]string, len(a))
+
+	for i, v := range a {
+
+		r[i] = fmt.Sprintf("%v", v)
+	}
+
+	return r
+}
+
+func get_program_name(params UsageParams) string {
+
+	program_name := params.ProgramName
+
+	if 0 == len(program_name) {
+
+		arg0 := os.Args[0]
+
+		program_name = path.Base(arg0)
+	}
+
+	return program_name
+}
+
+func generate_version_string(params UsageParams, apiFunctionName string) string {
+
+	program_name	:=	get_program_name(params)
+	version_prefix	:=	params.VersionPrefix
+
+	var version string;
+
+	switch v := params.Version.(type) {
+
+	case string:
+
+		version = v
+	case []string:
+
+		version = strings.Join(v, ".")
+	case []int:
+
+		as := make([]string, len(v))
+
+		for i, n := range v {
+
+			as[i] = fmt.Sprintf("%v", n)
+		}
+
+		version = strings.Join(as, ".")
+	default:
+
+		panic(fmt.Sprintf("%v() called with UsageParams.Version of an invalid type %T, but must be instance of string, []string, or []int", v, reflect.TypeOf(v)))
+	}
+
+	return fmt.Sprintf("%s %s%s", program_name, version_prefix, version)
+}
 
 /* /////////////////////////////////////////////////////////////////////////
  * API
@@ -93,7 +172,7 @@ func ShowUsage(arguments *Arguments, params UsageParams) (rc int, err error) {
 
 		default:
 
-			panic(fmt.Sprintf("alias[%d] - '%v' - is an instance of type %T, and must be instance of either %T or %T!", i, a, a, Flag, Option))
+			panic(fmt.Sprintf("alias[%d] - '%v' - is an instance of type %T, but must be instance of either %T or %T!", i, a, a, Flag, Option))
 		}
 	}
 
@@ -151,6 +230,28 @@ func ShowUsage(arguments *Arguments, params UsageParams) (rc int, err error) {
 	}
 
 	return params.ExitCode, nil
+}
+
+func ShowVersion(aliases []Alias, params UsageParams) (rc int, err error) {
+
+	stream := params.Stream
+	exiter := params.Exiter
+
+	if exiter == nil {
+
+		exiter = new(default_exiter)
+	}
+
+	version := generate_version_string(params, "ShowVersion")
+
+	fmt.Fprintf(stream, "%s\n", version)
+
+	if 0 != (CallExitWhenDone & params.Flags) || (0 != params.ExitCode && 0 != (CallExitIfNoneZero & params.Flags)) {
+
+		exiter.Exit(params.ExitCode)
+	}
+
+	return
 }
 
 /* ///////////////////////////// end of file //////////////////////////// */
