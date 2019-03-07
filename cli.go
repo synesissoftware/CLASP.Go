@@ -46,6 +46,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reflect"
 	"path"
 	"strings"
 )
@@ -70,6 +71,9 @@ type UsageParams struct {
 	Exiter					Exiter
 	Version					interface{}
 	VersionPrefix			string
+	InfoLines				[]string
+	ValuesString			string
+	FlagsAndOptionsString	string
 }
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -158,9 +162,7 @@ func generate_version_string(params UsageParams, apiFunctionName string) string 
  * API
  */
 
-func ShowUsage(arguments *Arguments, params UsageParams) (rc int, err error) {
-
-	aliases := arguments.aliases_
+func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 	for i, a := range aliases {
 
@@ -187,40 +189,68 @@ func ShowUsage(arguments *Arguments, params UsageParams) (rc int, err error) {
 		}
 	}
 
-	if 0 == len(params.ProgramName) {
+	program_name	:=	get_program_name(params)
 
-		params.ProgramName = arguments.ProgramName
+	if " " == params.FlagsAndOptionsString {
+
+		params.FlagsAndOptionsString = "[ ... flags and options ... ]"
+	}
+	if "" != params.FlagsAndOptionsString {
+
+		params.FlagsAndOptionsString = " " + params.FlagsAndOptionsString
 	}
 
-	fmt.Fprintf(params.Stream, "USAGE: %s [ ... flags and options ... ] %s\n", params.ProgramName, params.Values)
-	fmt.Fprintf(params.Stream, "\n")
-	fmt.Fprintf(params.Stream, "flags/options:\n")
-	fmt.Fprintf(params.Stream, "\n")
+	if "" != params.ValuesString {
 
-	for _, a := range aliases {
+		params.ValuesString = " " + params.ValuesString
+	}
 
-		switch a.Type {
+	for _, info_line := range params.InfoLines {
 
-		case Flag:
+		if ":version:" == info_line {
 
-			for _, b := range a.Aliases {
+			version := generate_version_string(params, "ShowVersion")
 
-				fmt.Fprintf(params.Stream, "\t%v\n", b)
-			}
-			fmt.Fprintf(params.Stream, "\t%v\n", a.Name)
+			fmt.Fprintf(params.Stream, "%s\n", version)
+		} else {
 
-		case Option:
-
-			for _, b := range a.Aliases {
-
-				fmt.Fprintf(params.Stream, "\t%v <value>\n", b)
-			}
-			fmt.Fprintf(params.Stream, "\t%v=<value>\n", a.Name)
+			fmt.Fprintf(params.Stream, "%s\n", info_line)
 		}
-		fmt.Fprintf(params.Stream, "\t\t%v\n", a.Help)
-		if 0 == (SkipBlanksBetweenLines & params.Flags) {
+	}
 
-			fmt.Fprintf(params.Stream, "\n")
+	fmt.Fprintf(params.Stream, "USAGE: %s%s%s\n", program_name, params.FlagsAndOptionsString, params.ValuesString)
+
+	if 0 != len(aliases) {
+
+		fmt.Fprintf(params.Stream, "\n")
+		fmt.Fprintf(params.Stream, "flags/options:\n")
+		fmt.Fprintf(params.Stream, "\n")
+
+		for _, a := range aliases {
+
+			switch a.Type {
+
+			case Flag:
+
+				for _, b := range a.Aliases {
+
+					fmt.Fprintf(params.Stream, "\t%v\n", b)
+				}
+				fmt.Fprintf(params.Stream, "\t%v\n", a.Name)
+
+			case Option:
+
+				for _, b := range a.Aliases {
+
+					fmt.Fprintf(params.Stream, "\t%v <value>\n", b)
+				}
+				fmt.Fprintf(params.Stream, "\t%v=<value>\n", a.Name)
+			}
+			fmt.Fprintf(params.Stream, "\t\t%v\n", a.Help)
+			if 0 == (SkipBlanksBetweenLines & params.Flags) {
+
+				fmt.Fprintf(params.Stream, "\n")
+			}
 		}
 	}
 
