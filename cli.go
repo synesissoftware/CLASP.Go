@@ -1,10 +1,10 @@
 /* /////////////////////////////////////////////////////////////////////////
  * File:        clasp/cli.go
  *
- * Purpose:     CLASP library in Go
+ * Purpose:     CLI utilities for CLASP.Go
  *
  * Created:     4th September 2015
- * Updated:     7th March 2019
+ * Updated:     8th March 2019
  *
  * Home:        http://synesis.com.au/software
  *

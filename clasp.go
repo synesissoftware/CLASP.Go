@@ -1,10 +1,10 @@
 /* /////////////////////////////////////////////////////////////////////////
- * File:        clasp/clasp.go
+ * File:        clasp.go
  *
- * Purpose:     CLASP library in Go
+ * Purpose:     Main file for CLASP.Go
  *
  * Created:     15th August 2015
- * Updated:     7th March 2019
+ * Updated:     8th March 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -51,7 +51,7 @@ import (
 const (
 
 	VersionMajor int16		=	0
-	VersionMinor int16		=	8
+	VersionMinor int16		=	9
 	VersionRevision int16	=	1
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionRevision) << 16)
 )
