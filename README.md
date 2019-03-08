@@ -167,6 +167,10 @@ Defect reports, feature requests, and pull requests are welcome on https://githu
 
 ### Related projects
 
+* [**CLASP**](https://github.com/synesissoftware/CLASP/)
+* [**CLASP.Python**](https://github.com/synesissoftware/CLASP.Python/)
+* [**CLASP.Ruby**](https://github.com/synesissoftware/CLASP.Ruby/)
+
 ### License
 
 **CLASP.Gp** is released under the 3-clause BSD license. See [LICENSE](./LICENSE) for details.
