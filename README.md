@@ -36,11 +36,11 @@ Examples are provided in the ```examples``` directory, along with a markdown des
 
 ### Where to get help
 
-[GitHub Page](https://github.com/synesissoftware/CLASP.Gp "GitHub Page")
+[GitHub Page](https://github.com/synesissoftware/CLASP.Go "GitHub Page")
 
 ### Contribution guidelines
 
-Defect reports, feature requests, and pull requests are welcome on https://github.com/synesissoftware/CLASP.Gp.
+Defect reports, feature requests, and pull requests are welcome on https://github.com/synesissoftware/CLASP.Go.
 
 ### Dependencies
 
@@ -52,4 +52,4 @@ Defect reports, feature requests, and pull requests are welcome on https://githu
 
 ### License
 
-**CLASP.Gp** is released under the 3-clause BSD license. See [LICENSE](./LICENSE) for details.
+**CLASP.Go** is released under the 3-clause BSD license. See [LICENSE](./LICENSE) for details.
