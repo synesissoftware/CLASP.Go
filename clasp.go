@@ -270,6 +270,17 @@ func Parse(argv []string, params ParseParams) *Arguments {
 						resolvedName	=	alias.Name
 						argType			=	alias.Type
 						arg.AliasIndex	=	aliasIndex
+
+						if ix_equals := strings.Index(resolvedName, "="); ix_equals >= 0 {
+
+							res_nm	:=	resolvedName[:ix_equals]
+							value	:=	resolvedName[ix_equals + 1:]
+
+							argType			=	Option
+							s				=	resolvedName
+							resolvedName	=	res_nm
+							arg.Value		=	value
+						}
 					} else {
 
 						// Now we test to see whether every character yields
@@ -287,7 +298,6 @@ func Parse(argv []string, params ParseParams) *Arguments {
 								continue
 							}
 
-							// TODO: find better way than this
 							testAlias	:=	fmt.Sprintf("-%c", c)
 
 							if compoundFound, compoundAlias, compoundAliasIndex := params.findAlias(testAlias); compoundFound && compoundAlias.Type == Flag {
@@ -301,6 +311,17 @@ func Parse(argv []string, params ParseParams) *Arguments {
 								compoundArg.CmdLineIndex	=	arg.CmdLineIndex
 								compoundArg.AliasIndex		=	compoundAliasIndex
 								compoundArg.Flags			=	arg.Flags
+
+								if ix_equals := strings.Index(compoundArg.ResolvedName, "="); ix_equals >= 0 {
+
+									res_nm	:=	compoundArg.ResolvedName[:ix_equals]
+									value	:=	compoundArg.ResolvedName[ix_equals + 1:]
+
+									compoundArg.Type			=	Option
+									s							=	compoundArg.ResolvedName
+									compoundArg.ResolvedName	=	res_nm
+									compoundArg.Value			=	value
+								}
 
 								compoundArguments			=	append(compoundArguments, &compoundArg)
 							} else {

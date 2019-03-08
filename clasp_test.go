@@ -986,4 +986,35 @@ func Test_groupedFlags_2(t *testing.T) {
 	}
 }
 
+func Test_flag_alias_of_option_with_value(t *testing.T) {
+
+	aliases	:=	[]clasp.Alias {
+
+		{ clasp.Option, "--verbosity", nil, "Specifies the verbosity", []string{ "low", "medium", "high" }, 0 },
+		{ clasp.Flag, "--verbosity=high", []string{ "-v" }, "", nil, 0 },
+	}
+	argv	:=	[]string{ "path/blah", "-v" }
+
+	args	:=	clasp.Parse(argv, clasp.ParseParams{ Aliases: aliases })
+
+	if expected, actual := 1, len(args.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
+
+		argument0 := args.Arguments[0]
+		check(t, 1 == argument0.CmdLineIndex, "argument0 has wrong CmdLineIndex")
+		//check(t, "high" == argument0.Value, "argument0 has wrong value")
+	}
+
+	if expected, actual := 0, len(args.Flags); check(t, expected == actual, "arguments object has wrong number of Flags: expected %v; actual %v", expected, actual) {
+	}
+
+	if expected, actual := 1, len(args.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
+
+		option0 := args.Options[0]
+		check(t, 1 == option0.CmdLineIndex, "arguments has wrong command-line index")
+		check(t, clasp.Option == option0.Type, "argument has wrong type: expected: %v; received %v", clasp.Option, option0.Type)
+		check(t, "--verbosity" == option0.ResolvedName, "arguments has wrong resolved name")
+		check(t, "--verbosity=high" == option0.GivenName, "arguments has wrong given name")
+		check(t, "high" == option0.Value, "arguments has wrong value")
+	}
+}
 
