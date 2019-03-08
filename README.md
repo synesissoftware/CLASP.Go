@@ -1,5 +1,13 @@
 # CLASP.Go
-Command-Line Argument Sorting and Parsing for Go
+**C**ommand-**L**ine **A**rgument **S**orting and **P**arsing for Go
+
+## Introduction
+
+**CLASP** stands for **C**ommand-**L**ine **A**rgument **S**orting and
+**P**arsing. The first CLASP library was a C library with a C++ wrapper. There
+have been several implementations in other languages. **CLASP.Go** is the
+Go version.
+
 
 ## Table of Contents
 
