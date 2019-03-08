@@ -349,7 +349,7 @@ func Test_single_flag(t *testing.T) {
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
-	if expected := 1; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	if expected := 1; check(t, expected == len(args1.Flags), "arguments object has wrong number of Flags: expected %v; actual %v", expected, len(args1.Flags)) {
 
 		flag0 := args1.Flags[0]
 		check(t, 1 == flag0.CmdLineIndex, "arguments has wrong command-line index")
@@ -387,7 +387,7 @@ func Test_several_flags(t *testing.T) {
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
-	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of Flags: expected %v; actual %v", expected, len(args1.Flags)) {
 
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
@@ -447,7 +447,7 @@ func Test_flags_and_values(t *testing.T) {
 		check(t, "def" == argument2.Value, "arguments has wrong argument")
 		check(t, "--value-really" == argument4.Value, "arguments has wrong argument")
 	}
-	if expected := 2; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	if expected := 2; check(t, expected == len(args1.Flags), "arguments object has wrong number of Flags: expected %v; actual %v", expected, len(args1.Flags)) {
 
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
@@ -512,7 +512,7 @@ func Test_flags_values_and_option(t *testing.T) {
 		check(t, "value1" == argument3.Value, "arguments has wrong value")
 		check(t, "--value-really" == argument4.Value, "arguments has wrong value")
 	}
-	if expected := 1; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	if expected := 1; check(t, expected == len(args1.Flags), "arguments object has wrong number of Flags: expected %v; actual %v", expected, len(args1.Flags)) {
 
 		flag0 := args1.Flags[0]
 		check(t, 2 == flag0.CmdLineIndex, "arguments has wrong command-line index")
@@ -567,7 +567,7 @@ func Test_single_hyphen_default(t *testing.T) {
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
-	if expected := 1; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	if expected := 1; check(t, expected == len(args1.Flags), "arguments object has wrong number of Flags: expected %v; actual %v", expected, len(args1.Flags)) {
 
 		flag0 := args1.Flags[0]
 		check(t, 1 == flag0.CmdLineIndex, "arguments has wrong command-line index")
@@ -605,7 +605,7 @@ func Test_single_hyphen_as_value(t *testing.T) {
 		check(t, "-" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
-	if expected := 0; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	if expected := 0; check(t, expected == len(args1.Flags), "arguments object has wrong number of Flags: expected %v; actual %v", expected, len(args1.Flags)) {
 	}
 	if expected, actual := 0, len(args1.Options); check(t, expected == actual, "arguments object has wrong number of Options: expected %v; actual %v", expected, actual) {
 	}
@@ -645,7 +645,7 @@ func Test_alias_0(t *testing.T) {
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
-	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of Flags: expected %v; actual %v", expected, len(args1.Flags)) {
 
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
@@ -699,7 +699,7 @@ func Test_alias_1(t *testing.T) {
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
-	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of Flags: expected %v; actual %v", expected, len(args1.Flags)) {
 
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
@@ -759,7 +759,7 @@ func Test_alias_2(t *testing.T) {
 		check(t, "" == argument2.Value, "arguments has wrong argument")
 		check(t, 4 == argument2.CmdLineIndex, "arguments has wrong argument")
 	}
-	if expected := 2; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	if expected := 2; check(t, expected == len(args1.Flags), "arguments object has wrong number of Flags: expected %v; actual %v", expected, len(args1.Flags)) {
 
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
@@ -899,7 +899,7 @@ func Test_groupedFlags_1(t *testing.T) {
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
-	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	if expected := 3; check(t, expected == len(args1.Flags), "arguments object has wrong number of Flags: expected %v; actual %v", expected, len(args1.Flags)) {
 
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
@@ -955,7 +955,7 @@ func Test_groupedFlags_2(t *testing.T) {
 		check(t, "" == argument0.Value, "arguments has wrong argument")
 		check(t, 1 == argument0.CmdLineIndex, "arguments has wrong argument")
 	}
-	if expected := 2; check(t, expected == len(args1.Flags), "arguments object has wrong number of flags: expected %v; actual %v", expected, len(args1.Flags)) {
+	if expected := 2; check(t, expected == len(args1.Flags), "arguments object has wrong number of Flags: expected %v; actual %v", expected, len(args1.Flags)) {
 
 		flag0 := args1.Flags[0]
 		flag1 := args1.Flags[1]
