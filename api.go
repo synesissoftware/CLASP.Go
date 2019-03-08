@@ -1,5 +1,5 @@
 /* /////////////////////////////////////////////////////////////////////////
- * File:        clasp.go
+ * File:        api.go
  *
  * Purpose:     Main file for CLASP.Go
  *

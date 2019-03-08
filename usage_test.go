@@ -90,7 +90,7 @@ func call_ShowUsage_(t *testing.T, aliases []clasp.Alias, ups clasp.UsageParams)
 func test_ShowVersion_(t *testing.T, expected string, aliases []clasp.Alias, program_name string, version interface{}, version_prefix string) {
 
 	buf			:=	new(bytes.Buffer)
-	params		:=	clasp.UsageParams { Stream: buf, ProgramName: program_name, Flags: 0, ValuesString: "", ExitCode: 0, Exiter: nil, Version: version, VersionPrefix: version_prefix }
+	params		:=	clasp.UsageParams { Stream: buf, ProgramName: program_name, UsageFlags: 0, ValuesString: "", ExitCode: 0, Exiter: nil, Version: version, VersionPrefix: version_prefix }
 
 	xc, err		:=	clasp.ShowVersion(aliases, params)
 	if err != nil {

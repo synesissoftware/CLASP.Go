@@ -1,7 +1,7 @@
 /* /////////////////////////////////////////////////////////////////////////
- * File:        clasp/cli.go
+ * File:        usage.go
  *
- * Purpose:     CLI utilities for CLASP.Go
+ * Purpose:     Usage components for CLASP.Go
  *
  * Created:     4th September 2015
  * Updated:     8th March 2019

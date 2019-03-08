@@ -32,7 +32,7 @@ func main() {
 		clasp.ShowUsage(aliases, clasp.UsageParams{
 
 			Version: ProgramVersion,
-			InfoLines: []string { "CLASP.Go Examples", "", ":version:", "" }
+			InfoLines: []string { "CLASP.Go Examples", "", ":version:", "" },
 		})
 	}
 
