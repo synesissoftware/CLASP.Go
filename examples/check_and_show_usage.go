@@ -52,5 +52,14 @@ func main() {
 
 		fmt.Printf("Debug mode is specified\n")
 	}
+
+	if unused := args.GetUnusedFlagsAndOptions(); 0 != len(unused) {
+
+		fmt.Fprintf(os.Stderr, "%s: unrecognised flag/option: %s\n", args.ProgramName, unused[0].Str())
+
+		os.Exit(1)
+	}
+
+	fmt.Printf("no flags/options specified\n")
 }
 
