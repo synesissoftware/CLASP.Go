@@ -48,14 +48,6 @@ import (
 	"strings"
 )
 
-const (
-
-	VersionMajor int16		=	0
-	VersionMinor int16		=	9
-	VersionRevision int16	=	1
-	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionRevision) << 16)
-)
-
 /* /////////////////////////////////////////////////////////////////////////
  * types
  */
@@ -128,6 +120,16 @@ type ParseParams struct {
 	Flags		ParseFlag
 }
 
+func HelpFlag() Alias {
+
+	return Alias{ Flag, "--help", nil, "Shows this helps and exits", nil, 0 }
+}
+
+func VersionFlag() Alias {
+
+	return Alias{ Flag, "--version", nil, "Shows version information and exits", nil, 0 }
+}
+
 /* /////////////////////////////////////////////////////////////////////////
  * helpers
  */
@@ -167,6 +169,19 @@ func (params ParseParams) findAlias(name string) (found bool, alias Alias, alias
 /* /////////////////////////////////////////////////////////////////////////
  * API
  */
+
+func (arg Argument) Str() string {
+
+	switch arg.Type {
+
+	case Option:
+
+		return fmt.Sprintf("%s=%s", arg.ResolvedName, arg.Value)
+	default:
+
+		return arg.ResolvedName
+	}
+}
 
 func Parse(argv []string, params ParseParams) *Arguments {
 

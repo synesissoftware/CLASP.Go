@@ -73,6 +73,9 @@ type UsageParams struct {
 	VersionPrefix			string
 	InfoLines				[]string
 	ValuesString			string
+	// If the empty string is specified, then a default string is used if
+	// any aliases are specified; if a whitespace-only string is specified,
+	// then no flags/options element is presented
 	FlagsAndOptionsString	string
 }
 
@@ -83,8 +86,8 @@ type UsageParams struct {
 const (
 
 	SkipBlanksBetweenLines  UsageFlag = 1 << iota
-	CallExitWhenDone        UsageFlag = 1 << iota
-	CallExitIfNoneZero      UsageFlag = 1 << iota
+	DontCallExit            UsageFlag = 1 << iota
+	DontCallExitIfZero      UsageFlag = 1 << iota
 )
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -97,6 +100,24 @@ type default_exiter struct {
 func (de *default_exiter) Exit(exitCode int) {
 
 	os.Exit(exitCode)
+}
+
+func should_call_Exit(params UsageParams) bool {
+
+	if 0 != (DontCallExit & params.Flags) {
+
+		return false
+	}
+
+	if 0 == params.ExitCode {
+
+		if 0 != (DontCallExitIfZero & params.Flags) {
+
+			return false
+		}
+	}
+
+	return true
 }
 
 func collect_array_as_strings(a []interface{}) []string {
@@ -191,11 +212,12 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 	program_name	:=	get_program_name(params)
 
-	if " " == params.FlagsAndOptionsString {
+	if "" == params.FlagsAndOptionsString && 0 != len(aliases) {
 
 		params.FlagsAndOptionsString = "[ ... flags and options ... ]"
 	}
-	if "" != params.FlagsAndOptionsString {
+
+	if "" != strings.TrimSpace(params.FlagsAndOptionsString) {
 
 		params.FlagsAndOptionsString = " " + params.FlagsAndOptionsString
 	}
@@ -209,7 +231,7 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 		if ":version:" == info_line {
 
-			version := generate_version_string(params, "ShowVersion")
+			version := generate_version_string(params, "ShowUsage")
 
 			fmt.Fprintf(params.Stream, "%s\n", version)
 		} else {
@@ -254,7 +276,7 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 		}
 	}
 
-	if 0 != (CallExitWhenDone & params.Flags) || (0 != params.ExitCode && 0 != (CallExitIfNoneZero & params.Flags)) {
+	if should_call_Exit(params) {
 
 		os.Exit(params.ExitCode)
 	}
@@ -264,8 +286,18 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 func ShowVersion(aliases []Alias, params UsageParams) (rc int, err error) {
 
-	stream := params.Stream
 	exiter := params.Exiter
+
+	if params.Stream == nil {
+
+		if 0 == params.ExitCode {
+
+			params.Stream = os.Stdout
+		} else {
+
+			params.Stream = os.Stderr
+		}
+	}
 
 	if exiter == nil {
 
@@ -274,9 +306,9 @@ func ShowVersion(aliases []Alias, params UsageParams) (rc int, err error) {
 
 	version := generate_version_string(params, "ShowVersion")
 
-	fmt.Fprintf(stream, "%s\n", version)
+	fmt.Fprintf(params.Stream, "%s\n", version)
 
-	if 0 != (CallExitWhenDone & params.Flags) || (0 != params.ExitCode && 0 != (CallExitIfNoneZero & params.Flags)) {
+	if should_call_Exit(params) {
 
 		exiter.Exit(params.ExitCode)
 	}
