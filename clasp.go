@@ -131,6 +131,45 @@ func VersionFlag() Alias {
 	return Alias{ Flag, "--version", nil, "Shows version information and exits", nil, 0 }
 }
 
+func (at ArgType) String() string {
+
+	switch(at) {
+
+	case Flag:
+
+		return "Flag"
+	case Option, optionViaAlias:
+
+		return "Option"
+	case Value:
+
+		return "Value"
+	default:
+
+		return fmt.Sprintf("<%T %d>", at, at)
+	}
+}
+
+func (alias Alias) String() string {
+
+	return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, ValueSet=%v, BitFlags=0x%x }>", alias, alias.Type, alias.Name, alias.Aliases, alias.Help, alias.ValueSet, alias.BitFlags)
+}
+
+func (argument Argument) String() string {
+
+	return fmt.Sprintf("<%T{ ResolvedName=%q, GivenName=%q, Value=%q, Type=%v, CmdLineIndex=%d, NumGivenHyphens=%d, AliasIndex=%d, Flags=0x%x, used=%t }>", argument, argument.ResolvedName, argument.GivenName, argument.Value, argument.Type, argument.CmdLineIndex, argument.NumGivenHyphens, argument.AliasIndex, argument.Flags, argument.used_ != 0)
+}
+
+func (arguments Arguments) String() string {
+
+	return fmt.Sprintf("<%T{ Arguments=%v, Flags=%v, Options=%v, Values=%v, Argv=%v, ProgramName=%q }>", arguments, arguments.Arguments, arguments.Flags, arguments.Options, arguments.Values, arguments.Argv, arguments.ProgramName)
+}
+
+func (params ParseParams) String() string {
+
+	return fmt.Sprintf("<%T{ Aliases=%v, Flags=0x%x }>", params, params.Aliases, params.Flags)
+}
+
 /* /////////////////////////////////////////////////////////////////////////
  * helpers
  */

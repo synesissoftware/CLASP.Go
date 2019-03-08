@@ -44,9 +44,11 @@ package clasp
 const (
 
 	VersionMajor int16		=	0
-	VersionMinor int16		=	10
-	VersionRevision int16	=	3
-	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionRevision) << 16)
+	VersionMinor int16		=	11
+	VersionPatch int16	=	1
+	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionPatch) << 16)
+
+	VersionRevision int16	=	VersionPatch
 )
 
 /* ///////////////////////////// end of file //////////////////////////// */

@@ -66,7 +66,7 @@ type UsageParams struct {
 
 	Stream					io.Writer
 	ProgramName				string
-	Flags					UsageFlag
+	UsageFlags				UsageFlag
 	ExitCode				int
 	Exiter					Exiter
 	Version					interface{}
@@ -77,6 +77,11 @@ type UsageParams struct {
 	// any aliases are specified; if a whitespace-only string is specified,
 	// then no flags/options element is presented
 	FlagsAndOptionsString	string
+}
+
+func (params UsageParams) String() string {
+
+	return fmt.Sprintf("<%T{ Stream=%v, ProgramName=%q, UsageFlags=0x%x, ExitCode=%d, Exiter=%v, Version=%v, VersionPrefix=%q, InfoLines=%v, ValuesString=%q, FlagsAndOptionsString=%q }>", params, params.Stream, params.ProgramName, params.UsageFlags, params.ExitCode, params.Exiter, params.Version, params.VersionPrefix, params.InfoLines, params.ValuesString, params.FlagsAndOptionsString)
 }
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -104,14 +109,14 @@ func (de *default_exiter) Exit(exitCode int) {
 
 func should_call_Exit(params UsageParams) bool {
 
-	if 0 != (DontCallExit & params.Flags) {
+	if 0 != (DontCallExit & params.UsageFlags) {
 
 		return false
 	}
 
 	if 0 == params.ExitCode {
 
-		if 0 != (DontCallExitIfZero & params.Flags) {
+		if 0 != (DontCallExitIfZero & params.UsageFlags) {
 
 			return false
 		}
@@ -269,7 +274,7 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 				fmt.Fprintf(params.Stream, "\t%v=<value>\n", a.Name)
 			}
 			fmt.Fprintf(params.Stream, "\t\t%v\n", a.Help)
-			if 0 == (SkipBlanksBetweenLines & params.Flags) {
+			if 0 == (SkipBlanksBetweenLines & params.UsageFlags) {
 
 				fmt.Fprintf(params.Stream, "\n")
 			}
