@@ -1,10 +1,10 @@
 # CLASP.Go Example - **show_usage_and_version**
 
-### Example1 - show_usage_and_version.go
+## Summary
 
+Example illustrating various kinds of *flag* and *option* aliases, including the combination of short-names.
 
-
-### Source
+## Source
 
 ```Go
 // examples/flag_and_option_aliases.go
@@ -88,7 +88,7 @@ func main() {
 }
 ```
 
-### Usage
+## Usage
 
 #### No arguments
 
@@ -103,7 +103,7 @@ it gives the output:
 ```
 ```
 
-#### Show usage
+### Show usage
 
 If executed with the arguments
 
@@ -141,7 +141,7 @@ flags/options:
         Shows version information and exits
 ```
 
-#### Specify flags and options in long-form
+### Specify flags and options in long-form
 
 If executed with the arguments
 
@@ -156,7 +156,7 @@ verbosity is specified as: silent
 Debug mode is specified
 ```
 
-#### Specify flags and options in short-form
+### Specify flags and options in short-form
 
 If executed with the arguments
 
@@ -171,7 +171,7 @@ verbosity is specified as: silent
 Debug mode is specified
 ```
 
-#### Specify flags and options in short-form, including an alias for an option-with-value
+### Specify flags and options in short-form, including an alias for an option-with-value
 
 If executed with the arguments
 
@@ -186,7 +186,7 @@ verbosity is specified as: chatty
 Debug mode is specified
 ```
 
-#### Specify flags and options with combined short-form
+### Specify flags and options with combined short-form
 
 If executed with the arguments
 
@@ -200,7 +200,4 @@ it gives the (same) output:
 verbosity is specified as: chatty
 Debug mode is specified
 ```
-
-
-
 

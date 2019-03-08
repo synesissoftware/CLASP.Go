@@ -1,10 +1,10 @@
 # CLASP.Go Example - **show_usage_and_version**
 
-### Example1 - show_usage_and_version.go
+## Summary
 
+Simple example supporting ```--help``` and ```--version```.
 
-
-### Source
+## Source
 
 ```Go
 // examples/show_usage_and_version.go
@@ -67,9 +67,9 @@ func main() {
 }
 ```
 
-### Usage
+## Usage
 
-#### No arguments
+### No arguments
 
 If executed with no arguments
 
@@ -83,7 +83,7 @@ it gives the output:
 no flags specified
 ```
 
-#### Show usage
+### Show usage
 
 If executed with the arguments
 
@@ -109,7 +109,7 @@ flags/options:
         Shows version information and exits
 ```
 
-#### Show version
+### Show version
 
 If executed with the arguments
 
@@ -123,7 +123,7 @@ it gives the output:
 show_usage_and_version 0.0.1
 ```
 
-#### Unknown option
+### Unknown option
 
 If executed with the arguments
 
@@ -138,3 +138,4 @@ show_usage_and_version: unrecognised flag/option: --unknown=value
 ```
 
 with an exit code of 1
+
