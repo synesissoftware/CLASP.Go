@@ -1,4 +1,4 @@
-// examples/check_and_show_usage.go
+// examples/flag_and_option_aliases.go
 
 package main
 
@@ -16,6 +16,8 @@ const (
 )
 
 func main() {
+
+	// Specify aliases, parse, and checking standard flags
 
 	flag_Debug			:=	clasp.Alias{ clasp.Flag, "--debug", []string{ "-d" }, "runs in Debug mode", nil, 0 }
 	option_Verbosity	:=	clasp.Alias{ clasp.Option, "--verbosity", []string{ "-v" }, "specifies the verbosity", []string{ "terse", "quiet", "silent", "chatty" }, 0 }
@@ -35,7 +37,11 @@ func main() {
 
 	if args.FlagIsSpecified(clasp.HelpFlag()) {
 
-		clasp.ShowUsage(aliases, clasp.UsageParams{})
+		clasp.ShowUsage(aliases, clasp.UsageParams{
+
+			Version: ProgramVersion,
+			InfoLines: []string { "CLASP.Go Examples", "", ":version:", "" },
+		})
 	}
 
 	if args.FlagIsSpecified(clasp.VersionFlag()) {
@@ -43,15 +49,21 @@ func main() {
 		clasp.ShowVersion(aliases, clasp.UsageParams{ Version: ProgramVersion })
 	}
 
-	if o_v, found := args.LookupOption("--verbosity"); found {
 
-		fmt.Printf("verbosity is specified as: %s\n", o_v.Value)
+	// Program-specific processing of flags/options
+
+	if opt, found := args.LookupOption("--verbosity"); found {
+
+		fmt.Printf("verbosity is specified as: %s\n", opt.Value)
 	}
 
 	if args.FlagIsSpecified("--debug") {
 
 		fmt.Printf("Debug mode is specified\n")
 	}
+
+
+	// Check for any unrecognised flags or options
 
 	if unused := args.GetUnusedFlagsAndOptions(); 0 != len(unused) {
 
@@ -60,6 +72,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Printf("no flags/options specified\n")
+
+	// Finish normal processing
+
+	return
 }
 

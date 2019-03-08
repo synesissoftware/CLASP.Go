@@ -72,11 +72,12 @@ type ArgType int
 
 const (
 
-	Flag	ArgType = 1
-	Option	ArgType = 2
-	Value	ArgType = 3
+	Flag			ArgType = 1
+	Option			ArgType = 2
+	Value			ArgType = 3
 
-	int_1_	ArgType = -99
+	optionViaAlias	ArgType = -98
+	int_1_			ArgType = -99
 )
 
 type Alias struct {
@@ -256,6 +257,8 @@ func Parse(argv []string, params ParseParams) *Arguments {
 					arg.GivenName		=	nv[0]
 					arg.ResolvedName	=	nv[0]
 					arg.Value			=	nv[1]
+
+					// TODO: handle "-<opt-alias>=value"
 				} else {
 
 					// Here we have to be flexible, and examine
@@ -276,7 +279,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 							res_nm	:=	resolvedName[:ix_equals]
 							value	:=	resolvedName[ix_equals + 1:]
 
-							argType			=	Option
+							argType			=	optionViaAlias
 							s				=	resolvedName
 							resolvedName	=	res_nm
 							arg.Value		=	value
@@ -338,13 +341,25 @@ func Parse(argv []string, params ParseParams) *Arguments {
 						}
 					}
 
-					arg.Type			=	argType
+					switch argType {
+
+					case optionViaAlias:
+
+						arg.Type	=	Option
+					default:
+
+						arg.Type	=	argType
+					}
+
 					arg.GivenName		=	s
 					arg.ResolvedName	=	resolvedName
 
-					if Option == argType {
+					if Option == arg.Type {
 
-						nextIsOptValue	=	true
+						if optionViaAlias != argType {
+
+							nextIsOptValue	=	true
+						}
 					} else {
 
 						if isSingle	&& (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
