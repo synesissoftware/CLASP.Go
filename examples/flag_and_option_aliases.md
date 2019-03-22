@@ -1,4 +1,4 @@
-# CLASP.Go Example - **show_usage_and_version**
+# CLASP.Go Example - **flag_and_option_aliases**
 
 ## Summary
 
@@ -90,7 +90,7 @@ func main() {
 
 ## Usage
 
-#### No arguments
+### No arguments
 
 If executed with no arguments
 

@@ -8,7 +8,6 @@
 have been several implementations in other languages. **CLASP.Go** is the
 Go version.
 
-
 ## Table of Contents
 
 1. [Introduction](#introduction)
@@ -16,6 +15,10 @@ Go version.
 3. [Components](#components)
 4. [Examples](#examples)
 5. [Project Information](#project-information)
+
+## Introduction
+
+T.B.C.
 
 ## Installation
 

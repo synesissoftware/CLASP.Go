@@ -687,7 +687,7 @@ func Test_alias_1(t *testing.T) {
 
 	aliases := []clasp.Alias {
 
-		{ clasp.Flag, "--flag2", []string { "-f2" }, "second flag", nil, 0 },
+		{ clasp.Flag, "--flag2", []string { "-f2" }, "second flag", nil, 0, nil },
 	}
 	argv := []string { "path/blah", "-f", "-f2", "---flag3" }
 
@@ -741,7 +741,7 @@ func Test_alias_2(t *testing.T) {
 
 	aliases := []clasp.Alias {
 
-		{ clasp.Option, "--flag2", []string { "-f2" }, "f2-option", nil, 0 },
+		{ clasp.Option, "--flag2", []string { "-f2" }, "f2-option", nil, 0, nil },
 	}
 	argv := []string { "path/blah", "-f", "-f2", "abc", "---flag3" }
 
@@ -864,9 +864,9 @@ func Test_CheckAllFlagBits(t *testing.T) {
 
 	aliases := []clasp.Alias {
 
-		{ clasp.Flag, "-f1", nil, "", nil, 0x01 },
-		{ clasp.Flag, "-f2", nil, "", nil, 0x02 },
-		{ clasp.Flag, "-f4", nil, "", nil, 0x04 },
+		{ clasp.Flag, "-f1", nil, "", nil, 0x01, nil },
+		{ clasp.Flag, "-f2", nil, "", nil, 0x02, nil },
+		{ clasp.Flag, "-f4", nil, "", nil, 0x04, nil },
 	}
 
 	argv1 := []string { "path/blah", "-f1", "-f2", "-f4" }
@@ -885,9 +885,9 @@ func Test_groupedFlags_1(t *testing.T) {
 
 	aliases := []clasp.Alias {
 
-		{ clasp.Flag, "--high", []string { "-h" }, "second flag", nil, 0 },
-		{ clasp.Flag, "--mid",  []string { "-m" }, "second flag", nil, 0 },
-		{ clasp.Flag, "--low",  []string { "-l" }, "second flag", nil, 0 },
+		{ clasp.Flag, "--high", []string { "-h" }, "second flag", nil, 0, nil },
+		{ clasp.Flag, "--mid",  []string { "-m" }, "second flag", nil, 0, nil },
+		{ clasp.Flag, "--low",  []string { "-l" }, "second flag", nil, 0, nil },
 	}
 	argv := []string { "path/blah", "-hm", "-l" }
 
@@ -941,9 +941,9 @@ func Test_groupedFlags_2(t *testing.T) {
 
 	aliases := []clasp.Alias {
 
-		{ clasp.Flag, "--high", []string { "-h" }, "second flag", nil, 0 },
-		{ clasp.Flag, "--mid",  []string { "-m" }, "second flag", nil, 0 },
-		{ clasp.Flag, "--low",  []string { "-l" }, "second flag", nil, 0 },
+		{ clasp.Flag, "--high", []string { "-h" }, "second flag", nil, 0, nil },
+		{ clasp.Flag, "--mid",  []string { "-m" }, "second flag", nil, 0, nil },
+		{ clasp.Flag, "--low",  []string { "-l" }, "second flag", nil, 0, nil },
 	}
 	argv := []string { "path/blah", "-hmx", "-l" }
 
@@ -990,8 +990,8 @@ func Test_flag_alias_of_option_with_value(t *testing.T) {
 
 	aliases	:=	[]clasp.Alias {
 
-		{ clasp.Option, "--verbosity", nil, "Specifies the verbosity", []string{ "low", "medium", "high" }, 0 },
-		{ clasp.Flag, "--verbosity=high", []string{ "-v" }, "", nil, 0 },
+		{ clasp.Option, "--verbosity", nil, "Specifies the verbosity", []string{ "low", "medium", "high" }, 0, nil },
+		{ clasp.Flag, "--verbosity=high", []string{ "-v" }, "", nil, 0, nil },
 	}
 	argv	:=	[]string{ "path/blah", "-v" }
 

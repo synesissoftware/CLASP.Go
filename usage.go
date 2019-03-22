@@ -4,7 +4,7 @@
  * Purpose:     Usage components for CLASP.Go
  *
  * Created:     4th September 2015
- * Updated:     8th March 2019
+ * Updated:     22nd March 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -273,7 +273,18 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 				}
 				fmt.Fprintf(params.Stream, "\t%v=<value>\n", a.Name)
 			}
+
 			fmt.Fprintf(params.Stream, "\t\t%v\n", a.Help)
+
+			if 0 != len(a.ValueSet) {
+
+				fmt.Fprintf(params.Stream, "\t\twhere <value> one of:\n")
+				for j := 0; j != len(a.ValueSet); j++ {
+
+					fmt.Fprintf(params.Stream, "\t\t\t%v\n", a.ValueSet[j])
+				}
+			}
+
 			if 0 == (SkipBlanksBetweenLines & params.UsageFlags) {
 
 				fmt.Fprintf(params.Stream, "\n")

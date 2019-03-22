@@ -4,7 +4,7 @@
  * Purpose:     Main file for CLASP.Go
  *
  * Created:     15th August 2015
- * Updated:     8th March 2019
+ * Updated:     22nd March 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -88,6 +88,7 @@ type Alias struct {
 	Help			string
 	ValueSet		[]string
 	BitFlags		int
+	Extras			map[string]interface{}
 }
 
 type Argument struct {
@@ -123,12 +124,12 @@ type ParseParams struct {
 
 func HelpFlag() Alias {
 
-	return Alias{ Flag, "--help", nil, "Shows this helps and exits", nil, 0 }
+	return Alias{ Flag, "--help", nil, "Shows this helps and exits", nil, 0, nil }
 }
 
 func VersionFlag() Alias {
 
-	return Alias{ Flag, "--version", nil, "Shows version information and exits", nil, 0 }
+	return Alias{ Flag, "--version", nil, "Shows version information and exits", nil, 0, nil }
 }
 
 func (at ArgType) String() string {
