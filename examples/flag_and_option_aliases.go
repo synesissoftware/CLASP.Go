@@ -19,9 +19,9 @@ func main() {
 
 	// Specify aliases, parse, and checking standard flags
 
-	flag_Debug			:=	clasp.Alias{ clasp.Flag, "--debug", []string{ "-d" }, "runs in Debug mode", nil, 0 }
-	option_Verbosity	:=	clasp.Alias{ clasp.Option, "--verbosity", []string{ "-v" }, "specifies the verbosity", []string{ "terse", "quiet", "silent", "chatty" }, 0 }
-	flag_Chatty			:=	clasp.Alias{ clasp.Flag, "--verbosity=chatty", []string{ "-c" }, "", nil, 0 }
+	flag_Debug			:=	clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d")
+	option_Verbosity	:=	clasp.Option("--verbosity").SetHelp("specifies the verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty")
+	flag_Chatty			:=	clasp.AliasesFor("--verbosity=chatty", "-c")
 
 	aliases	:= []clasp.Alias {
 

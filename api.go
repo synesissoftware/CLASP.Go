@@ -4,7 +4,7 @@
  * Purpose:     Main file for CLASP.Go
  *
  * Created:     15th August 2015
- * Updated:     22nd March 2019
+ * Updated:     24th March 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -72,9 +72,9 @@ type ArgType int
 
 const (
 
-	Flag			ArgType = 1
-	Option			ArgType = 2
-	Value			ArgType = 3
+	FlagType		ArgType = 1
+	OptionType		ArgType = 2
+	ValueType		ArgType = 3
 
 	optionViaAlias	ArgType = -98
 	int_1_			ArgType = -99
@@ -99,7 +99,7 @@ type Argument struct {
 	Type			ArgType
 	CmdLineIndex	int
 	NumGivenHyphens	int
-	AliasIndex		int
+	ArgumentAlias	*Alias
 	Flags			int
 
 	used_			int
@@ -113,7 +113,7 @@ type Arguments struct {
 	Values		[]*Argument
 	Argv		[]string
 	ProgramName	string
-	aliases_	[]Alias
+	aliases_	[]*Alias
 }
 
 type ParseParams struct {
@@ -122,27 +122,29 @@ type ParseParams struct {
 	Flags		ParseFlag
 }
 
+// Obtains, by value, an Alias containing a stock specification of a '--help' flag
 func HelpFlag() Alias {
 
-	return Alias{ Flag, "--help", nil, "Shows this helps and exits", nil, 0, nil }
+	return Alias{ FlagType, "--help", nil, "Shows this helps and exits", nil, 0, nil }
 }
 
+// Obtains, by value, an Alias containing a stock specification of a '--version' flag
 func VersionFlag() Alias {
 
-	return Alias{ Flag, "--version", nil, "Shows version information and exits", nil, 0, nil }
+	return Alias{ FlagType, "--version", nil, "Shows version information and exits", nil, 0, nil }
 }
 
 func (at ArgType) String() string {
 
 	switch(at) {
 
-	case Flag:
+	case FlagType:
 
 		return "Flag"
-	case Option, optionViaAlias:
+	case OptionType, optionViaAlias:
 
 		return "Option"
-	case Value:
+	case ValueType:
 
 		return "Value"
 	default:
@@ -153,12 +155,12 @@ func (at ArgType) String() string {
 
 func (alias Alias) String() string {
 
-	return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, ValueSet=%v, BitFlags=0x%x }>", alias, alias.Type, alias.Name, alias.Aliases, alias.Help, alias.ValueSet, alias.BitFlags)
+	return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, ValueSet=%v, BitFlags=0x%x, Extras=%v }>", alias, alias.Type, alias.Name, alias.Aliases, alias.Help, alias.ValueSet, alias.BitFlags, alias.Extras)
 }
 
 func (argument Argument) String() string {
 
-	return fmt.Sprintf("<%T{ ResolvedName=%q, GivenName=%q, Value=%q, Type=%v, CmdLineIndex=%d, NumGivenHyphens=%d, AliasIndex=%d, Flags=0x%x, used=%t }>", argument, argument.ResolvedName, argument.GivenName, argument.Value, argument.Type, argument.CmdLineIndex, argument.NumGivenHyphens, argument.AliasIndex, argument.Flags, argument.used_ != 0)
+	return fmt.Sprintf("<%T{ ResolvedName=%q, GivenName=%q, Value=%q, Type=%v, CmdLineIndex=%d, NumGivenHyphens=%d, ArgumentAlias=%v, Flags=0x%x, used=%t }>", argument, argument.ResolvedName, argument.GivenName, argument.Value, argument.Type, argument.CmdLineIndex, argument.NumGivenHyphens, argument.ArgumentAlias, argument.Flags, argument.used_ != 0)
 }
 
 func (arguments Arguments) String() string {
@@ -171,11 +173,86 @@ func (params ParseParams) String() string {
 	return fmt.Sprintf("<%T{ Aliases=%v, Flags=0x%x }>", params, params.Aliases, params.Flags)
 }
 
+/* builders */
+
+// Creates a flag alias, with the given name
+func Flag(name string) (result Alias) {
+
+	result.Type = FlagType
+	result.Name = name
+
+	return
+}
+
+// Creates an option alias, with the given name
+func Option(name string) (result Alias) {
+
+	result.Type = OptionType
+	result.Name = name
+
+	return
+}
+
+// Creates an alias for an actual flag/option, with 1 or more aliases
+func AliasesFor(actual string, alias0 string, other_aliases ...string) (result Alias) {
+
+	result.Type = FlagType
+	result.Name = actual
+	result.Aliases = append([]string { alias0 }, other_aliases...)
+
+	return
+}
+
+// Builder method to set the help for an alias
+func (alias Alias) SetHelp(help string) (Alias) {
+
+	alias.Help = help
+
+	return alias
+}
+
+// Builder method to set the values for an option alias
+func (alias Alias) SetValues(values ...string) (Alias) {
+
+	alias.ValueSet = values
+
+	return alias
+}
+
+// Sets the alias
+func (alias Alias) SetAlias(s string) (Alias) {
+
+	alias.Aliases = []string { s }
+
+	return alias
+}
+
+// Sets one or more aliases
+func (alias Alias) SetAliases(aliases ...string) (Alias) {
+
+	alias.Aliases = aliases
+
+	return alias
+}
+
+// Builder method to an Extras entry
+func (alias Alias) SetExtra(key string, value interface{}) (Alias) {
+
+	if alias.Extras == nil {
+
+		alias.Extras = make(map[string]interface{})
+	}
+
+	alias.Extras[key] = value
+
+	return alias
+}
+
 /* /////////////////////////////////////////////////////////////////////////
  * helpers
  */
 
-func (params ParseParams) findAlias(name string) (found bool, alias Alias, aliasIndex int) {
+func (params *ParseParams) findAlias(name string) (found bool, alias *Alias, aliasIndex int) {
 
 	// Algorithm:
 	//
@@ -187,7 +264,7 @@ func (params ParseParams) findAlias(name string) (found bool, alias Alias, alias
 
 		if name == a.Name {
 
-			return true, a, i
+			return true, &a, i
 		}
 	}
 
@@ -197,25 +274,28 @@ func (params ParseParams) findAlias(name string) (found bool, alias Alias, alias
 
 			if name == n {
 
-				return true, a, i
+				return true, &a, i
 			}
 		}
 	}
 
-	var dummy Alias
-
-	return false, dummy, -1
+	return false, nil, -1
 }
 
 /* /////////////////////////////////////////////////////////////////////////
  * API
  */
 
+func (arg *Argument) Use() {
+
+	arg.used_ = 1
+}
+
 func (arg Argument) Str() string {
 
 	switch arg.Type {
 
-	case Option:
+	case OptionType:
 
 		return fmt.Sprintf("%s=%s", arg.ResolvedName, arg.Value)
 	default:
@@ -258,7 +338,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 		arg.CmdLineIndex	=	i + 1
 		arg.Flags			=	int(params.Flags)
-		arg.AliasIndex		=	-1
+		arg.ArgumentAlias	=	nil
 
 		numHyphens			:=	0
 		isSingle			:=	false
@@ -286,14 +366,14 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 			case 0:
 
-				arg.Type				=	Value
+				arg.Type				=	ValueType
 				arg.Value				=	s
 			default:
 
-				nv					:=	strings.SplitN(s, "=", 2)
+				nv := strings.SplitN(s, "=", 2)
 				if len(nv) > 1 {
 
-					arg.Type			=	Option
+					arg.Type			=	OptionType
 					arg.GivenName		=	nv[0]
 					arg.ResolvedName	=	nv[0]
 					arg.Value			=	nv[1]
@@ -306,13 +386,13 @@ func Parse(argv []string, params ParseParams) *Arguments {
 					// option
 
 					resolvedName		:=	s
-					argType				:=	Flag
+					argType				:=	FlagType
 
-					if found, alias, aliasIndex := params.findAlias(s); found {
+					if found, alias, _ := params.findAlias(s); found {
 
-						resolvedName	=	alias.Name
-						argType			=	alias.Type
-						arg.AliasIndex	=	aliasIndex
+						resolvedName		=	alias.Name
+						argType				=	alias.Type
+						arg.ArgumentAlias	=	alias
 
 						if ix_equals := strings.Index(resolvedName, "="); ix_equals >= 0 {
 
@@ -343,16 +423,16 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 							testAlias	:=	fmt.Sprintf("-%c", c)
 
-							if compoundFound, compoundAlias, compoundAliasIndex := params.findAlias(testAlias); compoundFound && compoundAlias.Type == Flag {
+							if compoundFound, compoundAlias, _ := params.findAlias(testAlias); compoundFound && compoundAlias.Type == FlagType {
 
 								var compoundArg Argument
 
 								compoundArg.ResolvedName	=	compoundAlias.Name
 								compoundArg.GivenName		=	s
 								compoundArg.Value			=	""
-								compoundArg.Type			=	Flag
+								compoundArg.Type			=	FlagType
 								compoundArg.CmdLineIndex	=	arg.CmdLineIndex
-								compoundArg.AliasIndex		=	compoundAliasIndex
+								compoundArg.ArgumentAlias	=	compoundAlias
 								compoundArg.Flags			=	arg.Flags
 
 								if ix_equals := strings.Index(compoundArg.ResolvedName, "="); ix_equals >= 0 {
@@ -360,10 +440,17 @@ func Parse(argv []string, params ParseParams) *Arguments {
 									res_nm	:=	compoundArg.ResolvedName[:ix_equals]
 									value	:=	compoundArg.ResolvedName[ix_equals + 1:]
 
-									compoundArg.Type			=	Option
+									compoundArg.Type			=	OptionType
 									s							=	compoundArg.ResolvedName
 									compoundArg.ResolvedName	=	res_nm
 									compoundArg.Value			=	value
+
+									// Now need to look up the actual underlying alias
+
+									if actualFound, actualAlias, _ := params.findAlias(res_nm); actualFound {
+
+										compoundArg.ArgumentAlias	=	actualAlias
+									}
 								}
 
 								compoundArguments			=	append(compoundArguments, &compoundArg)
@@ -385,7 +472,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 					case optionViaAlias:
 
-						arg.Type	=	Option
+						arg.Type	=	OptionType
 					default:
 
 						arg.Type	=	argType
@@ -394,7 +481,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 					arg.GivenName		=	s
 					arg.ResolvedName	=	resolvedName
 
-					if Option == arg.Type {
+					if OptionType == arg.Type {
 
 						if optionViaAlias != argType {
 
@@ -404,7 +491,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 						if isSingle	&& (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
 
-							arg.Type	=	Value
+							arg.Type	=	ValueType
 							arg.Value	=	s
 						}
 					}
@@ -418,19 +505,28 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 		switch(arg.Type) {
 
-			case Flag:
+			case FlagType:
 
 				args.Flags		=	append(args.Flags, arg)
-			case Option:
+			case OptionType:
 
 				args.Options	=	append(args.Options, arg)
-			case Value:
+			case ValueType:
 
 				args.Values		=	append(args.Values, arg)
 		}
 	}
 
-	args.aliases_	=	params.Aliases
+	args.aliases_	=	make([]*Alias, len(params.Aliases))
+
+	for i, a := range(params.Aliases) {
+
+		var p *Alias = new(Alias)
+
+		*p = a
+
+		args.aliases_[i] = p
+	}
 
 	return args
 }
@@ -450,11 +546,11 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 
 		switch a.Type {
 
-			case Option:
+			case OptionType:
 
 				// TODO: issue warning
 				fallthrough
-			case Flag:
+			case FlagType:
 
 				name	=	a.Name
 				found	=	true
@@ -483,6 +579,50 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 	return false
 }
 
+func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
+
+	name	:=	""
+	found	:=	false
+
+	if s, is_string := id.(string); is_string {
+
+		name	=	s
+		found	=	true
+	}
+
+	if a, is_Alias := id.(Alias); is_Alias {
+
+		switch a.Type {
+
+			case FlagType:
+
+				name	=	a.Name
+				found	=	true
+			default:
+
+				panic(fmt.Sprintf("invoked LookupFlag() passing a non-Flag Alias '%v'", a))
+		}
+	}
+
+	if !found && nil != id {
+
+		panic(fmt.Sprintf("invoked LookupFlag() passing a value - '%v' - that is neither string nor alias", id))
+	}
+
+	for i, o := range args.Flags {
+
+		// TODO: mark as used
+		_ = i
+		if name == o.ResolvedName {
+
+			o.used_ = 1
+			return o, true
+		}
+	}
+
+	return nil, false
+}
+
 func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 
 	name	:=	""
@@ -498,7 +638,7 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 
 		switch a.Type {
 
-			case Option:
+			case OptionType:
 
 				name	=	a.Name
 				found	=	true
@@ -565,10 +705,10 @@ func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
 
 		switch a.Type {
 
-			case Flag:
+			case FlagType:
 
 				fallthrough
-			case Option:
+			case OptionType:
 
 				if 0 == a.used_ {
 
@@ -581,7 +721,7 @@ func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
 	return unused
 }
 
-func (args *Arguments) CheckAllFlagBits(flags *int) int {
+func check_flag_bits(args *Arguments, flags *int, only_unused bool) int {
 
 	var dummy_ int
 
@@ -594,20 +734,41 @@ func (args *Arguments) CheckAllFlagBits(flags *int) int {
 
 	for _, arg := range args.Flags {
 
-		if 0 == arg.used_ {
+		if !only_unused || 0 == arg.used_ {
 
 			for _, al := range args.aliases_ {
 
 				if al.Name == arg.ResolvedName {
 
 					*flags |= al.BitFlags
-					arg.used_ = 1
+					if only_unused {
+
+						arg.used_ = 1
+					}
 				}
 			}
 		}
 	}
 
 	return *flags
+}
+
+// Examines the unused parsed flags held by the Arguments instance and
+// combines the BitFlags values of their corresponding aliases.
+//
+// NOTE: Marks any of the flags as used
+func (args *Arguments) CheckUnusedFlagBits(flags *int) int {
+
+	return check_flag_bits(args, flags, true)
+}
+
+// Examines all parsed flags held by the Arguments instance and combines
+// the BitFlags values of their corresponding aliases.
+//
+// NOTE: Does NOT mark any of the flags as used
+func (args *Arguments) CheckAllFlagBits(flags *int) int {
+
+	return check_flag_bits(args, flags, false)
 }
 
 func Aliases(aliases...string) []string {

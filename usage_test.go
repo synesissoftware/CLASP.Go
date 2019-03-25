@@ -224,7 +224,7 @@ func Test_ShowUsage_3(t *testing.T) {
 
 	aliases						:=	[]clasp.Alias{
 
-		{ clasp.Flag, "--high", []string { "-h" }, "makes things high", nil, 0, nil },
+		{ clasp.FlagType, "--high", []string { "-h" }, "makes things high", nil, 0, nil },
 	}
 	values_string				:=	""
 	flags_and_options_string	:=	""

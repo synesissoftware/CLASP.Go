@@ -194,13 +194,13 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 		switch a.Type {
 
-		case Flag, Option:
+		case FlagType, OptionType:
 
 			;
 
 		default:
 
-			panic(fmt.Sprintf("alias[%d] - '%v' - is an instance of type %T, but must be instance of either %T or %T!", i, a, a, Flag, Option))
+			panic(fmt.Sprintf("alias[%d] - '%v' - is an instance of type %T, but must be instance of either %T or %T!", i, a, a, FlagType, OptionType))
 		}
 	}
 
@@ -257,7 +257,7 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 			switch a.Type {
 
-			case Flag:
+			case FlagType:
 
 				for _, b := range a.Aliases {
 
@@ -265,7 +265,7 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 				}
 				fmt.Fprintf(params.Stream, "\t%v\n", a.Name)
 
-			case Option:
+			case OptionType:
 
 				for _, b := range a.Aliases {
 

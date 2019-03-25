@@ -12,7 +12,7 @@ import (
 
 func Test_String_of_ArgType_Flag(t *testing.T) {
 
-	at_F		:=	clasp.Flag
+	at_F		:=	clasp.FlagType
 
 	expected	:=	"Flag"
 	actual		:=	at_F.String()
@@ -25,7 +25,7 @@ func Test_String_of_ArgType_Flag(t *testing.T) {
 
 func Test_String_of_ArgType_Option(t *testing.T) {
 
-	at_F		:=	clasp.Option
+	at_F		:=	clasp.OptionType
 
 	expected	:=	"Option"
 	actual		:=	at_F.String()
@@ -38,7 +38,7 @@ func Test_String_of_ArgType_Option(t *testing.T) {
 
 func Test_String_of_ArgType_Value(t *testing.T) {
 
-	at_F		:=	clasp.Value
+	at_F		:=	clasp.ValueType
 
 	expected	:=	"Value"
 	actual		:=	at_F.String()
@@ -69,7 +69,7 @@ func Test_String_of_Alias_1(t *testing.T) {
 
 	alias		:=	clasp.Alias{}
 
-	expected	:=	"<clasp.Alias{ Type=<clasp.ArgType 0>, Name=\"\", Aliases=[], Help=\"\", ValueSet=[], BitFlags=0x0 }>"
+	expected	:=	"<clasp.Alias{ Type=<clasp.ArgType 0>, Name=\"\", Aliases=[], Help=\"\", ValueSet=[], BitFlags=0x0, Extras=map[] }>"
 	actual		:=	alias.String()
 
 	if expected != actual {
@@ -80,9 +80,9 @@ func Test_String_of_Alias_1(t *testing.T) {
 
 func Test_String_of_Alias_2(t *testing.T) {
 
-	alias		:=	clasp.Alias{ Help: "help, plz", BitFlags: 0x1234, Name: "--flagpole", Type: clasp.Option }
+	alias		:=	clasp.Alias{ Help: "help, plz", BitFlags: 0x1234, Name: "--flagpole", Type: clasp.OptionType }
 
-	expected	:=	"<clasp.Alias{ Type=Option, Name=\"--flagpole\", Aliases=[], Help=\"help, plz\", ValueSet=[], BitFlags=0x1234 }>"
+	expected	:=	"<clasp.Alias{ Type=Option, Name=\"--flagpole\", Aliases=[], Help=\"help, plz\", ValueSet=[], BitFlags=0x1234, Extras=map[] }>"
 	actual		:=	alias.String()
 
 	if expected != actual {
@@ -101,13 +101,13 @@ func Test_String_of_Argument_1(t *testing.T) {
 		ResolvedName: "--help",
 		GivenName: "--help",
 		Value: "",
-		Type: clasp.Flag,
+		Type: clasp.FlagType,
 		CmdLineIndex: 1,
 		NumGivenHyphens: 2,
 		Flags: 0x1234,
 	}
 
-	expected	:=	"<clasp.Argument{ ResolvedName=\"--help\", GivenName=\"--help\", Value=\"\", Type=Flag, CmdLineIndex=1, NumGivenHyphens=2, AliasIndex=0, Flags=0x1234, used=false }>"
+	expected	:=	"<clasp.Argument{ ResolvedName=\"--help\", GivenName=\"--help\", Value=\"\", Type=Flag, CmdLineIndex=1, NumGivenHyphens=2, ArgumentAlias=<nil>, Flags=0x1234, used=false }>"
 	actual		:=	argument.String()
 
 	if expected != actual {
