@@ -4,7 +4,7 @@
  * Purpose:     Main file for CLASP.Go
  *
  * Created:     15th August 2015
- * Updated:     24th March 2019
+ * Updated:     28th March 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -364,138 +364,138 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 		switch numHyphens {
 
-			case 0:
+		case 0:
 
-				arg.Type				=	ValueType
-				arg.Value				=	s
-			default:
+			arg.Type				=	ValueType
+			arg.Value				=	s
+		default:
 
-				nv := strings.SplitN(s, "=", 2)
-				if len(nv) > 1 {
+			nv := strings.SplitN(s, "=", 2)
+			if len(nv) > 1 {
 
-					arg.Type			=	OptionType
-					arg.GivenName		=	nv[0]
-					arg.ResolvedName	=	nv[0]
-					arg.Value			=	nv[1]
+				arg.Type			=	OptionType
+				arg.GivenName		=	nv[0]
+				arg.ResolvedName	=	nv[0]
+				arg.Value			=	nv[1]
 
-					// TODO: handle "-<opt-alias>=value"
+				// TODO: handle "-<opt-alias>=value"
+			} else {
+
+				// Here we have to be flexible, and examine
+				// whether the apparent flag is, in fact, an
+				// option
+
+				resolvedName		:=	s
+				argType				:=	FlagType
+
+				if found, alias, _ := params.findAlias(s); found {
+
+					resolvedName		=	alias.Name
+					argType				=	alias.Type
+					arg.ArgumentAlias	=	alias
+
+					if ix_equals := strings.Index(resolvedName, "="); ix_equals >= 0 {
+
+						res_nm	:=	resolvedName[:ix_equals]
+						value	:=	resolvedName[ix_equals + 1:]
+
+						argType			=	optionViaAlias
+						s				=	resolvedName
+						resolvedName	=	res_nm
+						arg.Value		=	value
+					}
 				} else {
 
-					// Here we have to be flexible, and examine
-					// whether the apparent flag is, in fact, an
-					// option
+					// Now we test to see whether every character yields
+					// an alias. If so, we convert all, add them in, then
+					// skip to the next input
 
-					resolvedName		:=	s
-					argType				:=	FlagType
+					validCompoundFlag	:=	len(s) > 1
 
-					if found, alias, _ := params.findAlias(s); found {
+					compoundArguments	:=	make([]*Argument, 0, len(s) - 1)
 
-						resolvedName		=	alias.Name
-						argType				=	alias.Type
-						arg.ArgumentAlias	=	alias
+					for i, c := range s {
 
-						if ix_equals := strings.Index(resolvedName, "="); ix_equals >= 0 {
+						if 0 == i {
 
-							res_nm	:=	resolvedName[:ix_equals]
-							value	:=	resolvedName[ix_equals + 1:]
-
-							argType			=	optionViaAlias
-							s				=	resolvedName
-							resolvedName	=	res_nm
-							arg.Value		=	value
-						}
-					} else {
-
-						// Now we test to see whether every character yields
-						// an alias. If so, we convert all, add them in, then
-						// skip to the next input
-
-						validCompoundFlag	:=	len(s) > 1
-
-						compoundArguments	:=	make([]*Argument, 0, len(s) - 1)
-
-						for i, c := range s {
-
-							if 0 == i {
-
-								continue
-							}
-
-							testAlias	:=	fmt.Sprintf("-%c", c)
-
-							if compoundFound, compoundAlias, _ := params.findAlias(testAlias); compoundFound && compoundAlias.Type == FlagType {
-
-								var compoundArg Argument
-
-								compoundArg.ResolvedName	=	compoundAlias.Name
-								compoundArg.GivenName		=	s
-								compoundArg.Value			=	""
-								compoundArg.Type			=	FlagType
-								compoundArg.CmdLineIndex	=	arg.CmdLineIndex
-								compoundArg.ArgumentAlias	=	compoundAlias
-								compoundArg.Flags			=	arg.Flags
-
-								if ix_equals := strings.Index(compoundArg.ResolvedName, "="); ix_equals >= 0 {
-
-									res_nm	:=	compoundArg.ResolvedName[:ix_equals]
-									value	:=	compoundArg.ResolvedName[ix_equals + 1:]
-
-									compoundArg.Type			=	OptionType
-									s							=	compoundArg.ResolvedName
-									compoundArg.ResolvedName	=	res_nm
-									compoundArg.Value			=	value
-
-									// Now need to look up the actual underlying alias
-
-									if actualFound, actualAlias, _ := params.findAlias(res_nm); actualFound {
-
-										compoundArg.ArgumentAlias	=	actualAlias
-									}
-								}
-
-								compoundArguments			=	append(compoundArguments, &compoundArg)
-							} else {
-
-								validCompoundFlag = false
-								break
-							}
-						}
-
-						if validCompoundFlag {
-
-							args.Arguments	=	append(args.Arguments, compoundArguments...)
 							continue
 						}
+
+						testAlias	:=	fmt.Sprintf("-%c", c)
+
+						if compoundFound, compoundAlias, _ := params.findAlias(testAlias); compoundFound && compoundAlias.Type == FlagType {
+
+							var compoundArg Argument
+
+							compoundArg.ResolvedName	=	compoundAlias.Name
+							compoundArg.GivenName		=	s
+							compoundArg.Value			=	""
+							compoundArg.Type			=	FlagType
+							compoundArg.CmdLineIndex	=	arg.CmdLineIndex
+							compoundArg.ArgumentAlias	=	compoundAlias
+							compoundArg.Flags			=	arg.Flags
+
+							if ix_equals := strings.Index(compoundArg.ResolvedName, "="); ix_equals >= 0 {
+
+								res_nm	:=	compoundArg.ResolvedName[:ix_equals]
+								value	:=	compoundArg.ResolvedName[ix_equals + 1:]
+
+								compoundArg.Type			=	OptionType
+								s							=	compoundArg.ResolvedName
+								compoundArg.ResolvedName	=	res_nm
+								compoundArg.Value			=	value
+
+								// Now need to look up the actual underlying alias
+
+								if actualFound, actualAlias, _ := params.findAlias(res_nm); actualFound {
+
+									compoundArg.ArgumentAlias	=	actualAlias
+								}
+							}
+
+							compoundArguments			=	append(compoundArguments, &compoundArg)
+						} else {
+
+							validCompoundFlag = false
+							break
+						}
 					}
 
-					switch argType {
+					if validCompoundFlag {
 
-					case optionViaAlias:
-
-						arg.Type	=	OptionType
-					default:
-
-						arg.Type	=	argType
-					}
-
-					arg.GivenName		=	s
-					arg.ResolvedName	=	resolvedName
-
-					if OptionType == arg.Type {
-
-						if optionViaAlias != argType {
-
-							nextIsOptValue	=	true
-						}
-					} else {
-
-						if isSingle	&& (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
-
-							arg.Type	=	ValueType
-							arg.Value	=	s
-						}
+						args.Arguments	=	append(args.Arguments, compoundArguments...)
+						continue
 					}
 				}
+
+				switch argType {
+
+				case optionViaAlias:
+
+					arg.Type	=	OptionType
+				default:
+
+					arg.Type	=	argType
+				}
+
+				arg.GivenName		=	s
+				arg.ResolvedName	=	resolvedName
+
+				if OptionType == arg.Type {
+
+					if optionViaAlias != argType {
+
+						nextIsOptValue	=	true
+					}
+				} else {
+
+					if isSingle	&& (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
+
+						arg.Type	=	ValueType
+						arg.Value	=	s
+					}
+				}
+			}
 		}
 
 		args.Arguments	=	append(args.Arguments, arg)
