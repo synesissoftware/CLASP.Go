@@ -1,5 +1,9 @@
 # **CLASP.Go** Changes
 
+## 0.14.0 - 29th March 2019
+
+* + added End() builder method
+
 ## 0.13.1 - 28th March 2019
 
 * ~ handling omitted alias resolution for options

@@ -4,7 +4,7 @@
  * Purpose:     Main file for CLASP.Go
  *
  * Created:     15th August 2015
- * Updated:     28th March 2019
+ * Updated:     29th March 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -219,7 +219,7 @@ func (alias Alias) SetValues(values ...string) (Alias) {
 	return alias
 }
 
-// Sets the alias
+// Builder method that sets the alias
 func (alias Alias) SetAlias(s string) (Alias) {
 
 	alias.Aliases = []string { s }
@@ -227,7 +227,7 @@ func (alias Alias) SetAlias(s string) (Alias) {
 	return alias
 }
 
-// Sets one or more aliases
+// Builder method that sets one or more aliases
 func (alias Alias) SetAliases(aliases ...string) (Alias) {
 
 	alias.Aliases = aliases
@@ -244,6 +244,14 @@ func (alias Alias) SetExtra(key string, value interface{}) (Alias) {
 	}
 
 	alias.Extras[key] = value
+
+	return alias
+}
+
+// Builder method to denote the end of building. All uses of building should
+// be using this method, as future versions may change the types/semantics
+// of the other builder methods
+func (alias Alias) End() (Alias) {
 
 	return alias
 }
