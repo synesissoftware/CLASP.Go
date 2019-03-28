@@ -378,7 +378,13 @@ func Parse(argv []string, params ParseParams) *Arguments {
 				arg.ResolvedName	=	nv[0]
 				arg.Value			=	nv[1]
 
-				// TODO: handle "-<opt-alias>=value"
+				if found, alias, _ := params.findAlias(arg.ResolvedName); found {
+
+					arg.ResolvedName	=	alias.Name
+					arg.ArgumentAlias	=	alias
+				} else {
+
+				}
 			} else {
 
 				// Here we have to be flexible, and examine

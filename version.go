@@ -4,7 +4,7 @@
  * Purpose:     Version file for CLASP.Go
  *
  * Created:     15th August 2015
- * Updated:     24th March 2019
+ * Updated:     28th March 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -45,7 +45,7 @@ const (
 
 	VersionMajor int16		=	0
 	VersionMinor int16		=	13
-	VersionPatch int16		=	0
+	VersionPatch int16		=	1
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionPatch) << 16)
 
 	VersionRevision int16	=	VersionPatch

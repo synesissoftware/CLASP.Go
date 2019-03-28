@@ -1,5 +1,9 @@
 # **CLASP.Go** Changes
 
+## 0.13.1 - 28th March 2019
+
+* ~ handling omitted alias resolution for options
+
 ## 0.13.0 - 25th March 2019
 
  * ~ changed ``Flag``, ``Option``, and ``Value`` constants to ``FlagType``, ``OptionType``, ``ValueType``;
