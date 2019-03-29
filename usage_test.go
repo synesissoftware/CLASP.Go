@@ -27,6 +27,8 @@ func filter_AS(lines []string, f func(line string) bool) (r []string) {
 
 func check_num_lines(t *testing.T, result []string, num_lines int) {
 
+	t.Helper()
+
 	if num_lines != len(result) {
 
 		t.Errorf("expected number of lines %d does not equal actual %d", num_lines, len(result))
@@ -34,6 +36,8 @@ func check_num_lines(t *testing.T, result []string, num_lines int) {
 }
 
 func check_num_nonblank_lines(t *testing.T, result []string, num_lines int) {
+
+	t.Helper()
 
 	nb_lines := filter_AS(result, func(line string) bool { return 0 != len(line) })
 
@@ -45,6 +49,8 @@ func check_num_nonblank_lines(t *testing.T, result []string, num_lines int) {
 
 func check_line_equal(t *testing.T, actual, expected string) {
 
+	t.Helper()
+
 	if actual != expected {
 
 		t.Errorf("expected line '%s' does not equal actual '%s'", expected, actual)
@@ -52,6 +58,8 @@ func check_line_equal(t *testing.T, actual, expected string) {
 }
 
 func check_stripped_line_equal(t *testing.T, actual, expected string) {
+
+	t.Helper()
 
 	if strings.TrimSpace(actual) != strings.TrimSpace(expected) {
 
@@ -61,9 +69,12 @@ func check_stripped_line_equal(t *testing.T, actual, expected string) {
 
 func call_ShowUsage_(t *testing.T, aliases []clasp.Alias, ups clasp.UsageParams) (result []string, err error) {
 
+	t.Helper()
+
 	buf			:=	new(bytes.Buffer)
 
 	ups.Stream = buf
+	ups.UsageFlags |= clasp.DontCallExit
 
 	var xc	int;
 
@@ -89,8 +100,20 @@ func call_ShowUsage_(t *testing.T, aliases []clasp.Alias, ups clasp.UsageParams)
 
 func test_ShowVersion_(t *testing.T, expected string, aliases []clasp.Alias, program_name string, version interface{}, version_prefix string) {
 
+	t.Helper()
+
 	buf			:=	new(bytes.Buffer)
-	params		:=	clasp.UsageParams { Stream: buf, ProgramName: program_name, UsageFlags: 0, ValuesString: "", ExitCode: 0, Exiter: nil, Version: version, VersionPrefix: version_prefix }
+	params		:=	clasp.UsageParams{
+
+		Stream: buf,
+		ProgramName: program_name,
+		UsageFlags: clasp.DontCallExit,
+		ValuesString: "",
+		ExitCode: 0,
+		Exiter: nil,
+		Version: version,
+		VersionPrefix: version_prefix,
+	}
 
 	xc, err		:=	clasp.ShowVersion(aliases, params)
 	if err != nil {
@@ -220,7 +243,7 @@ func Test_ShowUsage_2(t *testing.T) {
 	}
 }
 
-func Test_ShowUsage_3(t *testing.T) {
+func Test_ShowUsage_3_a(t *testing.T) {
 
 	aliases						:=	[]clasp.Alias{
 
@@ -249,7 +272,79 @@ func Test_ShowUsage_3(t *testing.T) {
 		check_num_nonblank_lines(t, result, 5)
 		check_num_lines(t, result, 9)
 
+		check_line_equal(t, result[0], "USAGE: myprogram [ ... flags and options ... ]")
+		check_line_equal(t, result[2], "flags/options:")
+		check_stripped_line_equal(t, result[4], "-h")
+		check_stripped_line_equal(t, result[5], "--high")
+	}
+}
+
+func Test_ShowUsage_3_b(t *testing.T) {
+
+	aliases						:=	[]clasp.Alias{
+
+		{ clasp.FlagType, "--high", []string { "-h" }, "makes things high", nil, 0, nil },
+	}
+	values_string				:=	""
+	flags_and_options_string	:=	" "
+	info_lines					:=	make([]string, 0)
+
+	usage_params_base			:=	clasp.UsageParams {
+
+		ProgramName:			"myprogram",
+		VersionPrefix:			"v",
+		Version:				"0.1.2",
+		ExitCode:				0,
+		ValuesString:			values_string,
+		FlagsAndOptionsString:	flags_and_options_string,
+		InfoLines:				info_lines,
+	}
+
+	result, err					:=	call_ShowUsage_(t, aliases, usage_params_base)
+	if err != nil {
+
+	} else {
+
+		check_num_nonblank_lines(t, result, 5)
+		check_num_lines(t, result, 9)
+
 		check_line_equal(t, result[0], "USAGE: myprogram")
+		check_line_equal(t, result[2], "flags/options:")
+		check_stripped_line_equal(t, result[4], "-h")
+		check_stripped_line_equal(t, result[5], "--high")
+	}
+}
+
+func Test_ShowUsage_3_c(t *testing.T) {
+
+	aliases						:=	[]clasp.Alias{
+
+		{ clasp.FlagType, "--high", []string { "-h" }, "makes things high", nil, 0, nil },
+	}
+	values_string				:=	""
+	flags_and_options_string	:=	"[ flags/options ]"
+	info_lines					:=	make([]string, 0)
+
+	usage_params_base			:=	clasp.UsageParams {
+
+		ProgramName:			"myprogram",
+		VersionPrefix:			"v",
+		Version:				"0.1.2",
+		ExitCode:				0,
+		ValuesString:			values_string,
+		FlagsAndOptionsString:	flags_and_options_string,
+		InfoLines:				info_lines,
+	}
+
+	result, err					:=	call_ShowUsage_(t, aliases, usage_params_base)
+	if err != nil {
+
+	} else {
+
+		check_num_nonblank_lines(t, result, 5)
+		check_num_lines(t, result, 9)
+
+		check_line_equal(t, result[0], "USAGE: myprogram [ flags/options ]")
 		check_line_equal(t, result[2], "flags/options:")
 		check_stripped_line_equal(t, result[4], "-h")
 		check_stripped_line_equal(t, result[5], "--high")

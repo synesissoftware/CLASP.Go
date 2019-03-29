@@ -225,6 +225,9 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 	if "" != strings.TrimSpace(params.FlagsAndOptionsString) {
 
 		params.FlagsAndOptionsString = " " + params.FlagsAndOptionsString
+	} else {
+
+		params.FlagsAndOptionsString = ""
 	}
 
 	if "" != params.ValuesString {

@@ -1,5 +1,9 @@
 # **CLASP.Go** Changes
 
+## 0.14.1 - 29th March 2019
+
+* ~ fix for FlagsAndOptionsString handling
+
 ## 0.14.0 - 29th March 2019
 
 * + added End() builder method
