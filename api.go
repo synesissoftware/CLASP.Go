@@ -125,7 +125,7 @@ type ParseParams struct {
 // Obtains, by value, an Alias containing a stock specification of a '--help' flag
 func HelpFlag() Alias {
 
-	return Alias{ FlagType, "--help", nil, "Shows this helps and exits", nil, 0, nil }
+	return Alias{ FlagType, "--help", nil, "Shows this help and exits", nil, 0, nil }
 }
 
 // Obtains, by value, an Alias containing a stock specification of a '--version' flag

@@ -3,6 +3,7 @@ package clasp_test
 
 import (
 
+	angols "github.com/synesissoftware/ANGoLS"
 	clasp "github.com/synesissoftware/CLASP.Go"
 
 	"bytes"
@@ -12,18 +13,6 @@ import (
 	"testing"
 )
 
-func filter_AS(lines []string, f func(line string) bool) (r []string) {
-
-	for _, line := range lines {
-
-		if f(line) {
-
-			r = append(r, line)
-		}
-	}
-
-	return r
-}
 
 func check_num_lines(t *testing.T, result []string, num_lines int) {
 
@@ -39,7 +28,10 @@ func check_num_nonblank_lines(t *testing.T, result []string, num_lines int) {
 
 	t.Helper()
 
-	nb_lines := filter_AS(result, func(line string) bool { return 0 != len(line) })
+	nb_lines, _ := angols.SelectSliceOfString(result, func(index int, line string) (bool, error) {
+
+		return 0 != len(line), nil
+	})
 
 	if num_lines != len(nb_lines) {
 

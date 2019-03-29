@@ -47,6 +47,12 @@ Defect reports, feature requests, and pull requests are welcome on https://githu
 
 ### Dependencies
 
+None
+
+#### Development/Testing Dependencies
+
+* [**ANGoLS**](https://github.com/synesissoftware/ANGoLS/)
+
 ### Related projects
 
 * [**CLASP**](https://github.com/synesissoftware/CLASP/)

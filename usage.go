@@ -204,6 +204,13 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 		}
 	}
 
+	exiter := params.Exiter
+
+	if exiter == nil {
+
+		exiter = new(default_exiter)
+	}
+
 	if params.Stream == nil {
 
 		if 0 == params.ExitCode {
@@ -297,7 +304,7 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 	if should_call_Exit(params) {
 
-		os.Exit(params.ExitCode)
+		exiter.Exit(params.ExitCode)
 	}
 
 	return params.ExitCode, nil

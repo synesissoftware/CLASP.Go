@@ -1,5 +1,11 @@
 # **CLASP.Go** Changes
 
+## 0.14.2 - 30th March 2019
+
+* ~ fixed failure to call specified exiter in ShowUsage()
+* ~ now uses features from ANGoLS (https://github.com/synesissoftware/ANGoLS/) for testing support
+* ~ fixed HelpFlag() help message (which said "Shows this helps and exits"; discovered in unit-testing libCLImate.Go)
+
 ## 0.14.1 - 29th March 2019
 
 * ~ fix for FlagsAndOptionsString handling
