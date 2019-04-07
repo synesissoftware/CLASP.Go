@@ -4,7 +4,7 @@
  * Purpose:     Main file for CLASP.Go
  *
  * Created:     15th August 2015
- * Updated:     29th March 2019
+ * Updated:     8th April 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -417,6 +417,13 @@ func Parse(argv []string, params ParseParams) *Arguments {
 						s				=	resolvedName
 						resolvedName	=	res_nm
 						arg.Value		=	value
+
+						// Now need to look up the actual underlying alias
+
+						if actualFound, actualAlias, _ := params.findAlias(res_nm); actualFound {
+
+							arg.ArgumentAlias	=	actualAlias
+						}
 					}
 				} else {
 
@@ -428,9 +435,9 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 					compoundArguments	:=	make([]*Argument, 0, len(s) - 1)
 
-					for i, c := range s {
+					for j, c := range s {
 
-						if 0 == i {
+						if 0 == j {
 
 							continue
 						}

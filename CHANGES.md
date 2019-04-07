@@ -1,5 +1,9 @@
 # **CLASP.Go** Changes
 
+## 0.14.3 - 8th April 2019
+
+* ~ fixed failure to properly assign alias for uncombined option-value aliases
+
 ## 0.14.2 - 30th March 2019
 
 * ~ fixed failure to call specified exiter in ShowUsage()
