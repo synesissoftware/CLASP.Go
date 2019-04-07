@@ -346,3 +346,47 @@ func Test_ShowUsage_3_c(t *testing.T) {
 	}
 }
 
+func Test_ShowUsage_4(t *testing.T) {
+
+	aliases						:=	[]clasp.Alias{
+
+		clasp.Option("--verbosity").
+			SetHelp("Specifies the verbosity").
+			SetValues("low", "medium", "high"),
+		clasp.Flag("--verbosity=high").SetAlias("-v"),
+	}
+	values_string				:=	""
+	flags_and_options_string	:=	"[ flags/options ]"
+	info_lines					:=	make([]string, 0)
+
+	usage_params_base			:=	clasp.UsageParams {
+
+		ProgramName:			"myprogram",
+		VersionPrefix:			"v",
+		Version:				"0.1.2",
+		ExitCode:				0,
+		ValuesString:			values_string,
+		FlagsAndOptionsString:	flags_and_options_string,
+		InfoLines:				info_lines,
+	}
+
+	result, err					:=	call_ShowUsage_(t, aliases, usage_params_base)
+	if err != nil {
+
+	} else {
+
+		check_num_nonblank_lines(t, result, 9)
+		check_num_lines(t, result, 13)
+
+		check_line_equal(t, result[0], "USAGE: myprogram [ flags/options ]")
+		check_line_equal(t, result[2], "flags/options:")
+		check_stripped_line_equal(t, result[4], "-v --verbosity=high")
+		check_stripped_line_equal(t, result[5], "--verbosity=<value>")
+		check_stripped_line_equal(t, result[6], "Specifies the verbosity")
+		check_stripped_line_equal(t, result[7], "where <value> one of:")
+		check_stripped_line_equal(t, result[8], "low")
+		check_stripped_line_equal(t, result[9], "medium")
+		check_stripped_line_equal(t, result[10], "high")
+	}
+}
+

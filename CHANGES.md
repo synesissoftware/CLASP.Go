@@ -1,5 +1,9 @@
 # **CLASP.Go** Changes
 
+## 0.14.4 - 8th April 2019
+
+* ~ option-value aliases are now listed correctly in ShowUsage()
+
 ## 0.14.3 - 8th April 2019
 
 * ~ fixed failure to properly assign alias for uncombined option-value aliases

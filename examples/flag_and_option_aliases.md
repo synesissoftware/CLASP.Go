@@ -126,12 +126,10 @@ flags/options:
     --debug
         runs in Debug mode
 
+    -c --verbosity=chatty
     -v <value>
     --verbosity=<value>
         specifies the verbosity
-
-    -c
-    --verbosity=chatty
 
 
     --help

@@ -4,7 +4,7 @@
  * Purpose:     Usage components for CLASP.Go
  *
  * Created:     4th September 2015
- * Updated:     22nd March 2019
+ * Updated:     8th April 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -263,7 +263,30 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 		fmt.Fprintf(params.Stream, "flags/options:\n")
 		fmt.Fprintf(params.Stream, "\n")
 
+		voas	:=	make(map[string][]Alias)
+		pure	:=	make([]Alias, 0)
+
 		for _, a := range aliases {
+
+			ix_eq	:= 	strings.Index(a.Name, "=")
+
+			if ix_eq < 0 {
+
+				pure	=	append(pure, a)
+			} else {
+
+				name	:=	a.Name[0:ix_eq]
+
+				if _, ok := voas[name]; !ok {
+
+					voas[name] = make([]Alias, 0)
+				}
+
+				voas[name] = append(voas[name], a)
+			}
+		}
+
+		for _, a := range pure {
 
 			switch a.Type {
 
@@ -277,6 +300,10 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 			case OptionType:
 
+				for _, c := range voas[a.Name] {
+
+					fmt.Fprintf(params.Stream, "\t%v %v\n", c.Aliases[0], c.Name)
+				}
 				for _, b := range a.Aliases {
 
 					fmt.Fprintf(params.Stream, "\t%v <value>\n", b)
