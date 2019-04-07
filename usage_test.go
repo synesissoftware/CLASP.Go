@@ -239,7 +239,7 @@ func Test_ShowUsage_3_a(t *testing.T) {
 
 	aliases						:=	[]clasp.Alias{
 
-		{ clasp.FlagType, "--high", []string { "-h" }, "makes things high", nil, 0, nil },
+		clasp.Flag("--high").SetAlias("-h").SetHelp("makes things high"),
 	}
 	values_string				:=	""
 	flags_and_options_string	:=	""
@@ -268,6 +268,7 @@ func Test_ShowUsage_3_a(t *testing.T) {
 		check_line_equal(t, result[2], "flags/options:")
 		check_stripped_line_equal(t, result[4], "-h")
 		check_stripped_line_equal(t, result[5], "--high")
+		check_stripped_line_equal(t, result[6], "makes things high")
 	}
 }
 
@@ -275,7 +276,7 @@ func Test_ShowUsage_3_b(t *testing.T) {
 
 	aliases						:=	[]clasp.Alias{
 
-		{ clasp.FlagType, "--high", []string { "-h" }, "makes things high", nil, 0, nil },
+		clasp.Flag("--high").SetAlias("-h").SetHelp("makes things high"),
 	}
 	values_string				:=	""
 	flags_and_options_string	:=	" "
@@ -304,6 +305,7 @@ func Test_ShowUsage_3_b(t *testing.T) {
 		check_line_equal(t, result[2], "flags/options:")
 		check_stripped_line_equal(t, result[4], "-h")
 		check_stripped_line_equal(t, result[5], "--high")
+		check_stripped_line_equal(t, result[6], "makes things high")
 	}
 }
 
@@ -311,7 +313,7 @@ func Test_ShowUsage_3_c(t *testing.T) {
 
 	aliases						:=	[]clasp.Alias{
 
-		{ clasp.FlagType, "--high", []string { "-h" }, "makes things high", nil, 0, nil },
+		clasp.Flag("--high").SetAlias("-h").SetHelp("makes things high"),
 	}
 	values_string				:=	""
 	flags_and_options_string	:=	"[ flags/options ]"
@@ -340,6 +342,7 @@ func Test_ShowUsage_3_c(t *testing.T) {
 		check_line_equal(t, result[2], "flags/options:")
 		check_stripped_line_equal(t, result[4], "-h")
 		check_stripped_line_equal(t, result[5], "--high")
+		check_stripped_line_equal(t, result[6], "makes things high")
 	}
 }
 
