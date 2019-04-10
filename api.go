@@ -4,7 +4,7 @@
  * Purpose:     Main file for CLASP.Go
  *
  * Created:     15th August 2015
- * Updated:     8th April 2019
+ * Updated:     10th April 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -80,7 +80,7 @@ const (
 	int_1_			ArgType = -99
 )
 
-type Alias struct {
+type Specification struct {
 
 	Type			ArgType
 	Name			string
@@ -93,45 +93,45 @@ type Alias struct {
 
 type Argument struct {
 
-	ResolvedName	string
-	GivenName		string
-	Value			string
-	Type			ArgType
-	CmdLineIndex	int
-	NumGivenHyphens	int
-	ArgumentAlias	*Alias
-	Flags			int
+	ResolvedName			string
+	GivenName				string
+	Value					string
+	Type					ArgType
+	CmdLineIndex			int
+	NumGivenHyphens			int
+	ArgumentSpecification	*Specification
+	Flags					int
 
 	used_			int
 }
 
 type Arguments struct {
 
-	Arguments	[]*Argument
-	Flags		[]*Argument
-	Options		[]*Argument
-	Values		[]*Argument
-	Argv		[]string
-	ProgramName	string
-	aliases_	[]*Alias
+	Arguments		[]*Argument
+	Flags			[]*Argument
+	Options			[]*Argument
+	Values			[]*Argument
+	Argv			[]string
+	ProgramName		string
+	specifications_	[]*Specification
 }
 
 type ParseParams struct {
 
-	Aliases		[]Alias
-	Flags		ParseFlag
+	Specifications	[]Specification
+	Flags			ParseFlag
 }
 
-// Obtains, by value, an Alias containing a stock specification of a '--help' flag
-func HelpFlag() Alias {
+// Obtains, by value, a specification containing a stock specification of a '--help' flag
+func HelpFlag() Specification {
 
-	return Alias{ FlagType, "--help", nil, "Shows this help and exits", nil, 0, nil }
+	return Specification{ FlagType, "--help", nil, "Shows this help and exits", nil, 0, nil }
 }
 
-// Obtains, by value, an Alias containing a stock specification of a '--version' flag
-func VersionFlag() Alias {
+// Obtains, by value, a specification containing a stock specification of a '--version' flag
+func VersionFlag() Specification {
 
-	return Alias{ FlagType, "--version", nil, "Shows version information and exits", nil, 0, nil }
+	return Specification{ FlagType, "--version", nil, "Shows version information and exits", nil, 0, nil }
 }
 
 func (at ArgType) String() string {
@@ -153,14 +153,14 @@ func (at ArgType) String() string {
 	}
 }
 
-func (alias Alias) String() string {
+func (specification Specification) String() string {
 
-	return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, ValueSet=%v, BitFlags=0x%x, Extras=%v }>", alias, alias.Type, alias.Name, alias.Aliases, alias.Help, alias.ValueSet, alias.BitFlags, alias.Extras)
+	return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, ValueSet=%v, BitFlags=0x%x, Extras=%v }>", specification, specification.Type, specification.Name, specification.Aliases, specification.Help, specification.ValueSet, specification.BitFlags, specification.Extras)
 }
 
 func (argument Argument) String() string {
 
-	return fmt.Sprintf("<%T{ ResolvedName=%q, GivenName=%q, Value=%q, Type=%v, CmdLineIndex=%d, NumGivenHyphens=%d, ArgumentAlias=%v, Flags=0x%x, used=%t }>", argument, argument.ResolvedName, argument.GivenName, argument.Value, argument.Type, argument.CmdLineIndex, argument.NumGivenHyphens, argument.ArgumentAlias, argument.Flags, argument.used_ != 0)
+	return fmt.Sprintf("<%T{ ResolvedName=%q, GivenName=%q, Value=%q, Type=%v, CmdLineIndex=%d, NumGivenHyphens=%d, ArgumentSpecification=%v, Flags=0x%x, used=%t }>", argument, argument.ResolvedName, argument.GivenName, argument.Value, argument.Type, argument.CmdLineIndex, argument.NumGivenHyphens, argument.ArgumentSpecification, argument.Flags, argument.used_ != 0)
 }
 
 func (arguments Arguments) String() string {
@@ -170,13 +170,13 @@ func (arguments Arguments) String() string {
 
 func (params ParseParams) String() string {
 
-	return fmt.Sprintf("<%T{ Aliases=%v, Flags=0x%x }>", params, params.Aliases, params.Flags)
+	return fmt.Sprintf("<%T{ Specifications=%v, Flags=0x%x }>", params, params.Specifications, params.Flags)
 }
 
 /* builders */
 
-// Creates a flag alias, with the given name
-func Flag(name string) (result Alias) {
+// Creates a flag specification, with the given name
+func Flag(name string) (result Specification) {
 
 	result.Type = FlagType
 	result.Name = name
@@ -184,8 +184,8 @@ func Flag(name string) (result Alias) {
 	return
 }
 
-// Creates an option alias, with the given name
-func Option(name string) (result Alias) {
+// Creates an option specification, with the given name
+func Option(name string) (result Specification) {
 
 	result.Type = OptionType
 	result.Name = name
@@ -193,8 +193,8 @@ func Option(name string) (result Alias) {
 	return
 }
 
-// Creates an alias for an actual flag/option, with 1 or more aliases
-func AliasesFor(actual string, alias0 string, other_aliases ...string) (result Alias) {
+// Creates a specification for an actual flag/option, with 1 or more aliases
+func AliasesFor(actual string, alias0 string, other_aliases ...string) (result Specification) {
 
 	result.Type = FlagType
 	result.Name = actual
@@ -203,72 +203,72 @@ func AliasesFor(actual string, alias0 string, other_aliases ...string) (result A
 	return
 }
 
-// Builder method to set the help for an alias
-func (alias Alias) SetHelp(help string) (Alias) {
+// Builder method to set the help for a specification
+func (specification Specification) SetHelp(help string) (Specification) {
 
-	alias.Help = help
+	specification.Help = help
 
-	return alias
+	return specification
 }
 
-// Builder method to set the values for an option alias
-func (alias Alias) SetValues(values ...string) (Alias) {
+// Builder method to set the values for an option specification
+func (specification Specification) SetValues(values ...string) (Specification) {
 
-	alias.ValueSet = values
+	specification.ValueSet = values
 
-	return alias
+	return specification
 }
 
-// Builder method that sets the alias
-func (alias Alias) SetAlias(s string) (Alias) {
+// Builder method that sets the specification
+func (specification Specification) SetAlias(s string) (Specification) {
 
-	alias.Aliases = []string { s }
+	specification.Aliases = []string { s }
 
-	return alias
+	return specification
 }
 
 // Builder method that sets one or more aliases
-func (alias Alias) SetAliases(aliases ...string) (Alias) {
+func (specification Specification) SetAliases(aliases ...string) (Specification) {
 
-	alias.Aliases = aliases
+	specification.Aliases = aliases
 
-	return alias
+	return specification
 }
 
 // Builder method to an Extras entry
-func (alias Alias) SetExtra(key string, value interface{}) (Alias) {
+func (specification Specification) SetExtra(key string, value interface{}) (Specification) {
 
-	if alias.Extras == nil {
+	if specification.Extras == nil {
 
-		alias.Extras = make(map[string]interface{})
+		specification.Extras = make(map[string]interface{})
 	}
 
-	alias.Extras[key] = value
+	specification.Extras[key] = value
 
-	return alias
+	return specification
 }
 
 // Builder method to denote the end of building. All uses of building should
 // be using this method, as future versions may change the types/semantics
 // of the other builder methods
-func (alias Alias) End() (Alias) {
+func (specification Specification) End() (Specification) {
 
-	return alias
+	return specification
 }
 
 /* /////////////////////////////////////////////////////////////////////////
  * helpers
  */
 
-func (params *ParseParams) findAlias(name string) (found bool, alias *Alias, aliasIndex int) {
+func (params *ParseParams) findSpecification(name string) (found bool, specification *Specification, specificationIndex int) {
 
 	// Algorithm:
 	//
-	// 1. search for alias with that name
-	// 2. search for alias with that alias
+	// 1. search for specification with that name
+	// 2. search for specification with that alias
 	// 3. return nil
 
-	for i, a := range params.Aliases {
+	for i, a := range params.Specifications {
 
 		if name == a.Name {
 
@@ -276,7 +276,7 @@ func (params *ParseParams) findAlias(name string) (found bool, alias *Alias, ali
 		}
 	}
 
-	for i, a := range params.Aliases {
+	for i, a := range params.Specifications {
 
 		for _, n := range a.Aliases {
 
@@ -346,7 +346,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 		arg.CmdLineIndex	=	i + 1
 		arg.Flags			=	int(params.Flags)
-		arg.ArgumentAlias	=	nil
+		arg.ArgumentSpecification	=	nil
 
 		numHyphens			:=	0
 		isSingle			:=	false
@@ -386,10 +386,10 @@ func Parse(argv []string, params ParseParams) *Arguments {
 				arg.ResolvedName	=	nv[0]
 				arg.Value			=	nv[1]
 
-				if found, alias, _ := params.findAlias(arg.ResolvedName); found {
+				if found, specification, _ := params.findSpecification(arg.ResolvedName); found {
 
-					arg.ResolvedName	=	alias.Name
-					arg.ArgumentAlias	=	alias
+					arg.ResolvedName	=	specification.Name
+					arg.ArgumentSpecification	=	specification
 				} else {
 
 				}
@@ -402,11 +402,11 @@ func Parse(argv []string, params ParseParams) *Arguments {
 				resolvedName		:=	s
 				argType				:=	FlagType
 
-				if found, alias, _ := params.findAlias(s); found {
+				if found, specification, _ := params.findSpecification(s); found {
 
-					resolvedName		=	alias.Name
-					argType				=	alias.Type
-					arg.ArgumentAlias	=	alias
+					resolvedName		=	specification.Name
+					argType				=	specification.Type
+					arg.ArgumentSpecification	=	specification
 
 					if ix_equals := strings.Index(resolvedName, "="); ix_equals >= 0 {
 
@@ -418,17 +418,17 @@ func Parse(argv []string, params ParseParams) *Arguments {
 						resolvedName	=	res_nm
 						arg.Value		=	value
 
-						// Now need to look up the actual underlying alias
+						// Now need to look up the actual underlying specification
 
-						if actualFound, actualAlias, _ := params.findAlias(res_nm); actualFound {
+						if actualFound, actualSpecification, _ := params.findSpecification(res_nm); actualFound {
 
-							arg.ArgumentAlias	=	actualAlias
+							arg.ArgumentSpecification	=	actualSpecification
 						}
 					}
 				} else {
 
 					// Now we test to see whether every character yields
-					// an alias. If so, we convert all, add them in, then
+					// a specification. If so, we convert all, add them in, then
 					// skip to the next input
 
 					validCompoundFlag	:=	len(s) > 1
@@ -444,17 +444,17 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 						testAlias	:=	fmt.Sprintf("-%c", c)
 
-						if compoundFound, compoundAlias, _ := params.findAlias(testAlias); compoundFound && compoundAlias.Type == FlagType {
+						if compoundFound, compoundSpec, _ := params.findSpecification(testAlias); compoundFound && compoundSpec.Type == FlagType {
 
 							var compoundArg Argument
 
-							compoundArg.ResolvedName	=	compoundAlias.Name
-							compoundArg.GivenName		=	s
-							compoundArg.Value			=	""
-							compoundArg.Type			=	FlagType
-							compoundArg.CmdLineIndex	=	arg.CmdLineIndex
-							compoundArg.ArgumentAlias	=	compoundAlias
-							compoundArg.Flags			=	arg.Flags
+							compoundArg.ResolvedName			=	compoundSpec.Name
+							compoundArg.GivenName				=	s
+							compoundArg.Value					=	""
+							compoundArg.Type					=	FlagType
+							compoundArg.CmdLineIndex			=	arg.CmdLineIndex
+							compoundArg.ArgumentSpecification	=	compoundSpec
+							compoundArg.Flags					=	arg.Flags
 
 							if ix_equals := strings.Index(compoundArg.ResolvedName, "="); ix_equals >= 0 {
 
@@ -466,11 +466,11 @@ func Parse(argv []string, params ParseParams) *Arguments {
 								compoundArg.ResolvedName	=	res_nm
 								compoundArg.Value			=	value
 
-								// Now need to look up the actual underlying alias
+								// Now need to look up the actual underlying specification
 
-								if actualFound, actualAlias, _ := params.findAlias(res_nm); actualFound {
+								if actualFound, actualSpecification, _ := params.findSpecification(res_nm); actualFound {
 
-									compoundArg.ArgumentAlias	=	actualAlias
+									compoundArg.ArgumentSpecification	=	actualSpecification
 								}
 							}
 
@@ -538,15 +538,15 @@ func Parse(argv []string, params ParseParams) *Arguments {
 		}
 	}
 
-	args.aliases_	=	make([]*Alias, len(params.Aliases))
+	args.specifications_	=	make([]*Specification, len(params.Specifications))
 
-	for i, a := range(params.Aliases) {
+	for i, a := range(params.Specifications) {
 
-		var p *Alias = new(Alias)
+		var p *Specification = new(Specification)
 
 		*p = a
 
-		args.aliases_[i] = p
+		args.specifications_[i] = p
 	}
 
 	return args
@@ -563,7 +563,7 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 		found	=	true
 	}
 
-	if a, is_Alias := id.(Alias); is_Alias {
+	if a, is_Specification := id.(Specification); is_Specification {
 
 		switch a.Type {
 
@@ -577,13 +577,13 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 				found	=	true
 			default:
 
-				panic(fmt.Sprintf("invoked FlagIsSpecified() passing a non-Flag (and non-Option) Alias '%v'", a))
+				panic(fmt.Sprintf("invoked FlagIsSpecified() passing a non-Flag (and non-Option) Specification '%v'", a))
 		}
 	}
 
 	if !found && nil != id {
 
-		panic(fmt.Sprintf("invoked FlagIsSpecified() passing a value - '%v' - that is neither string nor alias", id))
+		panic(fmt.Sprintf("invoked FlagIsSpecified() passing a value - '%v' - that is neither string nor specification", id))
 	}
 
 	for i, f := range args.Flags {
@@ -611,7 +611,7 @@ func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
 		found	=	true
 	}
 
-	if a, is_Alias := id.(Alias); is_Alias {
+	if a, is_Specification := id.(Specification); is_Specification {
 
 		switch a.Type {
 
@@ -621,13 +621,13 @@ func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
 				found	=	true
 			default:
 
-				panic(fmt.Sprintf("invoked LookupFlag() passing a non-Flag Alias '%v'", a))
+				panic(fmt.Sprintf("invoked LookupFlag() passing a non-Flag Specification '%v'", a))
 		}
 	}
 
 	if !found && nil != id {
 
-		panic(fmt.Sprintf("invoked LookupFlag() passing a value - '%v' - that is neither string nor alias", id))
+		panic(fmt.Sprintf("invoked LookupFlag() passing a value - '%v' - that is neither string nor specification", id))
 	}
 
 	for i, o := range args.Flags {
@@ -655,7 +655,7 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 		found	=	true
 	}
 
-	if a, is_Alias := id.(Alias); is_Alias {
+	if a, is_Specification := id.(Specification); is_Specification {
 
 		switch a.Type {
 
@@ -665,13 +665,13 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 				found	=	true
 			default:
 
-				panic(fmt.Sprintf("invoked LookupOption() passing a non-Option Alias '%v'", a))
+				panic(fmt.Sprintf("invoked LookupOption() passing a non-Option Specification '%v'", a))
 		}
 	}
 
 	if !found && nil != id {
 
-		panic(fmt.Sprintf("invoked LookupOption() passing a value - '%v' - that is neither string nor alias", id))
+		panic(fmt.Sprintf("invoked LookupOption() passing a value - '%v' - that is neither string nor specification", id))
 	}
 
 	for i, o := range args.Options {
@@ -757,7 +757,7 @@ func check_flag_bits(args *Arguments, flags *int, only_unused bool) int {
 
 		if !only_unused || 0 == arg.used_ {
 
-			for _, al := range args.aliases_ {
+			for _, al := range args.specifications_ {
 
 				if al.Name == arg.ResolvedName {
 

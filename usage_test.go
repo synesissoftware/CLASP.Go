@@ -59,7 +59,7 @@ func check_stripped_line_equal(t *testing.T, actual, expected string) {
 	}
 }
 
-func call_ShowUsage_(t *testing.T, aliases []clasp.Alias, ups clasp.UsageParams) (result []string, err error) {
+func call_ShowUsage_(t *testing.T, specifications []clasp.Specification, ups clasp.UsageParams) (result []string, err error) {
 
 	t.Helper()
 
@@ -70,7 +70,7 @@ func call_ShowUsage_(t *testing.T, aliases []clasp.Alias, ups clasp.UsageParams)
 
 	var xc	int;
 
-	xc, err		=	clasp.ShowUsage(aliases, ups)
+	xc, err		=	clasp.ShowUsage(specifications, ups)
 	if err != nil {
 
 		t.Errorf("ShowUsage() failed with exit code: %d", xc)
@@ -90,7 +90,7 @@ func call_ShowUsage_(t *testing.T, aliases []clasp.Alias, ups clasp.UsageParams)
 	return
 }
 
-func test_ShowVersion_(t *testing.T, expected string, aliases []clasp.Alias, program_name string, version interface{}, version_prefix string) {
+func test_ShowVersion_(t *testing.T, expected string, specifications []clasp.Specification, program_name string, version interface{}, version_prefix string) {
 
 	t.Helper()
 
@@ -107,7 +107,7 @@ func test_ShowVersion_(t *testing.T, expected string, aliases []clasp.Alias, pro
 		VersionPrefix: version_prefix,
 	}
 
-	xc, err		:=	clasp.ShowVersion(aliases, params)
+	xc, err		:=	clasp.ShowVersion(specifications, params)
 	if err != nil {
 
 		t.Errorf("ShowVersion() failed with exit code: %d", xc)
@@ -130,44 +130,44 @@ func test_ShowVersion_(t *testing.T, expected string, aliases []clasp.Alias, pro
 
 func Test_ShowVersion_with_int_array_version(t *testing.T) {
 
-	var aliases		[]clasp.Alias
+	var specifications		[]clasp.Specification
 
-	test_ShowVersion_(t, "myprog 1.2.3\n", aliases, "myprog", []int{ 1, 2, 3 }, "")
+	test_ShowVersion_(t, "myprog 1.2.3\n", specifications, "myprog", []int{ 1, 2, 3 }, "")
 
-	test_ShowVersion_(t, "myprog v1.2.3\n", aliases, "myprog", []int{ 1, 2, 3 }, "v")
+	test_ShowVersion_(t, "myprog v1.2.3\n", specifications, "myprog", []int{ 1, 2, 3 }, "v")
 }
 
 func Test_ShowVersion_with_string_array_version(t *testing.T) {
 
-	var aliases		[]clasp.Alias
+	var specifications		[]clasp.Specification
 
-	test_ShowVersion_(t, "myprog 0.1.9\n", aliases, "myprog", []string{ "0", "1", "9" }, "")
+	test_ShowVersion_(t, "myprog 0.1.9\n", specifications, "myprog", []string{ "0", "1", "9" }, "")
 
-	test_ShowVersion_(t, "myprog v0.1.9\n", aliases, "myprog", []string{ "0", "1", "9" }, "v")
+	test_ShowVersion_(t, "myprog v0.1.9\n", specifications, "myprog", []string{ "0", "1", "9" }, "v")
 }
 
 func Test_ShowVersion_with_string_version(t *testing.T) {
 
-	var aliases		[]clasp.Alias
+	var specifications		[]clasp.Specification
 
-	test_ShowVersion_(t, "myprog 0.1.9\n", aliases, "myprog", "0.1.9", "")
+	test_ShowVersion_(t, "myprog 0.1.9\n", specifications, "myprog", "0.1.9", "")
 
-	test_ShowVersion_(t, "myprog v0.1.9\n", aliases, "myprog", "0.1.9", "v")
+	test_ShowVersion_(t, "myprog v0.1.9\n", specifications, "myprog", "0.1.9", "v")
 }
 
 func Test_ShowVersion_with_inferred_ProgramName(t *testing.T) {
 
-	var aliases		[]clasp.Alias
+	var specifications		[]clasp.Specification
 
 	program_name	:=	os.Args[0]
 	program_name	=	path.Base(program_name)
 
-	test_ShowVersion_(t, program_name + " 0.1.2\n", aliases, "", "0.1.2", "")
+	test_ShowVersion_(t, program_name + " 0.1.2\n", specifications, "", "0.1.2", "")
 }
 
 func Test_ShowUsage_1(t *testing.T) {
 
-	var	aliases					[]clasp.Alias
+	var	specifications					[]clasp.Specification
 	values_string				:=	""
 	flags_and_options_string	:=	""
 	info_lines					:=	make([]string, 0)
@@ -183,7 +183,7 @@ func Test_ShowUsage_1(t *testing.T) {
 		InfoLines:				info_lines,
 	}
 
-	result, err					:=	call_ShowUsage_(t, aliases, usage_params_base)
+	result, err					:=	call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
 	} else {
@@ -197,7 +197,7 @@ func Test_ShowUsage_1(t *testing.T) {
 
 func Test_ShowUsage_2(t *testing.T) {
 
-	var	aliases					[]clasp.Alias
+	var	specifications					[]clasp.Specification
 	values_string				:=	""
 	flags_and_options_string	:=	""
 	info_lines					:=	[]string {
@@ -219,7 +219,7 @@ func Test_ShowUsage_2(t *testing.T) {
 		InfoLines:				info_lines,
 	}
 
-	result, err					:=	call_ShowUsage_(t, aliases, usage_params_base)
+	result, err					:=	call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
 	} else {
@@ -237,7 +237,7 @@ func Test_ShowUsage_2(t *testing.T) {
 
 func Test_ShowUsage_3_a(t *testing.T) {
 
-	aliases						:=	[]clasp.Alias{
+	specifications						:=	[]clasp.Specification{
 
 		clasp.Flag("--high").SetAlias("-h").SetHelp("makes things high"),
 	}
@@ -256,7 +256,7 @@ func Test_ShowUsage_3_a(t *testing.T) {
 		InfoLines:				info_lines,
 	}
 
-	result, err					:=	call_ShowUsage_(t, aliases, usage_params_base)
+	result, err					:=	call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
 	} else {
@@ -274,7 +274,7 @@ func Test_ShowUsage_3_a(t *testing.T) {
 
 func Test_ShowUsage_3_b(t *testing.T) {
 
-	aliases						:=	[]clasp.Alias{
+	specifications						:=	[]clasp.Specification{
 
 		clasp.Flag("--high").SetAlias("-h").SetHelp("makes things high"),
 	}
@@ -293,7 +293,7 @@ func Test_ShowUsage_3_b(t *testing.T) {
 		InfoLines:				info_lines,
 	}
 
-	result, err					:=	call_ShowUsage_(t, aliases, usage_params_base)
+	result, err					:=	call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
 	} else {
@@ -311,7 +311,7 @@ func Test_ShowUsage_3_b(t *testing.T) {
 
 func Test_ShowUsage_3_c(t *testing.T) {
 
-	aliases						:=	[]clasp.Alias{
+	specifications						:=	[]clasp.Specification{
 
 		clasp.Flag("--high").SetAlias("-h").SetHelp("makes things high"),
 	}
@@ -330,7 +330,7 @@ func Test_ShowUsage_3_c(t *testing.T) {
 		InfoLines:				info_lines,
 	}
 
-	result, err					:=	call_ShowUsage_(t, aliases, usage_params_base)
+	result, err					:=	call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
 	} else {
@@ -348,7 +348,7 @@ func Test_ShowUsage_3_c(t *testing.T) {
 
 func Test_ShowUsage_4(t *testing.T) {
 
-	aliases						:=	[]clasp.Alias{
+	specifications						:=	[]clasp.Specification{
 
 		clasp.Option("--verbosity").
 			SetHelp("Specifies the verbosity").
@@ -370,7 +370,7 @@ func Test_ShowUsage_4(t *testing.T) {
 		InfoLines:				info_lines,
 	}
 
-	result, err					:=	call_ShowUsage_(t, aliases, usage_params_base)
+	result, err					:=	call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
 	} else {

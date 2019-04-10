@@ -634,13 +634,13 @@ func Test_single_hyphen_as_value(t *testing.T) {
 }
 
 
-func Test_alias_0(t *testing.T) {
+func Test_specification_0(t *testing.T) {
 
-	aliases := []clasp.Alias {
+	specifications := []clasp.Specification {
 	}
 	argv := []string { "path/blah", "-f", "-f2", "---flag3" }
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Aliases: aliases })
+	args1 := clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -686,15 +686,15 @@ func Test_alias_0(t *testing.T) {
 }
 
 
-func Test_alias_1(t *testing.T) {
+func Test_specification_1(t *testing.T) {
 
-	aliases := []clasp.Alias {
+	specifications := []clasp.Specification {
 
 		{ clasp.FlagType, "--flag2", []string { "-f2" }, "second flag", nil, 0, nil },
 	}
 	argv := []string { "path/blah", "-f", "-f2", "---flag3" }
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Aliases: aliases })
+	args1 := clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -740,15 +740,15 @@ func Test_alias_1(t *testing.T) {
 }
 
 
-func Test_alias_2(t *testing.T) {
+func Test_specification_2(t *testing.T) {
 
-	aliases := []clasp.Alias {
+	specifications := []clasp.Specification {
 
 		{ clasp.OptionType, "--flag2", []string { "-f2" }, "f2-option", nil, 0, nil },
 	}
 	argv := []string { "path/blah", "-f", "-f2", "abc", "---flag3" }
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Aliases: aliases })
+	args1 := clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -865,7 +865,7 @@ func Test_find_unused_options_1(t *testing.T) {
 
 func Test_CheckAllFlagBits(t *testing.T) {
 
-	aliases := []clasp.Alias {
+	specifications := []clasp.Specification {
 
 		{ clasp.FlagType, "-f1", nil, "", nil, 0x01, nil },
 		{ clasp.FlagType, "-f2", nil, "", nil, 0x02, nil },
@@ -873,7 +873,7 @@ func Test_CheckAllFlagBits(t *testing.T) {
 	}
 
 	argv1 := []string { "path/blah", "-f1", "-f2", "-f4" }
-	args1 := clasp.Parse(argv1, clasp.ParseParams{ Aliases: aliases })
+	args1 := clasp.Parse(argv1, clasp.ParseParams{ Specifications: specifications })
 	if expected, actual := 0x7, args1.CheckAllFlagBits(nil); check(t, expected == actual, "flags not as expected: expected %x; actual %x", expected, actual) {
 	}
 	_ = args1.FlagIsSpecified("-f1")
@@ -881,7 +881,7 @@ func Test_CheckAllFlagBits(t *testing.T) {
 	}
 
 	argv2 := []string { "path/blah", "-f1", "-f4" }
-	args2 := clasp.Parse(argv2, clasp.ParseParams{ Aliases: aliases })
+	args2 := clasp.Parse(argv2, clasp.ParseParams{ Specifications: specifications })
 	if expected, actual := 0x5, args2.CheckAllFlagBits(nil); check(t, expected == actual, "flags not as expected: expected %x; actual %x", expected, actual) {
 	}
 }
@@ -889,7 +889,7 @@ func Test_CheckAllFlagBits(t *testing.T) {
 
 func Test_groupedFlags_1(t *testing.T) {
 
-	aliases := []clasp.Alias {
+	specifications := []clasp.Specification {
 
 		{ clasp.FlagType, "--high", []string { "-h" }, "second flag", nil, 0, nil },
 		{ clasp.FlagType, "--mid",  []string { "-m" }, "second flag", nil, 0, nil },
@@ -897,7 +897,7 @@ func Test_groupedFlags_1(t *testing.T) {
 	}
 	argv := []string { "path/blah", "-hm", "-l" }
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Aliases: aliases })
+	args1 := clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -945,7 +945,7 @@ func Test_groupedFlags_1(t *testing.T) {
 
 func Test_groupedFlags_2(t *testing.T) {
 
-	aliases := []clasp.Alias {
+	specifications := []clasp.Specification {
 
 		{ clasp.FlagType, "--high", []string { "-h" }, "second flag", nil, 0, nil },
 		{ clasp.FlagType, "--mid",  []string { "-m" }, "second flag", nil, 0, nil },
@@ -953,7 +953,7 @@ func Test_groupedFlags_2(t *testing.T) {
 	}
 	argv := []string { "path/blah", "-hmx", "-l" }
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Aliases: aliases })
+	args1 := clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
 
 	if expected, actual := 2, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -994,14 +994,14 @@ func Test_groupedFlags_2(t *testing.T) {
 
 func Test_flag_alias_of_option_with_value(t *testing.T) {
 
-	aliases	:=	[]clasp.Alias {
+	specifications	:=	[]clasp.Specification {
 
 		{ clasp.OptionType, "--verbosity", nil, "Specifies the verbosity", []string{ "low", "medium", "high" }, 0, nil },
 		{ clasp.FlagType, "--verbosity=high", []string{ "-v" }, "", nil, 0, nil },
 	}
 	argv	:=	[]string{ "path/blah", "-v" }
 
-	args	:=	clasp.Parse(argv, clasp.ParseParams{ Aliases: aliases })
+	args	:=	clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
 
 	if expected, actual := 1, len(args.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 

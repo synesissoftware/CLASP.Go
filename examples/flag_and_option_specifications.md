@@ -1,13 +1,13 @@
-# CLASP.Go Example - **flag_and_option_aliases**
+# CLASP.Go Example - **flag_and_option_specifications**
 
 ## Summary
 
-Example illustrating various kinds of *flag* and *option* aliases, including the combination of short-names.
+Example illustrating various kinds of *flag* and *option* specifications, including the combination of short-names.
 
 ## Source
 
 ```Go
-// examples/flag_and_option_aliases.go
+// examples/flag_and_option_specifications.go
 
 package main
 
@@ -26,13 +26,13 @@ const (
 
 func main() {
 
-    // Specify aliases, parse, and checking standard flags
+    // Specify specifications, parse, and checking standard flags
 
     flag_Debug          :=  clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d")
     option_Verbosity    :=  clasp.Option("--verbosity").SetHelp("specifies the verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty")
     flag_Chatty         :=  clasp.AliasesFor("--verbosity=chatty", "-c")
 
-    aliases := []clasp.Alias {
+    specifications := []clasp.Specification {
 
         flag_Debug,
         option_Verbosity,
@@ -42,11 +42,11 @@ func main() {
         clasp.VersionFlag(),
     }
 
-    args := clasp.Parse(os.Args, clasp.ParseParams{ Aliases: aliases })
+    args := clasp.Parse(os.Args, clasp.ParseParams{ Specifications: specifications })
 
     if args.FlagIsSpecified(clasp.HelpFlag()) {
 
-        clasp.ShowUsage(aliases, clasp.UsageParams{
+        clasp.ShowUsage(specifications, clasp.UsageParams{
 
             Version: ProgramVersion,
             InfoLines: []string { "CLASP.Go Examples", "", ":version:", "" },
@@ -55,7 +55,7 @@ func main() {
 
     if args.FlagIsSpecified(clasp.VersionFlag()) {
 
-        clasp.ShowVersion(aliases, clasp.UsageParams{ Version: ProgramVersion })
+        clasp.ShowVersion(specifications, clasp.UsageParams{ Version: ProgramVersion })
     }
 
 
@@ -95,7 +95,7 @@ func main() {
 If executed with no arguments
 
 ```
-    go run examples/flag_and_option_aliases.go
+    go run examples/flag_and_option_specifications.go
 ```
 
 it gives the output:
@@ -108,7 +108,7 @@ it gives the output:
 If executed with the arguments
 
 ```
-    go run examples/flag_and_option_aliases.go --help
+    go run examples/flag_and_option_specifications.go --help
 ```
 
 it gives the output:
@@ -116,9 +116,9 @@ it gives the output:
 ```
 CLASP.Go Examples
 
-flag_and_option_aliases 0.0.1
+flag_and_option_specifications 0.0.1
 
-USAGE: flag_and_option_aliases [ ... flags and options ... ]
+USAGE: flag_and_option_specifications [ ... flags and options ... ]
 
 flags/options:
 
@@ -144,7 +144,7 @@ flags/options:
 If executed with the arguments
 
 ```
-    go run examples/flag_and_option_aliases.go --debug --verbosity=silent
+    go run examples/flag_and_option_specifications.go --debug --verbosity=silent
 ```
 
 it gives the output:
@@ -159,7 +159,7 @@ Debug mode is specified
 If executed with the arguments
 
 ```
-    go run examples/flag_and_option_aliases.go -v silent -d
+    go run examples/flag_and_option_specifications.go -v silent -d
 ```
 
 it gives the (same) output:
@@ -174,7 +174,7 @@ Debug mode is specified
 If executed with the arguments
 
 ```
-    go run examples/flag_and_option_aliases.go -c -d
+    go run examples/flag_and_option_specifications.go -c -d
 ```
 
 it gives the output:
@@ -189,7 +189,7 @@ Debug mode is specified
 If executed with the arguments
 
 ```
-    go run examples/flag_and_option_aliases.go -dc
+    go run examples/flag_and_option_specifications.go -dc
 ```
 
 it gives the (same) output:

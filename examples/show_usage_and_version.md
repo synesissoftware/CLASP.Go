@@ -26,19 +26,19 @@ const (
 
 func main() {
 
-    // Specify aliases, parse, and checking standard flags
+    // Specify specifications, parse, and checking standard flags
 
-    aliases := []clasp.Alias {
+    specifications := []clasp.Alias {
 
         clasp.HelpFlag(),
         clasp.VersionFlag(),
     }
 
-    args := clasp.Parse(os.Args, clasp.ParseParams{ Aliases: aliases })
+    args := clasp.Parse(os.Args, clasp.ParseParams{ Specifications: specifications })
 
     if args.FlagIsSpecified(clasp.HelpFlag()) {
 
-        clasp.ShowUsage(aliases, clasp.UsageParams{
+        clasp.ShowUsage(specifications, clasp.UsageParams{
 
             Version: ProgramVersion,
             InfoLines: []string { "CLASP.Go Examples", "", ":version:", "" }
@@ -47,7 +47,7 @@ func main() {
 
     if args.FlagIsSpecified(clasp.VersionFlag()) {
 
-        clasp.ShowVersion(aliases, clasp.UsageParams{ Version: ProgramVersion })
+        clasp.ShowVersion(specifications, clasp.UsageParams{ Version: ProgramVersion })
     }
 
 

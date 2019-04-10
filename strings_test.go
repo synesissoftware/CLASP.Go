@@ -63,14 +63,14 @@ func Test_String_of_ArgType_unknown(t *testing.T) {
 }
 
 
-// Alias
+// Specification
 
-func Test_String_of_Alias_1(t *testing.T) {
+func Test_String_of_Specification_1(t *testing.T) {
 
-	alias		:=	clasp.Alias{}
+	specification		:=	clasp.Specification{}
 
-	expected	:=	"<clasp.Alias{ Type=<clasp.ArgType 0>, Name=\"\", Aliases=[], Help=\"\", ValueSet=[], BitFlags=0x0, Extras=map[] }>"
-	actual		:=	alias.String()
+	expected	:=	"<clasp.Specification{ Type=<clasp.ArgType 0>, Name=\"\", Aliases=[], Help=\"\", ValueSet=[], BitFlags=0x0, Extras=map[] }>"
+	actual		:=	specification.String()
 
 	if expected != actual {
 
@@ -78,12 +78,12 @@ func Test_String_of_Alias_1(t *testing.T) {
 	}
 }
 
-func Test_String_of_Alias_2(t *testing.T) {
+func Test_String_of_Specification_2(t *testing.T) {
 
-	alias		:=	clasp.Alias{ Help: "help, plz", BitFlags: 0x1234, Name: "--flagpole", Type: clasp.OptionType }
+	specification		:=	clasp.Specification{ Help: "help, plz", BitFlags: 0x1234, Name: "--flagpole", Type: clasp.OptionType }
 
-	expected	:=	"<clasp.Alias{ Type=Option, Name=\"--flagpole\", Aliases=[], Help=\"help, plz\", ValueSet=[], BitFlags=0x1234, Extras=map[] }>"
-	actual		:=	alias.String()
+	expected	:=	"<clasp.Specification{ Type=Option, Name=\"--flagpole\", Aliases=[], Help=\"help, plz\", ValueSet=[], BitFlags=0x1234, Extras=map[] }>"
+	actual		:=	specification.String()
 
 	if expected != actual {
 
@@ -107,7 +107,7 @@ func Test_String_of_Argument_1(t *testing.T) {
 		Flags: 0x1234,
 	}
 
-	expected	:=	"<clasp.Argument{ ResolvedName=\"--help\", GivenName=\"--help\", Value=\"\", Type=Flag, CmdLineIndex=1, NumGivenHyphens=2, ArgumentAlias=<nil>, Flags=0x1234, used=false }>"
+	expected	:=	"<clasp.Argument{ ResolvedName=\"--help\", GivenName=\"--help\", Value=\"\", Type=Flag, CmdLineIndex=1, NumGivenHyphens=2, ArgumentSpecification=<nil>, Flags=0x1234, used=false }>"
 	actual		:=	argument.String()
 
 	if expected != actual {
@@ -139,7 +139,7 @@ func Test_String_of_ParseParams_1(t *testing.T) {
 
 	parseParams	:=	clasp.ParseParams{}
 
-	expected	:=	"<clasp.ParseParams{ Aliases=[], Flags=0x0 }>"
+	expected	:=	"<clasp.ParseParams{ Specifications=[], Flags=0x0 }>"
 	actual		:=	parseParams.String()
 
 	if expected != actual {

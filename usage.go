@@ -4,7 +4,7 @@
  * Purpose:     Usage components for CLASP.Go
  *
  * Created:     4th September 2015
- * Updated:     8th April 2019
+ * Updated:     10th April 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -74,7 +74,7 @@ type UsageParams struct {
 	InfoLines				[]string
 	ValuesString			string
 	// If the empty string is specified, then a default string is used if
-	// any aliases are specified; if a whitespace-only string is specified,
+	// any specifications are specified; if a whitespace-only string is specified,
 	// then no flags/options element is presented
 	FlagsAndOptionsString	string
 }
@@ -188,9 +188,9 @@ func generate_version_string(params UsageParams, apiFunctionName string) string 
  * API
  */
 
-func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
+func ShowUsage(specifications []Specification, params UsageParams) (rc int, err error) {
 
-	for i, a := range aliases {
+	for i, a := range specifications {
 
 		switch a.Type {
 
@@ -200,7 +200,7 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 		default:
 
-			panic(fmt.Sprintf("alias[%d] - '%v' - is an instance of type %T, but must be instance of either %T or %T!", i, a, a, FlagType, OptionType))
+			panic(fmt.Sprintf("specification[%d] - '%v' - is an instance of type %T, but must be instance of either %T or %T!", i, a, a, FlagType, OptionType))
 		}
 	}
 
@@ -224,7 +224,7 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 	program_name	:=	get_program_name(params)
 
-	if "" == params.FlagsAndOptionsString && 0 != len(aliases) {
+	if "" == params.FlagsAndOptionsString && 0 != len(specifications) {
 
 		params.FlagsAndOptionsString = "[ ... flags and options ... ]"
 	}
@@ -257,16 +257,16 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 	fmt.Fprintf(params.Stream, "USAGE: %s%s%s\n", program_name, params.FlagsAndOptionsString, params.ValuesString)
 
-	if 0 != len(aliases) {
+	if 0 != len(specifications) {
 
 		fmt.Fprintf(params.Stream, "\n")
 		fmt.Fprintf(params.Stream, "flags/options:\n")
 		fmt.Fprintf(params.Stream, "\n")
 
-		voas	:=	make(map[string][]Alias)
-		pure	:=	make([]Alias, 0)
+		voas	:=	make(map[string][]Specification)
+		pure	:=	make([]Specification, 0)
 
-		for _, a := range aliases {
+		for _, a := range specifications {
 
 			ix_eq	:= 	strings.Index(a.Name, "=")
 
@@ -279,7 +279,7 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 
 				if _, ok := voas[name]; !ok {
 
-					voas[name] = make([]Alias, 0)
+					voas[name] = make([]Specification, 0)
 				}
 
 				voas[name] = append(voas[name], a)
@@ -337,7 +337,7 @@ func ShowUsage(aliases []Alias, params UsageParams) (rc int, err error) {
 	return params.ExitCode, nil
 }
 
-func ShowVersion(aliases []Alias, params UsageParams) (rc int, err error) {
+func ShowVersion(specifications []Specification, params UsageParams) (rc int, err error) {
 
 	exiter := params.Exiter
 

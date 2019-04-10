@@ -1,4 +1,4 @@
-// examples/flag_and_option_aliases.go
+// examples/flag_and_option_specifications.go
 
 package main
 
@@ -17,13 +17,13 @@ const (
 
 func main() {
 
-	// Specify aliases, parse, and checking standard flags
+	// Specify specifications, parse, and checking standard flags
 
 	flag_Debug			:=	clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d").End()
 	option_Verbosity	:=	clasp.Option("--verbosity").SetHelp("specifies the verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty").End()
 	flag_Chatty			:=	clasp.AliasesFor("--verbosity=chatty", "-c")
 
-	aliases	:= []clasp.Alias {
+	specifications	:= []clasp.Specification {
 
 		flag_Debug,
 		option_Verbosity,
@@ -33,11 +33,11 @@ func main() {
 		clasp.VersionFlag(),
 	}
 
-	args := clasp.Parse(os.Args, clasp.ParseParams{ Aliases: aliases })
+	args := clasp.Parse(os.Args, clasp.ParseParams{ Specifications: specifications })
 
 	if args.FlagIsSpecified(clasp.HelpFlag()) {
 
-		clasp.ShowUsage(aliases, clasp.UsageParams{
+		clasp.ShowUsage(specifications, clasp.UsageParams{
 
 			Version: ProgramVersion,
 			InfoLines: []string { "CLASP.Go Examples", "", ":version:", "" },
@@ -46,7 +46,7 @@ func main() {
 
 	if args.FlagIsSpecified(clasp.VersionFlag()) {
 
-		clasp.ShowVersion(aliases, clasp.UsageParams{ Version: ProgramVersion })
+		clasp.ShowVersion(specifications, clasp.UsageParams{ Version: ProgramVersion })
 	}
 
 

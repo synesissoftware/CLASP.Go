@@ -1,5 +1,9 @@
 # **CLASP.Go** Changes
 
+## 0.15.0 - 10th April 2019
+
+* ~ changed *Alias to *Specification
+
 ## 0.14.4 - 8th April 2019
 
 * ~ option-value aliases are now listed correctly in ShowUsage()
