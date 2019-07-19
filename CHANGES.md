@@ -1,5 +1,9 @@
 # **CLASP.Go** Changes
 
+## 0.15.0 - 20th July 2019
+
+* ~ minor improvements to README.md
+
 ## 0.15.0 - 10th April 2019
 
 * ~ changed *Alias to *Specification

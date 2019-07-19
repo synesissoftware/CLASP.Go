@@ -55,9 +55,23 @@ None
 
 ### Related projects
 
+**CLASP.Ruby** is inspired by the [C/C++ CLASP library](https://github.com/synesissoftware/CLASP), which is documented in the articles:
+
+ * _An Introduction to \CLASP_, Matthew Wilson, [CVu](http://accu.org/index.php/journals/c77/), January 2012;
+ * _[Anatomy of a CLI Program written in C](http://synesis.com.au/publishing/software-anatomies/anatomy-of-a-cli-program-written-in-c.html)_, Matthew Wilson, [CVu](http://accu.org/index.php/journals/c77/), September 2012; and
+ * _[Anatomy of a CLI Program written in C++](http://synesis.com.au/publishing/software-anatomies/anatomy-of-a-cli-program-written-in-c++.html)_, Matthew Wilson, [CVu](http://accu.org/index.php/journals/c77/), September 2015.
+
+Other CLASP libraries include:
+
 * [**CLASP**](https://github.com/synesissoftware/CLASP/)
+* [**CLASP.js**](https://github.com/synesissoftware/CLASP.js/)
+* [**CLASP.NET**](https://github.com/synesissoftware/CLASP.NET/)
 * [**CLASP.Python**](https://github.com/synesissoftware/CLASP.Python/)
 * [**CLASP.Ruby**](https://github.com/synesissoftware/CLASP.Ruby/)
+
+Projects in which **CLASP.Go** is used include:
+
+**CLASP.Go** is used in the **[libCLImate.Go](https://github.com/synesissoftware/libCLImate.Go)** library.
 
 ### License
 
