@@ -12,7 +12,7 @@ import (
 
 const (
 
-	ProgramVersion	=	"0.0.1"
+	ProgramVersion	=	"0.1.0"
 )
 
 func main() {
@@ -25,10 +25,13 @@ func main() {
 
 	specifications	:= []clasp.Specification {
 
+		clasp.Section("behaviour:"),
 		flag_Debug,
 		option_Verbosity,
 		flag_Chatty,
 
+		clasp.Section("standard:"),
+		flag_Debug,
 		clasp.HelpFlag(),
 		clasp.VersionFlag(),
 	}

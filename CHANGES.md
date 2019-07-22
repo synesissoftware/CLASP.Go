@@ -1,5 +1,9 @@
 # **CLASP.Go** Changes
 
+## 0.16.0 - 22nd July 2019
+
+* + added support for sections (via ``Section()`` function)
+
 ## 0.15.0 - 20th July 2019
 
 * ~ minor improvements to README.md

@@ -4,7 +4,7 @@
  * Purpose:     Usage components for CLASP.Go
  *
  * Created:     4th September 2015
- * Updated:     10th April 2019
+ * Updated:     22nd July 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -198,6 +198,10 @@ func ShowUsage(specifications []Specification, params UsageParams) (rc int, err 
 
 			;
 
+		case SectionType:
+
+			;
+
 		default:
 
 			panic(fmt.Sprintf("specification[%d] - '%v' - is an instance of type %T, but must be instance of either %T or %T!", i, a, a, FlagType, OptionType))
@@ -288,6 +292,8 @@ func ShowUsage(specifications []Specification, params UsageParams) (rc int, err 
 
 		for _, a := range pure {
 
+			is_section := false
+
 			switch a.Type {
 
 			case FlagType:
@@ -309,16 +315,24 @@ func ShowUsage(specifications []Specification, params UsageParams) (rc int, err 
 					fmt.Fprintf(params.Stream, "\t%v <value>\n", b)
 				}
 				fmt.Fprintf(params.Stream, "\t%v=<value>\n", a.Name)
+
+			case SectionType:
+
+				fmt.Fprintf(params.Stream, "\t%v\n", a.Name)
+				is_section = true
 			}
 
-			fmt.Fprintf(params.Stream, "\t\t%v\n", a.Help)
+			if !is_section {
 
-			if 0 != len(a.ValueSet) {
+				fmt.Fprintf(params.Stream, "\t\t%v\n", a.Help)
 
-				fmt.Fprintf(params.Stream, "\t\twhere <value> one of:\n")
-				for j := 0; j != len(a.ValueSet); j++ {
+				if 0 != len(a.ValueSet) {
 
-					fmt.Fprintf(params.Stream, "\t\t\t%v\n", a.ValueSet[j])
+					fmt.Fprintf(params.Stream, "\t\twhere <value> one of:\n")
+					for j := 0; j != len(a.ValueSet); j++ {
+
+						fmt.Fprintf(params.Stream, "\t\t\t%v\n", a.ValueSet[j])
+					}
 				}
 			}
 

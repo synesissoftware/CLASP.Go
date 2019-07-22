@@ -4,7 +4,7 @@
  * Purpose:     Version file for CLASP.Go
  *
  * Created:     15th August 2015
- * Updated:     10th April 2019
+ * Updated:     22nd July 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -44,7 +44,7 @@ package clasp
 const (
 
 	VersionMajor int16		=	0
-	VersionMinor int16		=	15
+	VersionMinor int16		=	16
 	VersionPatch int16		=	0
 	Version int64			=	(int64(VersionMajor) << 48) + (int64(VersionMinor) << 32) + (int64(VersionPatch) << 16)
 

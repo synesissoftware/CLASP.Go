@@ -76,6 +76,8 @@ const (
 	OptionType		ArgType = 2
 	ValueType		ArgType = 3
 
+	SectionType		ArgType	= 21
+
 	optionViaAlias	ArgType = -98
 	int_1_			ArgType = -99
 )
@@ -147,6 +149,9 @@ func (at ArgType) String() string {
 	case ValueType:
 
 		return "Value"
+	case SectionType:
+
+		return "Section"
 	default:
 
 		return fmt.Sprintf("<%T %d>", at, at)
@@ -188,6 +193,15 @@ func Flag(name string) (result Specification) {
 func Option(name string) (result Specification) {
 
 	result.Type = OptionType
+	result.Name = name
+
+	return
+}
+
+// Creates a flag specification, with the given name
+func Section(name string) (result Specification) {
+
+	result.Type = SectionType
 	result.Name = name
 
 	return

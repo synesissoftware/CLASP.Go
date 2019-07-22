@@ -21,7 +21,7 @@ import (
 
 const (
 
-    ProgramVersion  =   "0.0.1"
+    ProgramVersion  =   "0.1.0"
 )
 
 func main() {
@@ -34,10 +34,12 @@ func main() {
 
     specifications := []clasp.Specification {
 
+        clasp.Section("behaviour:"),
         flag_Debug,
         option_Verbosity,
         flag_Chatty,
 
+        clasp.Section("standard:"),
         clasp.HelpFlag(),
         clasp.VersionFlag(),
     }
@@ -116,27 +118,39 @@ it gives the output:
 ```
 CLASP.Go Examples
 
-flag_and_option_specifications 0.0.1
+flag_and_option_specifications 0.1.0
 
 USAGE: flag_and_option_specifications [ ... flags and options ... ]
 
 flags/options:
 
-    -d
-    --debug
-        runs in Debug mode
+	behaviour:
 
-    -c --verbosity=chatty
-    -v <value>
-    --verbosity=<value>
-        specifies the verbosity
+	-d
+	--debug
+		runs in Debug mode
 
+	-c --verbosity=chatty
+	-v <value>
+	--verbosity=<value>
+		specifies the verbosity
+		where <value> one of:
+			terse
+			quiet
+			silent
+			chatty
 
-    --help
-        Shows this help and exits
+	standard:
 
-    --version
-        Shows version information and exits
+	-d
+	--debug
+		runs in Debug mode
+
+	--help
+		Shows this help and exits
+
+	--version
+		Shows version information and exits
 ```
 
 ### Specify flags and options in long-form
@@ -198,4 +212,3 @@ it gives the (same) output:
 verbosity is specified as: chatty
 Debug mode is specified
 ```
-
