@@ -4,7 +4,7 @@
  * Purpose:     Main file for CLASP.Go
  *
  * Created:     15th August 2015
- * Updated:     10th April 2019
+ * Updated:     22nd July 2019
  *
  * Home:        http://synesis.com.au/software
  *
@@ -268,21 +268,21 @@ func (params *ParseParams) findSpecification(name string) (found bool, specifica
 	// 2. search for specification with that alias
 	// 3. return nil
 
-	for i, a := range params.Specifications {
+	for i, spec := range params.Specifications {
 
-		if name == a.Name {
+		if name == spec.Name {
 
-			return true, &a, i
+			return true, &spec, i
 		}
 	}
 
-	for i, a := range params.Specifications {
+	for i, spec := range params.Specifications {
 
-		for _, n := range a.Aliases {
+		for _, n := range spec.Aliases {
 
 			if name == n {
 
-				return true, &a, i
+				return true, &spec, i
 			}
 		}
 	}
@@ -540,11 +540,11 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 	args.specifications_	=	make([]*Specification, len(params.Specifications))
 
-	for i, a := range(params.Specifications) {
+	for i, spec := range(params.Specifications) {
 
 		var p *Specification = new(Specification)
 
-		*p = a
+		*p = spec
 
 		args.specifications_[i] = p
 	}
@@ -563,9 +563,9 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 		found	=	true
 	}
 
-	if a, is_Specification := id.(Specification); is_Specification {
+	if spec, is_Specification := id.(Specification); is_Specification {
 
-		switch a.Type {
+		switch spec.Type {
 
 			case OptionType:
 
@@ -573,11 +573,11 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 				fallthrough
 			case FlagType:
 
-				name	=	a.Name
+				name	=	spec.Name
 				found	=	true
 			default:
 
-				panic(fmt.Sprintf("invoked FlagIsSpecified() passing a non-Flag (and non-Option) Specification '%v'", a))
+				panic(fmt.Sprintf("invoked FlagIsSpecified() passing a non-Flag (and non-Option) Specification '%v'", spec))
 		}
 	}
 
@@ -611,17 +611,17 @@ func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
 		found	=	true
 	}
 
-	if a, is_Specification := id.(Specification); is_Specification {
+	if spec, is_Specification := id.(Specification); is_Specification {
 
-		switch a.Type {
+		switch spec.Type {
 
 			case FlagType:
 
-				name	=	a.Name
+				name	=	spec.Name
 				found	=	true
 			default:
 
-				panic(fmt.Sprintf("invoked LookupFlag() passing a non-Flag Specification '%v'", a))
+				panic(fmt.Sprintf("invoked LookupFlag() passing a non-Flag Specification '%v'", spec))
 		}
 	}
 
@@ -655,17 +655,17 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 		found	=	true
 	}
 
-	if a, is_Specification := id.(Specification); is_Specification {
+	if spec, is_Specification := id.(Specification); is_Specification {
 
-		switch a.Type {
+		switch spec.Type {
 
 			case OptionType:
 
-				name	=	a.Name
+				name	=	spec.Name
 				found	=	true
 			default:
 
-				panic(fmt.Sprintf("invoked LookupOption() passing a non-Option Specification '%v'", a))
+				panic(fmt.Sprintf("invoked LookupOption() passing a non-Option Specification '%v'", spec))
 		}
 	}
 
@@ -722,18 +722,18 @@ func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
 
 	var unused []*Argument
 
-	for _, a := range args.Arguments {
+	for _, spec := range args.Arguments {
 
-		switch a.Type {
+		switch spec.Type {
 
 			case FlagType:
 
 				fallthrough
 			case OptionType:
 
-				if 0 == a.used_ {
+				if 0 == spec.used_ {
 
-					unused = append(unused, a)
+					unused = append(unused, spec)
 				}
 				break;
 		}
