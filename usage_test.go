@@ -63,7 +63,7 @@ func call_ShowUsage_(t *testing.T, specifications []clasp.Specification, ups cla
 
 	t.Helper()
 
-	buf			:=	new(bytes.Buffer)
+	buf		:=	new(bytes.Buffer)
 
 	ups.Stream = buf
 	ups.UsageFlags |= clasp.DontCallExit
@@ -237,7 +237,7 @@ func Test_ShowUsage_2(t *testing.T) {
 
 func Test_ShowUsage_3_a(t *testing.T) {
 
-	specifications						:=	[]clasp.Specification{
+	specifications				:=	[]clasp.Specification{
 
 		clasp.Flag("--high").SetAlias("-h").SetHelp("makes things high"),
 	}
@@ -274,7 +274,7 @@ func Test_ShowUsage_3_a(t *testing.T) {
 
 func Test_ShowUsage_3_b(t *testing.T) {
 
-	specifications						:=	[]clasp.Specification{
+	specifications				:=	[]clasp.Specification{
 
 		clasp.Flag("--high").SetAlias("-h").SetHelp("makes things high"),
 	}
@@ -311,7 +311,7 @@ func Test_ShowUsage_3_b(t *testing.T) {
 
 func Test_ShowUsage_3_c(t *testing.T) {
 
-	specifications						:=	[]clasp.Specification{
+	specifications				:=	[]clasp.Specification{
 
 		clasp.Flag("--high").SetAlias("-h").SetHelp("makes things high"),
 	}
@@ -348,11 +348,9 @@ func Test_ShowUsage_3_c(t *testing.T) {
 
 func Test_ShowUsage_4(t *testing.T) {
 
-	specifications						:=	[]clasp.Specification{
+	specifications				:=	[]clasp.Specification{
 
-		clasp.Option("--verbosity").
-		SetHelp("Specifies the verbosity").
-		SetValues("low", "medium", "high"),
+		clasp.Option("--verbosity").SetHelp("Specifies the verbosity").SetValues("low", "medium", "high"),
 		clasp.Flag("--verbosity=high").SetAlias("-v"),
 	}
 	values_string				:=	""
