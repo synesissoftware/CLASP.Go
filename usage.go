@@ -265,14 +265,17 @@ func ShowUsage(specifications []Specification, params UsageParams) (rc int, err 
 
 		fmt.Fprintf(params.Stream, "\n")
 		fmt.Fprintf(params.Stream, "flags/options:\n")
-		fmt.Fprintf(params.Stream, "\n")
+		if 0 == (SkipBlanksBetweenLines & params.UsageFlags) {
+
+			fmt.Fprintf(params.Stream, "\n")
+		}
 
 		voas	:=	make(map[string][]Specification)
 		pure	:=	make([]Specification, 0)
 
 		for _, a := range specifications {
 
-			ix_eq	:= 	strings.Index(a.Name, "=")
+			ix_eq	:=	strings.Index(a.Name, "=")
 
 			if ix_eq < 0 {
 
@@ -291,8 +294,6 @@ func ShowUsage(specifications []Specification, params UsageParams) (rc int, err 
 		}
 
 		for _, a := range pure {
-
-			is_section := false
 
 			switch a.Type {
 
@@ -318,21 +319,27 @@ func ShowUsage(specifications []Specification, params UsageParams) (rc int, err 
 
 			case SectionType:
 
-				fmt.Fprintf(params.Stream, "\t%v\n", a.Name)
-				is_section = true
+				if 0 != (SkipBlanksBetweenLines & params.UsageFlags) {
+
+					fmt.Fprintf(params.Stream, "\n")
+				}
+				fmt.Fprintf(params.Stream, "\t%v\n\n", a.Name)
+
+				continue
 			}
 
-			if !is_section {
+			if 0 != len(a.Help) {
 
 				fmt.Fprintf(params.Stream, "\t\t%v\n", a.Help)
+			}
 
-				if 0 != len(a.ValueSet) {
 
-					fmt.Fprintf(params.Stream, "\t\twhere <value> one of:\n")
-					for j := 0; j != len(a.ValueSet); j++ {
+			if 0 != len(a.ValueSet) {
 
-						fmt.Fprintf(params.Stream, "\t\t\t%v\n", a.ValueSet[j])
-					}
+				fmt.Fprintf(params.Stream, "\t\twhere <value> one of:\n")
+				for j := 0; j != len(a.ValueSet); j++ {
+
+					fmt.Fprintf(params.Stream, "\t\t\t%v\n", a.ValueSet[j])
 				}
 			}
 

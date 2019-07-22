@@ -1,5 +1,9 @@
 # **CLASP.Go** Changes
 
+## 0.16.1 - 22nd July 2019
+
+* ~ improvement in display of usage to ensure sections are always surrounded by blank lines, and to deal with flags/options without help descriptions
+
 ## 0.16.0 - 22nd July 2019
 
 * + added support for sections (via ``Section()`` function)
