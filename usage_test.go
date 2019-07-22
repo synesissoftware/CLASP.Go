@@ -351,8 +351,8 @@ func Test_ShowUsage_4(t *testing.T) {
 	specifications						:=	[]clasp.Specification{
 
 		clasp.Option("--verbosity").
-			SetHelp("Specifies the verbosity").
-			SetValues("low", "medium", "high"),
+		SetHelp("Specifies the verbosity").
+		SetValues("low", "medium", "high"),
 		clasp.Flag("--verbosity=high").SetAlias("-v"),
 	}
 	values_string				:=	""
