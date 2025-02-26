@@ -1,57 +1,83 @@
-# CLASP.Go
+# CLASP.Go <!-- omit in toc -->
 **C**ommand-**L**ine **A**rgument **S**orting and **P**arsing for Go
+
 
 ## Introduction
 
 **CLASP** stands for **C**ommand-**L**ine **A**rgument **S**orting and
 **P**arsing. The first CLASP library was a C library with a C++ wrapper. There
-have been several implementations in other languages. **CLASP.Go** is the
+have been [several implementations in other languages](#related-projects). **CLASP.Go** is the
 Go version.
 
-## Table of Contents
 
-1. [Introduction](#introduction)
-2. [Installation](#installation)
-3. [Components](#components)
-4. [Examples](#examples)
-5. [Project Information](#project-information)
+## Table of Contents <!-- omit in toc -->
 
-## Introduction
-
-T.B.C.
+- [Introduction](#introduction)
+- [Installation](#installation)
+- [Components](#components)
+- [Examples](#examples)
+- [Project Information](#project-information)
+	- [Where to get help](#where-to-get-help)
+	- [Contribution guidelines](#contribution-guidelines)
+	- [Dependencies](#dependencies)
+		- [Development/Testing Dependencies](#developmenttesting-dependencies)
+	- [Related projects](#related-projects)
+	- [License](#license)
 
 ## Installation
 
-```Go
+Install via `go get`, as in:
 
+```bash
+go get "github.com/synesissoftware/CLASP.Go"
+```
+
+and then import as:
+
+```Go
 import clasp "github.com/synesissoftware/CLASP.Go"
 ```
 
+or, simply, as:
+
+```Go
+import "github.com/synesissoftware/CLASP.Go"
+```
+
+
 ## Components
 
-TBC
+T.B.C.
+
 
 ## Examples
 
 Examples are provided in the ```examples``` directory, along with a markdown description for each. A detailed list TOC of them is provided in [EXAMPLES.md](./EXAMPLES.md).
 
+
 ## Project Information
+
 
 ### Where to get help
 
 [GitHub Page](https://github.com/synesissoftware/CLASP.Go "GitHub Page")
 
+
 ### Contribution guidelines
 
 Defect reports, feature requests, and pull requests are welcome on https://github.com/synesissoftware/CLASP.Go.
+
 
 ### Dependencies
 
 None
 
+
 #### Development/Testing Dependencies
 
-* [**ANGoLS**](https://github.com/synesissoftware/ANGoLS/)
+* [**ANGoLS**](https://github.com/synesissoftware/ANGoLS/);
+* [**ver2go**](https://github.com/synesissoftware/ver2go/);
+
 
 ### Related projects
 
@@ -63,16 +89,21 @@ None
 
 Other CLASP libraries include:
 
-* [**CLASP**](https://github.com/synesissoftware/CLASP/)
-* [**CLASP.js**](https://github.com/synesissoftware/CLASP.js/)
-* [**CLASP.NET**](https://github.com/synesissoftware/CLASP.NET/)
-* [**CLASP.Python**](https://github.com/synesissoftware/CLASP.Python/)
-* [**CLASP.Ruby**](https://github.com/synesissoftware/CLASP.Ruby/)
+* [**CLASP**](https://github.com/synesissoftware/CLASP/);
+* [**CLASP.js**](https://github.com/synesissoftware/CLASP.js/);
+* [**CLASP.NET**](https://github.com/synesissoftware/CLASP.NET/);
+* [**CLASP.Python**](https://github.com/synesissoftware/CLASP.Python/);
+* [**CLASP.Ruby**](https://github.com/synesissoftware/CLASP.Ruby/);
 
 Projects in which **CLASP.Go** is used include:
 
 **CLASP.Go** is used in the **[libCLImate.Go](https://github.com/synesissoftware/libCLImate.Go)** library.
 
+
 ### License
 
 **CLASP.Go** is released under the 3-clause BSD license. See [LICENSE](./LICENSE) for details.
+
+
+<!-- ########################### end of file ########################### -->
+
