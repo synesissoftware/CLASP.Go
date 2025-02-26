@@ -1,10 +1,11 @@
-// Copyright 2015-2025 Matthew Wilson and Synesis Information Systems. All
-// rights reserved. Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
+// Copyright 2019-2025 Matthew Wilson and Synesis Information Systems.
+// Copyright 2015-2019 Matthew Wilson. All rights reserved. Use of this
+// source code is governed by a BSD-style license that can be found in the
+// LICENSE file.
 
 /*
  * Created: 15th August 2015
- * Updated: 23rd February 2025
+ * Updated: 26th February 2025
  */
 
 package clasp

@@ -1,48 +1,16 @@
-/* /////////////////////////////////////////////////////////////////////////
- * File:        api.go
- *
- * Purpose:     Main file for CLASP.Go
- *
- * Created:     15th August 2015
- * Updated:     22nd July 2019
- *
- * Home:        http://synesis.com.au/software
- *
- * Copyright (c) 2015-2019, Matthew Wilson
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are
- * met:
- *
- * - Redistributions of source code must retain the above copyright notice,
- *   this list of conditions and the following disclaimer.
- * - Redistributions in binary form must reproduce the above copyright
- *   notice, this list of conditions and the following disclaimer in the
- *   documentation and/or other materials provided with the distribution.
- * - Neither the names of Matthew Wilson and Synesis Software nor the names
- *   of any contributors may be used to endorse or promote products derived
- *   from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
- * IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * ////////////////////////////////////////////////////////////////////// */
+// Copyright 2019-2025 Matthew Wilson and Synesis Information Systems.
+// Copyright 2015-2019 Matthew Wilson. All rights reserved. Use of this
+// source code is governed by a BSD-style license that can be found in the
+// LICENSE file.
 
+/*
+ * Created: 15th August 2015
+ * Updated: 26th February 2025
+ */
 
 package clasp
 
 import (
-
 	"fmt"
 	"path"
 	"strings"
@@ -59,8 +27,7 @@ type ParseFlag int
  */
 
 const (
-
-	ParseTreatSingleHyphenAsValue ParseFlag = 1 << iota
+	ParseTreatSingleHyphenAsValue               ParseFlag = 1 << iota
 	ParseDontRecogniseDoubleHyphenToStartValues ParseFlag = 1 << iota
 )
 
@@ -71,74 +38,69 @@ const (
 type ArgType int
 
 const (
+	FlagType   ArgType = 1
+	OptionType ArgType = 2
+	ValueType  ArgType = 3
 
-	FlagType		ArgType = 1
-	OptionType		ArgType = 2
-	ValueType		ArgType = 3
+	SectionType ArgType = 21
 
-	SectionType		ArgType	= 21
-
-	optionViaAlias	ArgType = -98
-	int_1_			ArgType = -99
+	optionViaAlias ArgType = -98
+	int_1_         ArgType = -99
 )
 
 type Specification struct {
-
-	Type			ArgType
-	Name			string
-	Aliases			[]string
-	Help			string
-	ValueSet		[]string
-	BitFlags		int
-	Extras			map[string]interface{}
+	Type     ArgType
+	Name     string
+	Aliases  []string
+	Help     string
+	ValueSet []string
+	BitFlags int
+	Extras   map[string]interface{}
 }
 
 type Argument struct {
+	ResolvedName          string
+	GivenName             string
+	Value                 string
+	Type                  ArgType
+	CmdLineIndex          int
+	NumGivenHyphens       int
+	ArgumentSpecification *Specification
+	Flags                 int
 
-	ResolvedName			string
-	GivenName				string
-	Value					string
-	Type					ArgType
-	CmdLineIndex			int
-	NumGivenHyphens			int
-	ArgumentSpecification	*Specification
-	Flags					int
-
-	used_			int
+	used_ int
 }
 
 type Arguments struct {
-
-	Arguments		[]*Argument
-	Flags			[]*Argument
-	Options			[]*Argument
-	Values			[]*Argument
-	Argv			[]string
-	ProgramName		string
-	specifications_	[]*Specification
+	Arguments       []*Argument
+	Flags           []*Argument
+	Options         []*Argument
+	Values          []*Argument
+	Argv            []string
+	ProgramName     string
+	specifications_ []*Specification
 }
 
 type ParseParams struct {
-
-	Specifications	[]Specification
-	Flags			ParseFlag
+	Specifications []Specification
+	Flags          ParseFlag
 }
 
-// Obtains, by value, a specification containing a stock specification of a '--help' flag
+// Obtains, by value, a specification containing a stock specification of a '--help' flag.
 func HelpFlag() Specification {
 
-	return Specification{ FlagType, "--help", nil, "Shows this help and exits", nil, 0, nil }
+	return Specification{FlagType, "--help", nil, "Shows this help and exits", nil, 0, nil}
 }
 
-// Obtains, by value, a specification containing a stock specification of a '--version' flag
+// Obtains, by value, a specification containing a stock specification of a '--version' flag.
 func VersionFlag() Specification {
 
-	return Specification{ FlagType, "--version", nil, "Shows version information and exits", nil, 0, nil }
+	return Specification{FlagType, "--version", nil, "Shows version information and exits", nil, 0, nil}
 }
 
 func (at ArgType) String() string {
 
-	switch(at) {
+	switch at {
 
 	case FlagType:
 
@@ -180,7 +142,7 @@ func (params ParseParams) String() string {
 
 /* builders */
 
-// Creates a flag specification, with the given name
+// Creates a flag specification, with the given name.
 func Flag(name string) (result Specification) {
 
 	result.Type = FlagType
@@ -189,7 +151,7 @@ func Flag(name string) (result Specification) {
 	return
 }
 
-// Creates an option specification, with the given name
+// Creates an option specification, with the given name.
 func Option(name string) (result Specification) {
 
 	result.Type = OptionType
@@ -198,7 +160,7 @@ func Option(name string) (result Specification) {
 	return
 }
 
-// Creates a flag specification, with the given name
+// Creates a flag specification, with the given name.
 func Section(name string) (result Specification) {
 
 	result.Type = SectionType
@@ -207,50 +169,50 @@ func Section(name string) (result Specification) {
 	return
 }
 
-// Creates a specification for an actual flag/option, with 1 or more aliases
+// Creates a specification for an actual flag/option, with 1 or more aliases.
 func AliasesFor(actual string, alias0 string, other_aliases ...string) (result Specification) {
 
 	result.Type = FlagType
 	result.Name = actual
-	result.Aliases = append([]string { alias0 }, other_aliases...)
+	result.Aliases = append([]string{alias0}, other_aliases...)
 
 	return
 }
 
-// Builder method to set the help for a specification
-func (specification Specification) SetHelp(help string) (Specification) {
+// Builder method to set the help for a specification.
+func (specification Specification) SetHelp(help string) Specification {
 
 	specification.Help = help
 
 	return specification
 }
 
-// Builder method to set the values for an option specification
-func (specification Specification) SetValues(values ...string) (Specification) {
+// Builder method to set the values for an option specification.
+func (specification Specification) SetValues(values ...string) Specification {
 
 	specification.ValueSet = values
 
 	return specification
 }
 
-// Builder method that sets the specification
-func (specification Specification) SetAlias(s string) (Specification) {
+// Builder method that sets the alias.
+func (specification Specification) SetAlias(s string) Specification {
 
-	specification.Aliases = []string { s }
+	specification.Aliases = []string{s}
 
 	return specification
 }
 
-// Builder method that sets one or more aliases
-func (specification Specification) SetAliases(aliases ...string) (Specification) {
+// Builder method that sets one or more aliases.
+func (specification Specification) SetAliases(aliases ...string) Specification {
 
 	specification.Aliases = aliases
 
 	return specification
 }
 
-// Builder method to an Extras entry
-func (specification Specification) SetExtra(key string, value interface{}) (Specification) {
+// Builder method to set an Extras entry.
+func (specification Specification) SetExtra(key string, value interface{}) Specification {
 
 	if specification.Extras == nil {
 
@@ -264,8 +226,8 @@ func (specification Specification) SetExtra(key string, value interface{}) (Spec
 
 // Builder method to denote the end of building. All uses of building should
 // be using this method, as future versions may change the types/semantics
-// of the other builder methods
-func (specification Specification) End() (Specification) {
+// of the other builder methods.
+func (specification Specification) End() Specification {
 
 	return specification
 }
@@ -330,15 +292,15 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 	args := new(Arguments)
 
-	args.Arguments		=	make([]*Argument, 0)
-	args.Flags			=	make([]*Argument, 0)
-	args.Options		=	make([]*Argument, 0)
-	args.Values			=	make([]*Argument, 0)
-	args.Argv			=	argv
-	args.ProgramName	=	path.Base(argv[0])
+	args.Arguments = make([]*Argument, 0)
+	args.Flags = make([]*Argument, 0)
+	args.Options = make([]*Argument, 0)
+	args.Values = make([]*Argument, 0)
+	args.Argv = argv
+	args.ProgramName = path.Base(argv[0])
 
-	treatingAsValues	:=	false
-	nextIsOptValue		:=	false
+	treatingAsValues := false
+	nextIsOptValue := false
 
 	for i, s := range argv[1:] {
 
@@ -351,59 +313,57 @@ func Parse(argv []string, params ParseParams) *Arguments {
 		if nextIsOptValue {
 
 			nextIsOptValue = false
-			args.Arguments[len(args.Arguments) - 1].Value = s
+			args.Arguments[len(args.Arguments)-1].Value = s
 			continue
 		}
 
 		arg := new(Argument)
 
+		arg.CmdLineIndex = i + 1
+		arg.Flags = int(params.Flags)
+		arg.ArgumentSpecification = nil
 
-		arg.CmdLineIndex	=	i + 1
-		arg.Flags			=	int(params.Flags)
-		arg.ArgumentSpecification	=	nil
-
-		numHyphens			:=	0
-		isSingle			:=	false
+		numHyphens := 0
+		isSingle := false
 
 		if !treatingAsValues {
 
-			l				:=	len(s)
+			l := len(s)
 			if 1 == l && "-" == s {
 
-				numHyphens	=	1
-				isSingle	=	true
+				numHyphens = 1
+				isSingle = true
 			} else if 2 == l && "--" == s {
 
-				numHyphens	=	2
+				numHyphens = 2
 			} else {
 
-				numHyphens	=	strings.IndexFunc(s, func(c rune) bool { return '-' != c })
+				numHyphens = strings.IndexFunc(s, func(c rune) bool { return '-' != c })
 			}
 		}
 
-
-		arg.NumGivenHyphens	=	numHyphens
+		arg.NumGivenHyphens = numHyphens
 
 		switch numHyphens {
 
 		case 0:
 
-			arg.Type				=	ValueType
-			arg.Value				=	s
+			arg.Type = ValueType
+			arg.Value = s
 		default:
 
 			nv := strings.SplitN(s, "=", 2)
 			if len(nv) > 1 {
 
-				arg.Type			=	OptionType
-				arg.GivenName		=	nv[0]
-				arg.ResolvedName	=	nv[0]
-				arg.Value			=	nv[1]
+				arg.Type = OptionType
+				arg.GivenName = nv[0]
+				arg.ResolvedName = nv[0]
+				arg.Value = nv[1]
 
 				if found, specification, _ := params.findSpecification(arg.ResolvedName); found {
 
-					arg.ResolvedName	=	specification.Name
-					arg.ArgumentSpecification	=	specification
+					arg.ResolvedName = specification.Name
+					arg.ArgumentSpecification = specification
 				} else {
 
 				}
@@ -413,30 +373,30 @@ func Parse(argv []string, params ParseParams) *Arguments {
 				// whether the apparent flag is, in fact, an
 				// option
 
-				resolvedName		:=	s
-				argType				:=	FlagType
+				resolvedName := s
+				argType := FlagType
 
 				if found, specification, _ := params.findSpecification(s); found {
 
-					resolvedName		=	specification.Name
-					argType				=	specification.Type
-					arg.ArgumentSpecification	=	specification
+					resolvedName = specification.Name
+					argType = specification.Type
+					arg.ArgumentSpecification = specification
 
 					if ix_equals := strings.Index(resolvedName, "="); ix_equals >= 0 {
 
-						res_nm	:=	resolvedName[:ix_equals]
-						value	:=	resolvedName[ix_equals + 1:]
+						res_nm := resolvedName[:ix_equals]
+						value := resolvedName[ix_equals+1:]
 
-						argType			=	optionViaAlias
-						s				=	resolvedName
-						resolvedName	=	res_nm
-						arg.Value		=	value
+						argType = optionViaAlias
+						s = resolvedName
+						resolvedName = res_nm
+						arg.Value = value
 
 						// Now need to look up the actual underlying specification
 
 						if actualFound, actualSpecification, _ := params.findSpecification(res_nm); actualFound {
 
-							arg.ArgumentSpecification	=	actualSpecification
+							arg.ArgumentSpecification = actualSpecification
 						}
 					}
 				} else {
@@ -445,9 +405,9 @@ func Parse(argv []string, params ParseParams) *Arguments {
 					// a specification. If so, we convert all, add them in, then
 					// skip to the next input
 
-					validCompoundFlag	:=	len(s) > 1
+					validCompoundFlag := len(s) > 1
 
-					compoundArguments	:=	make([]*Argument, 0, len(s) - 1)
+					compoundArguments := make([]*Argument, 0, len(s)-1)
 
 					for j, c := range s {
 
@@ -456,39 +416,39 @@ func Parse(argv []string, params ParseParams) *Arguments {
 							continue
 						}
 
-						testAlias	:=	fmt.Sprintf("-%c", c)
+						testAlias := fmt.Sprintf("-%c", c)
 
 						if compoundFound, compoundSpec, _ := params.findSpecification(testAlias); compoundFound && compoundSpec.Type == FlagType {
 
 							var compoundArg Argument
 
-							compoundArg.ResolvedName			=	compoundSpec.Name
-							compoundArg.GivenName				=	s
-							compoundArg.Value					=	""
-							compoundArg.Type					=	FlagType
-							compoundArg.CmdLineIndex			=	arg.CmdLineIndex
-							compoundArg.ArgumentSpecification	=	compoundSpec
-							compoundArg.Flags					=	arg.Flags
+							compoundArg.ResolvedName = compoundSpec.Name
+							compoundArg.GivenName = s
+							compoundArg.Value = ""
+							compoundArg.Type = FlagType
+							compoundArg.CmdLineIndex = arg.CmdLineIndex
+							compoundArg.ArgumentSpecification = compoundSpec
+							compoundArg.Flags = arg.Flags
 
 							if ix_equals := strings.Index(compoundArg.ResolvedName, "="); ix_equals >= 0 {
 
-								res_nm	:=	compoundArg.ResolvedName[:ix_equals]
-								value	:=	compoundArg.ResolvedName[ix_equals + 1:]
+								res_nm := compoundArg.ResolvedName[:ix_equals]
+								value := compoundArg.ResolvedName[ix_equals+1:]
 
-								compoundArg.Type			=	OptionType
-								s							=	compoundArg.ResolvedName
-								compoundArg.ResolvedName	=	res_nm
-								compoundArg.Value			=	value
+								compoundArg.Type = OptionType
+								s = compoundArg.ResolvedName
+								compoundArg.ResolvedName = res_nm
+								compoundArg.Value = value
 
 								// Now need to look up the actual underlying specification
 
 								if actualFound, actualSpecification, _ := params.findSpecification(res_nm); actualFound {
 
-									compoundArg.ArgumentSpecification	=	actualSpecification
+									compoundArg.ArgumentSpecification = actualSpecification
 								}
 							}
 
-							compoundArguments			=	append(compoundArguments, &compoundArg)
+							compoundArguments = append(compoundArguments, &compoundArg)
 						} else {
 
 							validCompoundFlag = false
@@ -498,7 +458,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 					if validCompoundFlag {
 
-						args.Arguments	=	append(args.Arguments, compoundArguments...)
+						args.Arguments = append(args.Arguments, compoundArguments...)
 						continue
 					}
 				}
@@ -507,54 +467,54 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 				case optionViaAlias:
 
-					arg.Type	=	OptionType
+					arg.Type = OptionType
 				default:
 
-					arg.Type	=	argType
+					arg.Type = argType
 				}
 
-				arg.GivenName		=	s
-				arg.ResolvedName	=	resolvedName
+				arg.GivenName = s
+				arg.ResolvedName = resolvedName
 
 				if OptionType == arg.Type {
 
 					if optionViaAlias != argType {
 
-						nextIsOptValue	=	true
+						nextIsOptValue = true
 					}
 				} else {
 
-					if isSingle	&& (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
+					if isSingle && (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
 
-						arg.Type	=	ValueType
-						arg.Value	=	s
+						arg.Type = ValueType
+						arg.Value = s
 					}
 				}
 			}
 		}
 
-		args.Arguments	=	append(args.Arguments, arg)
+		args.Arguments = append(args.Arguments, arg)
 	}
 
 	for _, arg := range args.Arguments {
 
-		switch(arg.Type) {
+		switch arg.Type {
 
-			case FlagType:
+		case FlagType:
 
-				args.Flags		=	append(args.Flags, arg)
-			case OptionType:
+			args.Flags = append(args.Flags, arg)
+		case OptionType:
 
-				args.Options	=	append(args.Options, arg)
-			case ValueType:
+			args.Options = append(args.Options, arg)
+		case ValueType:
 
-				args.Values		=	append(args.Values, arg)
+			args.Values = append(args.Values, arg)
 		}
 	}
 
-	args.specifications_	=	make([]*Specification, len(params.Specifications))
+	args.specifications_ = make([]*Specification, len(params.Specifications))
 
-	for i, spec := range(params.Specifications) {
+	for i, spec := range params.Specifications {
 
 		var p *Specification = new(Specification)
 
@@ -568,30 +528,30 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 
-	name	:=	""
-	found	:=	false
+	name := ""
+	found := false
 
 	if s, is_string := id.(string); is_string {
 
-		name	=	s
-		found	=	true
+		name = s
+		found = true
 	}
 
 	if spec, is_Specification := id.(Specification); is_Specification {
 
 		switch spec.Type {
 
-			case OptionType:
+		case OptionType:
 
-				// TODO: issue warning
-				fallthrough
-			case FlagType:
+			// TODO: issue warning
+			fallthrough
+		case FlagType:
 
-				name	=	spec.Name
-				found	=	true
-			default:
+			name = spec.Name
+			found = true
+		default:
 
-				panic(fmt.Sprintf("invoked FlagIsSpecified() passing a non-Flag (and non-Option) Specification '%v'", spec))
+			panic(fmt.Sprintf("invoked FlagIsSpecified() passing a non-Flag (and non-Option) Specification '%v'", spec))
 		}
 	}
 
@@ -616,26 +576,26 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 
 func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
 
-	name	:=	""
-	found	:=	false
+	name := ""
+	found := false
 
 	if s, is_string := id.(string); is_string {
 
-		name	=	s
-		found	=	true
+		name = s
+		found = true
 	}
 
 	if spec, is_Specification := id.(Specification); is_Specification {
 
 		switch spec.Type {
 
-			case FlagType:
+		case FlagType:
 
-				name	=	spec.Name
-				found	=	true
-			default:
+			name = spec.Name
+			found = true
+		default:
 
-				panic(fmt.Sprintf("invoked LookupFlag() passing a non-Flag Specification '%v'", spec))
+			panic(fmt.Sprintf("invoked LookupFlag() passing a non-Flag Specification '%v'", spec))
 		}
 	}
 
@@ -660,26 +620,26 @@ func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
 
 func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 
-	name	:=	""
-	found	:=	false
+	name := ""
+	found := false
 
 	if s, is_string := id.(string); is_string {
 
-		name	=	s
-		found	=	true
+		name = s
+		found = true
 	}
 
 	if spec, is_Specification := id.(Specification); is_Specification {
 
 		switch spec.Type {
 
-			case OptionType:
+		case OptionType:
 
-				name	=	spec.Name
-				found	=	true
-			default:
+			name = spec.Name
+			found = true
+		default:
 
-				panic(fmt.Sprintf("invoked LookupOption() passing a non-Option Specification '%v'", spec))
+			panic(fmt.Sprintf("invoked LookupOption() passing a non-Option Specification '%v'", spec))
 		}
 	}
 
@@ -740,16 +700,16 @@ func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
 
 		switch spec.Type {
 
-			case FlagType:
+		case FlagType:
 
-				fallthrough
-			case OptionType:
+			fallthrough
+		case OptionType:
 
-				if 0 == spec.used_ {
+			if 0 == spec.used_ {
 
-					unused = append(unused, spec)
-				}
-				break;
+				unused = append(unused, spec)
+			}
+			break
 		}
 	}
 
@@ -791,7 +751,7 @@ func check_flag_bits(args *Arguments, flags *int, only_unused bool) int {
 // Examines the unused parsed flags held by the Arguments instance and
 // combines the BitFlags values of their corresponding aliases.
 //
-// NOTE: Marks any of the flags as used
+// NOTE: Marks any of the flags as used.
 func (args *Arguments) CheckUnusedFlagBits(flags *int) int {
 
 	return check_flag_bits(args, flags, true)
@@ -800,13 +760,13 @@ func (args *Arguments) CheckUnusedFlagBits(flags *int) int {
 // Examines all parsed flags held by the Arguments instance and combines
 // the BitFlags values of their corresponding aliases.
 //
-// NOTE: Does NOT mark any of the flags as used
+// NOTE: Does NOT mark any of the flags as used.
 func (args *Arguments) CheckAllFlagBits(flags *int) int {
 
 	return check_flag_bits(args, flags, false)
 }
 
-func Aliases(aliases...string) []string {
+func Aliases(aliases ...string) []string {
 
 	r := make([]string, len(aliases))
 
@@ -819,5 +779,3 @@ func Aliases(aliases...string) []string {
 }
 
 /* ///////////////////////////// end of file //////////////////////////// */
-
-

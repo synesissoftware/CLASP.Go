@@ -1,28 +1,35 @@
-# **CLASP.Go** Changes
+# **CLASP.Go** Changes <!-- omit in toc -->
+
 
 ## 0.16.1 - 22nd July 2019
 
 * ~ improvement in display of usage to ensure sections are always surrounded by blank lines, and to deal with flags/options without help descriptions
 
+
 ## 0.16.0 - 22nd July 2019
 
 * + added support for sections (via ``Section()`` function)
+
 
 ## 0.15.0 - 20th July 2019
 
 * ~ minor improvements to README.md
 
+
 ## 0.15.0 - 10th April 2019
 
 * ~ changed *Alias to *Specification
+
 
 ## 0.14.4 - 8th April 2019
 
 * ~ option-value aliases are now listed correctly in ShowUsage()
 
+
 ## 0.14.3 - 8th April 2019
 
 * ~ fixed failure to properly assign alias for uncombined option-value aliases
+
 
 ## 0.14.2 - 30th March 2019
 
@@ -30,17 +37,21 @@
 * ~ now uses features from ANGoLS (https://github.com/synesissoftware/ANGoLS/) for testing support
 * ~ fixed HelpFlag() help message (which said "Shows this helps and exits"; discovered in unit-testing libCLImate.Go)
 
+
 ## 0.14.1 - 29th March 2019
 
 * ~ fix for FlagsAndOptionsString handling
+
 
 ## 0.14.0 - 29th March 2019
 
 * + added End() builder method
 
+
 ## 0.13.1 - 28th March 2019
 
 * ~ handling omitted alias resolution for options
+
 
 ## 0.13.0 - 25th March 2019
 
