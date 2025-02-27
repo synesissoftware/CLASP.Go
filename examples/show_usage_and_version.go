@@ -3,7 +3,6 @@
 package main
 
 import (
-
 	clasp "github.com/synesissoftware/CLASP.Go"
 
 	"fmt"
@@ -11,36 +10,34 @@ import (
 )
 
 const (
-
-	ProgramVersion	=	"0.0.1"
+	ProgramVersion = "0.0.1"
 )
 
 func main() {
 
 	// Specify specifications, parse, and checking standard flags
 
-	specifications	:= []clasp.Specification {
+	specifications := []clasp.Specification{
 
 		clasp.HelpFlag(),
 		clasp.VersionFlag(),
 	}
 
-	args := clasp.Parse(os.Args, clasp.ParseParams{ Specifications: specifications })
+	args := clasp.Parse(os.Args, clasp.ParseParams{Specifications: specifications})
 
 	if args.FlagIsSpecified(clasp.HelpFlag()) {
 
 		clasp.ShowUsage(specifications, clasp.UsageParams{
 
-			Version: ProgramVersion,
-			InfoLines: []string { "CLASP.Go Examples", "", ":version:", "" },
+			Version:   ProgramVersion,
+			InfoLines: []string{"CLASP.Go Examples", "", ":version:", ""},
 		})
 	}
 
 	if args.FlagIsSpecified(clasp.VersionFlag()) {
 
-		clasp.ShowVersion(specifications, clasp.UsageParams{ Version: ProgramVersion })
+		clasp.ShowVersion(specifications, clasp.UsageParams{Version: ProgramVersion})
 	}
-
 
 	// Check for any unrecognised flags or options
 
@@ -51,9 +48,7 @@ func main() {
 		os.Exit(1)
 	}
 
-
 	// Finish normal processing
 
 	fmt.Printf("no flags specified\n")
 }
-

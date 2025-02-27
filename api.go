@@ -27,27 +27,35 @@ type ParseFlag int
  */
 
 const (
-	ParseTreatSingleHyphenAsValue               ParseFlag = 1 << iota
-	ParseDontRecogniseDoubleHyphenToStartValues ParseFlag = 1 << iota
+	Parse_None ParseFlag = 0
+)
+
+// TODO: rename the following with `Pars_` prefix
+
+const (
+	ParseTreatSingleHyphenAsValue               ParseFlag = 1 << iota // T.B.C.
+	ParseDontRecogniseDoubleHyphenToStartValues                       // T.B.C.
 )
 
 /* /////////////////////////////////////////////////////////////////////////
  * types
  */
 
+// T.B.C.
 type ArgType int
 
 const (
-	FlagType   ArgType = 1
-	OptionType ArgType = 2
-	ValueType  ArgType = 3
+	FlagType   ArgType = 1 // T.B.C.
+	OptionType ArgType = 2 // T.B.C.
+	ValueType  ArgType = 3 // T.B.C.
 
-	SectionType ArgType = 21
+	SectionType ArgType = 21 // T.B.C.
 
 	optionViaAlias ArgType = -98
 	int_1_         ArgType = -99
 )
 
+// T.B.C.
 type Specification struct {
 	Type     ArgType
 	Name     string
@@ -58,6 +66,7 @@ type Specification struct {
 	Extras   map[string]interface{}
 }
 
+// T.B.C.
 type Argument struct {
 	ResolvedName          string
 	GivenName             string
@@ -71,6 +80,7 @@ type Argument struct {
 	used_ int
 }
 
+// T.B.C.
 type Arguments struct {
 	Arguments       []*Argument
 	Flags           []*Argument
@@ -81,6 +91,7 @@ type Arguments struct {
 	specifications_ []*Specification
 }
 
+// T.B.C.
 type ParseParams struct {
 	Specifications []Specification
 	Flags          ParseFlag
@@ -270,11 +281,13 @@ func (params *ParseParams) findSpecification(name string) (found bool, specifica
  * API
  */
 
+// T.B.C.
 func (arg *Argument) Use() {
 
 	arg.used_ = 1
 }
 
+// T.B.C.
 func (arg Argument) Str() string {
 
 	switch arg.Type {
@@ -288,6 +301,7 @@ func (arg Argument) Str() string {
 	}
 }
 
+// T.B.C.
 func Parse(argv []string, params ParseParams) *Arguments {
 
 	args := new(Arguments)
@@ -526,6 +540,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 	return args
 }
 
+// T.B.C.
 func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 
 	name := ""
@@ -574,6 +589,7 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 	return false
 }
 
+// T.B.C.
 func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
 
 	name := ""
@@ -618,6 +634,7 @@ func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
 	return nil, false
 }
 
+// T.B.C.
 func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 
 	name := ""
@@ -662,6 +679,7 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 	return nil, false
 }
 
+// T.B.C.
 func (args *Arguments) GetUnusedFlags() []*Argument {
 
 	var unused []*Argument
@@ -677,6 +695,7 @@ func (args *Arguments) GetUnusedFlags() []*Argument {
 	return unused
 }
 
+// T.B.C.
 func (args *Arguments) GetUnusedOptions() []*Argument {
 
 	var unused []*Argument
@@ -692,6 +711,7 @@ func (args *Arguments) GetUnusedOptions() []*Argument {
 	return unused
 }
 
+// T.B.C.
 func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
 
 	var unused []*Argument
@@ -766,6 +786,7 @@ func (args *Arguments) CheckAllFlagBits(flags *int) int {
 	return check_flag_bits(args, flags, false)
 }
 
+// T.B.C.
 func Aliases(aliases ...string) []string {
 
 	r := make([]string, len(aliases))
