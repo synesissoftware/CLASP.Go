@@ -1,6 +1,17 @@
 # **CLASP.Go** Changes <!-- omit in toc -->
 
 
+## 0.16.2-alpha2 - 28th February 2025
+
+* ~ boilerplate;
+* ~ formatting;
+
+
+## 0.16.2-alpha1 - 23rd February 2025
+
+* ~ updated for use of Go modules;
+
+
 ## 0.16.1 - 22nd July 2019
 
 * ~ improvement in display of usage to ensure sections are always surrounded by blank lines, and to deal with flags/options without help descriptions

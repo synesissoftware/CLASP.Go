@@ -1,8 +1,6 @@
-
 package clasp_test
 
 import (
-
 	clasp "github.com/synesissoftware/CLASP.Go"
 
 	"fmt"
@@ -51,7 +49,7 @@ func equalInNonNillLhs(lhs clasp.Argument, rhs clasp.Argument) bool {
 	return true
 }
 
-func require(t *testing.T, cond bool, format string, args... interface{}) {
+func require(t *testing.T, cond bool, format string, args ...interface{}) {
 
 	if !cond {
 
@@ -69,7 +67,7 @@ func require(t *testing.T, cond bool, format string, args... interface{}) {
 	}
 }
 
-func check(t *testing.T, cond bool, format string, args... interface{}) bool {
+func check(t *testing.T, cond bool, format string, args ...interface{}) bool {
 
 	if !cond {
 
@@ -88,10 +86,9 @@ func check(t *testing.T, cond bool, format string, args... interface{}) bool {
 	return cond
 }
 
-
 func Test_no_args(t *testing.T) {
 
-	argv := []string { "path/blah" }
+	argv := []string{"path/blah"}
 
 	args1 := clasp.Parse(argv, clasp.ParseParams{})
 
@@ -115,10 +112,9 @@ func Test_no_args(t *testing.T) {
 	}
 }
 
-
 func Test_single_value(t *testing.T) {
 
-	argv := []string { "path/blah", "abc" }
+	argv := []string{"path/blah", "abc"}
 
 	args1 := clasp.Parse(argv, clasp.ParseParams{})
 
@@ -151,10 +147,9 @@ func Test_single_value(t *testing.T) {
 	}
 }
 
-
 func Test_several_values(t *testing.T) {
 
-	argv := []string { "path/blah", "abc", "def", "g", "hi" }
+	argv := []string{"path/blah", "abc", "def", "g", "hi"}
 
 	args1 := clasp.Parse(argv, clasp.ParseParams{})
 
@@ -208,10 +203,9 @@ func Test_several_values(t *testing.T) {
 	}
 }
 
-
 func Test_several_values_with_double_hyphen(t *testing.T) {
 
-	argv := []string { "path/blah", "abc", "def", "--", "-g", "--hi" }
+	argv := []string{"path/blah", "abc", "def", "--", "-g", "--hi"}
 
 	args1 := clasp.Parse(argv, clasp.ParseParams{})
 
@@ -269,12 +263,11 @@ func Test_several_values_with_double_hyphen(t *testing.T) {
 	}
 }
 
-
 func Test_several_values_with_double_hyphen_suppressed(t *testing.T) {
 
-	argv := []string { "path/blah", "abc", "def", "--", "-g", "--hi" }
+	argv := []string{"path/blah", "abc", "def", "--", "-g", "--hi"}
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Flags : clasp.ParseDontRecogniseDoubleHyphenToStartValues })
+	args1 := clasp.Parse(argv, clasp.ParseParams{Flags: clasp.ParseDontRecogniseDoubleHyphenToStartValues})
 
 	if expected, actual := 5, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -339,10 +332,9 @@ func Test_several_values_with_double_hyphen_suppressed(t *testing.T) {
 	}
 }
 
-
 func Test_single_flag(t *testing.T) {
 
-	argv := []string { "path/blah", "-f" }
+	argv := []string{"path/blah", "-f"}
 
 	args1 := clasp.Parse(argv, clasp.ParseParams{})
 
@@ -377,10 +369,9 @@ func Test_single_flag(t *testing.T) {
 	}
 }
 
-
 func Test_several_flags(t *testing.T) {
 
-	argv := []string { "path/blah", "-f", "--flag2", "---flag3" }
+	argv := []string{"path/blah", "-f", "--flag2", "---flag3"}
 
 	args1 := clasp.Parse(argv, clasp.ParseParams{})
 
@@ -427,10 +418,9 @@ func Test_several_flags(t *testing.T) {
 	}
 }
 
-
 func Test_flags_and_values(t *testing.T) {
 
-	argv := []string { "path/blah", "abc", "-f", "def", "--flag2", "--", "--value-really" }
+	argv := []string{"path/blah", "abc", "-f", "def", "--flag2", "--", "--value-really"}
 
 	args1 := clasp.Parse(argv, clasp.ParseParams{})
 
@@ -491,10 +481,9 @@ func Test_flags_and_values(t *testing.T) {
 	}
 }
 
-
 func Test_flags_values_and_option(t *testing.T) {
 
-	argv := []string { "path/blah", "abc", "-f", "def", "--opt1=value1", "--", "--value-really" }
+	argv := []string{"path/blah", "abc", "-f", "def", "--opt1=value1", "--", "--value-really"}
 
 	args1 := clasp.Parse(argv, clasp.ParseParams{})
 
@@ -557,10 +546,9 @@ func Test_flags_values_and_option(t *testing.T) {
 	}
 }
 
-
 func Test_single_hyphen_default(t *testing.T) {
 
-	argv := []string { "path/blah", "-" }
+	argv := []string{"path/blah", "-"}
 
 	args1 := clasp.Parse(argv, clasp.ParseParams{})
 
@@ -595,12 +583,11 @@ func Test_single_hyphen_default(t *testing.T) {
 	}
 }
 
-
 func Test_single_hyphen_as_value(t *testing.T) {
 
-	argv := []string { "path/blah", "-" }
+	argv := []string{"path/blah", "-"}
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Flags : clasp.ParseTreatSingleHyphenAsValue })
+	args1 := clasp.Parse(argv, clasp.ParseParams{Flags: clasp.ParseTreatSingleHyphenAsValue})
 
 	if expected, actual := 1, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -633,14 +620,12 @@ func Test_single_hyphen_as_value(t *testing.T) {
 	}
 }
 
-
 func Test_specification_0(t *testing.T) {
 
-	specifications := []clasp.Specification {
-	}
-	argv := []string { "path/blah", "-f", "-f2", "---flag3" }
+	specifications := []clasp.Specification{}
+	argv := []string{"path/blah", "-f", "-f2", "---flag3"}
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
+	args1 := clasp.Parse(argv, clasp.ParseParams{Specifications: specifications})
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -685,16 +670,15 @@ func Test_specification_0(t *testing.T) {
 	}
 }
 
-
 func Test_specification_1(t *testing.T) {
 
-	specifications := []clasp.Specification {
+	specifications := []clasp.Specification{
 
-		{ clasp.FlagType, "--flag2", []string { "-f2" }, "second flag", nil, 0, nil },
+		{clasp.FlagType, "--flag2", []string{"-f2"}, "second flag", nil, 0, nil},
 	}
-	argv := []string { "path/blah", "-f", "-f2", "---flag3" }
+	argv := []string{"path/blah", "-f", "-f2", "---flag3"}
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
+	args1 := clasp.Parse(argv, clasp.ParseParams{Specifications: specifications})
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -739,16 +723,15 @@ func Test_specification_1(t *testing.T) {
 	}
 }
 
-
 func Test_specification_2(t *testing.T) {
 
-	specifications := []clasp.Specification {
+	specifications := []clasp.Specification{
 
-		{ clasp.OptionType, "--flag2", []string { "-f2" }, "f2-option", nil, 0, nil },
+		{clasp.OptionType, "--flag2", []string{"-f2"}, "f2-option", nil, 0, nil},
 	}
-	argv := []string { "path/blah", "-f", "-f2", "abc", "---flag3" }
+	argv := []string{"path/blah", "-f", "-f2", "abc", "---flag3"}
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
+	args1 := clasp.Parse(argv, clasp.ParseParams{Specifications: specifications})
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -800,21 +783,20 @@ func Test_specification_2(t *testing.T) {
 	}
 }
 
-
 func Test_find_unused_flags_1(t *testing.T) {
 
-	argv := []string { "path/blah", "-f1", "-f2", "abc", "---flag3" }
+	argv := []string{"path/blah", "-f1", "-f2", "abc", "---flag3"}
 
 	args1 := clasp.Parse(argv, clasp.ParseParams{})
 
 	unused := args1.GetUnusedFlags()
 	if expected, actual := 3, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
 
-		if expected, actual := (clasp.Argument{ Type : clasp.FlagType, ResolvedName : "-f1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		if expected, actual := (clasp.Argument{Type: clasp.FlagType, ResolvedName: "-f1", CmdLineIndex: 1}), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 		}
-		if expected, actual := (clasp.Argument{ Type : clasp.FlagType, ResolvedName : "-f2", CmdLineIndex : 2 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		if expected, actual := (clasp.Argument{Type: clasp.FlagType, ResolvedName: "-f2", CmdLineIndex: 2}), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 		}
-		if expected, actual := (clasp.Argument{ Type : clasp.FlagType, ResolvedName : "---flag3", CmdLineIndex : 4 }), *unused[2]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		if expected, actual := (clasp.Argument{Type: clasp.FlagType, ResolvedName: "---flag3", CmdLineIndex: 4}), *unused[2]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 		}
 	}
 
@@ -823,29 +805,28 @@ func Test_find_unused_flags_1(t *testing.T) {
 		unused = args1.GetUnusedFlags()
 		if expected, actual := 2, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
 
-			if expected, actual := (clasp.Argument{ Type : clasp.FlagType, ResolvedName : "-f1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+			if expected, actual := (clasp.Argument{Type: clasp.FlagType, ResolvedName: "-f1", CmdLineIndex: 1}), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 			}
-			if expected, actual := (clasp.Argument{ Type : clasp.FlagType, ResolvedName : "---flag3", CmdLineIndex : 4 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+			if expected, actual := (clasp.Argument{Type: clasp.FlagType, ResolvedName: "---flag3", CmdLineIndex: 4}), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
 	}
 }
 
-
 func Test_find_unused_options_1(t *testing.T) {
 
-	argv := []string { "path/blah", "-o1=v1", "-o2=v2", "abc", "---option3=value3" }
+	argv := []string{"path/blah", "-o1=v1", "-o2=v2", "abc", "---option3=value3"}
 
 	args1 := clasp.Parse(argv, clasp.ParseParams{})
 
 	unused := args1.GetUnusedOptions()
 	if expected, actual := 3, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
 
-		if expected, actual := (clasp.Argument{ Type : clasp.OptionType, ResolvedName : "-o1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		if expected, actual := (clasp.Argument{Type: clasp.OptionType, ResolvedName: "-o1", CmdLineIndex: 1}), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 		}
-		if expected, actual := (clasp.Argument{ Type : clasp.OptionType, ResolvedName : "-o2", CmdLineIndex : 2 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		if expected, actual := (clasp.Argument{Type: clasp.OptionType, ResolvedName: "-o2", CmdLineIndex: 2}), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 		}
-		if expected, actual := (clasp.Argument{ Type : clasp.OptionType, ResolvedName : "---option3", CmdLineIndex : 4 }), *unused[2]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+		if expected, actual := (clasp.Argument{Type: clasp.OptionType, ResolvedName: "---option3", CmdLineIndex: 4}), *unused[2]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 		}
 	}
 
@@ -854,50 +835,48 @@ func Test_find_unused_options_1(t *testing.T) {
 		unused = args1.GetUnusedOptions()
 		if expected, actual := 2, len(unused); check(t, expected == actual, "unused slice has wrong size: expected %v; actual %v", expected, actual) {
 
-			if expected, actual := (clasp.Argument{ Type : clasp.OptionType, ResolvedName : "-o1", CmdLineIndex : 1 }), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+			if expected, actual := (clasp.Argument{Type: clasp.OptionType, ResolvedName: "-o1", CmdLineIndex: 1}), *unused[0]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 			}
-			if expected, actual := (clasp.Argument{ Type : clasp.OptionType, ResolvedName : "---option3", CmdLineIndex : 4 }), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
+			if expected, actual := (clasp.Argument{Type: clasp.OptionType, ResolvedName: "---option3", CmdLineIndex: 4}), *unused[1]; check(t, equalInNonNillLhs(expected, actual), "argument not equal to expected: expected '%v'; actual '%v'", expected, actual) {
 			}
 		}
 	}
 }
 
-
 func Test_CheckAllFlagBits(t *testing.T) {
 
-	specifications := []clasp.Specification {
+	specifications := []clasp.Specification{
 
-		{ clasp.FlagType, "-f1", nil, "", nil, 0x01, nil },
-		{ clasp.FlagType, "-f2", nil, "", nil, 0x02, nil },
-		{ clasp.FlagType, "-f4", nil, "", nil, 0x04, nil },
+		{clasp.FlagType, "-f1", nil, "", nil, 0x01, nil},
+		{clasp.FlagType, "-f2", nil, "", nil, 0x02, nil},
+		{clasp.FlagType, "-f4", nil, "", nil, 0x04, nil},
 	}
 
-	argv1 := []string { "path/blah", "-f1", "-f2", "-f4" }
-	args1 := clasp.Parse(argv1, clasp.ParseParams{ Specifications: specifications })
+	argv1 := []string{"path/blah", "-f1", "-f2", "-f4"}
+	args1 := clasp.Parse(argv1, clasp.ParseParams{Specifications: specifications})
 	if expected, actual := 0x7, args1.CheckAllFlagBits(nil); check(t, expected == actual, "flags not as expected: expected %x; actual %x", expected, actual) {
 	}
 	_ = args1.FlagIsSpecified("-f1")
 	if expected, actual := 0x6, args1.CheckUnusedFlagBits(nil); check(t, expected == actual, "flags not as expected: expected %x; actual %x", expected, actual) {
 	}
 
-	argv2 := []string { "path/blah", "-f1", "-f4" }
-	args2 := clasp.Parse(argv2, clasp.ParseParams{ Specifications: specifications })
+	argv2 := []string{"path/blah", "-f1", "-f4"}
+	args2 := clasp.Parse(argv2, clasp.ParseParams{Specifications: specifications})
 	if expected, actual := 0x5, args2.CheckAllFlagBits(nil); check(t, expected == actual, "flags not as expected: expected %x; actual %x", expected, actual) {
 	}
 }
 
-
 func Test_groupedFlags_1(t *testing.T) {
 
-	specifications := []clasp.Specification {
+	specifications := []clasp.Specification{
 
-		{ clasp.FlagType, "--high", []string { "-h" }, "second flag", nil, 0, nil },
-		{ clasp.FlagType, "--mid",  []string { "-m" }, "second flag", nil, 0, nil },
-		{ clasp.FlagType, "--low",  []string { "-l" }, "second flag", nil, 0, nil },
+		{clasp.FlagType, "--high", []string{"-h"}, "second flag", nil, 0, nil},
+		{clasp.FlagType, "--mid", []string{"-m"}, "second flag", nil, 0, nil},
+		{clasp.FlagType, "--low", []string{"-l"}, "second flag", nil, 0, nil},
 	}
-	argv := []string { "path/blah", "-hm", "-l" }
+	argv := []string{"path/blah", "-hm", "-l"}
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
+	args1 := clasp.Parse(argv, clasp.ParseParams{Specifications: specifications})
 
 	if expected, actual := 3, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -942,18 +921,17 @@ func Test_groupedFlags_1(t *testing.T) {
 	}
 }
 
-
 func Test_groupedFlags_2(t *testing.T) {
 
-	specifications := []clasp.Specification {
+	specifications := []clasp.Specification{
 
-		{ clasp.FlagType, "--high", []string { "-h" }, "second flag", nil, 0, nil },
-		{ clasp.FlagType, "--mid",  []string { "-m" }, "second flag", nil, 0, nil },
-		{ clasp.FlagType, "--low",  []string { "-l" }, "second flag", nil, 0, nil },
+		{clasp.FlagType, "--high", []string{"-h"}, "second flag", nil, 0, nil},
+		{clasp.FlagType, "--mid", []string{"-m"}, "second flag", nil, 0, nil},
+		{clasp.FlagType, "--low", []string{"-l"}, "second flag", nil, 0, nil},
 	}
-	argv := []string { "path/blah", "-hmx", "-l" }
+	argv := []string{"path/blah", "-hmx", "-l"}
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
+	args1 := clasp.Parse(argv, clasp.ParseParams{Specifications: specifications})
 
 	if expected, actual := 2, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -994,14 +972,14 @@ func Test_groupedFlags_2(t *testing.T) {
 
 func Test_flag_alias_of_option_with_value(t *testing.T) {
 
-	specifications	:=	[]clasp.Specification {
+	specifications := []clasp.Specification{
 
-		{ clasp.OptionType, "--verbosity", nil, "Specifies the verbosity", []string{ "low", "medium", "high" }, 0, nil },
-		{ clasp.FlagType, "--verbosity=high", []string{ "-v" }, "", nil, 0, nil },
+		{clasp.OptionType, "--verbosity", nil, "Specifies the verbosity", []string{"low", "medium", "high"}, 0, nil},
+		{clasp.FlagType, "--verbosity=high", []string{"-v"}, "", nil, 0, nil},
 	}
-	argv	:=	[]string{ "path/blah", "-v" }
+	argv := []string{"path/blah", "-v"}
 
-	args	:=	clasp.Parse(argv, clasp.ParseParams{ Specifications: specifications })
+	args := clasp.Parse(argv, clasp.ParseParams{Specifications: specifications})
 
 	if expected, actual := 1, len(args.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -1023,4 +1001,3 @@ func Test_flag_alias_of_option_with_value(t *testing.T) {
 		check(t, "high" == option0.Value, "arguments has wrong value")
 	}
 }
-
