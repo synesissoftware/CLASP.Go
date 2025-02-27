@@ -7,6 +7,12 @@
 * ~ changed some tests to exercise the ability of `Version` to be array of numbers;
 
 
+## 0.16.2-alpha2 - 28th February 2025
+
+* ~ boilerplate;
+* ~ formatting;
+
+
 ## 0.16.2-alpha1 - 23rd February 2025
 
 * ~ updated for use of Go modules;
