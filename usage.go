@@ -23,12 +23,15 @@ import (
  * types
  */
 
+// T.B.C.
 type UsageFlag int
 
+// T.B.C.
 type Exiter interface {
 	Exit(exitCode int)
 }
 
+// T.B.C.
 type UsageParams struct {
 	Stream        io.Writer
 	ProgramName   string
@@ -55,9 +58,15 @@ func (params UsageParams) String() string {
  */
 
 const (
-	SkipBlanksBetweenLines UsageFlag = 1 << iota
-	DontCallExit           UsageFlag = 1 << iota
-	DontCallExitIfZero     UsageFlag = 1 << iota
+	Usage_None UsageFlag = 0
+)
+
+// TODO: rename the following with `Usage_` prefix
+
+const (
+	SkipBlanksBetweenLines UsageFlag = 1 << iota // T.B.C.
+	DontCallExit           UsageFlag = 1 << iota // T.B.C.
+	DontCallExitIfZero     UsageFlag = 1 << iota // T.B.C.
 )
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -162,6 +171,7 @@ func generate_version_string(params UsageParams, apiFunctionName string) string 
  * API
  */
 
+// T.B.C.
 func ShowUsage(specifications []Specification, params UsageParams) (rc int, err error) {
 
 	for i, a := range specifications {
@@ -327,6 +337,7 @@ func ShowUsage(specifications []Specification, params UsageParams) (rc int, err 
 	return params.ExitCode, nil
 }
 
+// T.B.C.
 func ShowVersion(specifications []Specification, params UsageParams) (rc int, err error) {
 
 	exiter := params.Exiter

@@ -49,6 +49,7 @@ func equalInNonNillLhs(lhs clasp.Argument, rhs clasp.Argument) bool {
 	return true
 }
 
+/*
 func require(t *testing.T, cond bool, format string, args ...interface{}) {
 
 	if !cond {
@@ -66,6 +67,7 @@ func require(t *testing.T, cond bool, format string, args ...interface{}) {
 		t.FailNow()
 	}
 }
+*/
 
 func check(t *testing.T, cond bool, format string, args ...interface{}) bool {
 
