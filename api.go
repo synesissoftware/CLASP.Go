@@ -34,7 +34,7 @@ const (
 
 const (
 	ParseTreatSingleHyphenAsValue               ParseFlag = 1 << iota // T.B.C.
-	ParseDontRecogniseDoubleHyphenToStartValues ParseFlag = 1 << iota // T.B.C.
+	ParseDontRecogniseDoubleHyphenToStartValues                       // T.B.C.
 )
 
 /* /////////////////////////////////////////////////////////////////////////

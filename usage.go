@@ -65,8 +65,8 @@ const (
 
 const (
 	SkipBlanksBetweenLines UsageFlag = 1 << iota // T.B.C.
-	DontCallExit           UsageFlag = 1 << iota // T.B.C.
-	DontCallExitIfZero     UsageFlag = 1 << iota // T.B.C.
+	DontCallExit                                 // T.B.C.
+	DontCallExitIfZero                           // T.B.C.
 )
 
 /* /////////////////////////////////////////////////////////////////////////
