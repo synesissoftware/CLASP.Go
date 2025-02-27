@@ -132,6 +132,15 @@ func generate_version_string(params UsageParams, apiFunctionName string) string 
 
 		version = strings.Join(v, ".")
 	case []int:
+		as := make([]string, len(v))
+
+		for i, n := range v {
+
+			as[i] = fmt.Sprintf("%v", n)
+		}
+
+		version = strings.Join(as, ".")
+	case []uint16:
 
 		as := make([]string, len(v))
 
@@ -143,7 +152,7 @@ func generate_version_string(params UsageParams, apiFunctionName string) string 
 		version = strings.Join(as, ".")
 	default:
 
-		panic(fmt.Sprintf("%v() called with UsageParams.Version of an invalid type %T, but must be instance of string, []string, or []int", v, reflect.TypeOf(v)))
+		panic(fmt.Sprintf("%v() called with UsageParams.Version of an invalid type %T, but must be instance of string, []string, []int, []uint16", v, reflect.TypeOf(v)))
 	}
 
 	return fmt.Sprintf("%s %s%s", program_name, version_prefix, version)

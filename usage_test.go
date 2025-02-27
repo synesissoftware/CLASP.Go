@@ -134,6 +134,15 @@ func Test_ShowVersion_with_int_array_version(t *testing.T) {
 	test_ShowVersion_(t, "myprog v1.2.3\n", specifications, "myprog", []int{1, 2, 3}, "v")
 }
 
+func Test_ShowVersion_with_uint16_array_version(t *testing.T) {
+
+	var specifications []clasp.Specification
+
+	test_ShowVersion_(t, "myprog 1.2.3\n", specifications, "myprog", []uint16{1, 2, 3}, "")
+
+	test_ShowVersion_(t, "myprog v1.2.3\n", specifications, "myprog", []uint16{1, 2, 3}, "v")
+}
+
 func Test_ShowVersion_with_string_array_version(t *testing.T) {
 
 	var specifications []clasp.Specification
@@ -183,6 +192,7 @@ func Test_ShowUsage_1(t *testing.T) {
 	result, err := call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
+		t.Fail()
 	} else {
 
 		check_num_nonblank_lines(t, result, 1)
@@ -209,7 +219,7 @@ func Test_ShowUsage_2(t *testing.T) {
 
 		ProgramName:           "myprogram",
 		VersionPrefix:         "V",
-		Version:               "0.1.2",
+		Version:               []int{0, 1, 2},
 		ExitCode:              0,
 		ValuesString:          values_string,
 		FlagsAndOptionsString: flags_and_options_string,
@@ -219,6 +229,7 @@ func Test_ShowUsage_2(t *testing.T) {
 	result, err := call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
+		t.Fail()
 	} else {
 
 		check_num_nonblank_lines(t, result, 3)
@@ -256,6 +267,7 @@ func Test_ShowUsage_3_a(t *testing.T) {
 	result, err := call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
+		t.Fail()
 	} else {
 
 		check_num_nonblank_lines(t, result, 5)
@@ -293,6 +305,7 @@ func Test_ShowUsage_3_b(t *testing.T) {
 	result, err := call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
+		t.Fail()
 	} else {
 
 		check_num_nonblank_lines(t, result, 5)
@@ -330,6 +343,7 @@ func Test_ShowUsage_3_c(t *testing.T) {
 	result, err := call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
+		t.Fail()
 	} else {
 
 		check_num_nonblank_lines(t, result, 5)
@@ -358,7 +372,7 @@ func Test_ShowUsage_4(t *testing.T) {
 
 		ProgramName:           "myprogram",
 		VersionPrefix:         "v",
-		Version:               "0.1.2",
+		Version:               []int{0, 1, 2},
 		ExitCode:              0,
 		ValuesString:          values_string,
 		FlagsAndOptionsString: flags_and_options_string,
@@ -368,6 +382,7 @@ func Test_ShowUsage_4(t *testing.T) {
 	result, err := call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
+		t.Fail()
 	} else {
 
 		check_num_nonblank_lines(t, result, 9)
@@ -396,7 +411,7 @@ func Test_ShowUsage_5_a(t *testing.T) {
 	}
 	values_string := ""
 	flags_and_options_string := "[ flags/options ]"
-	info_lines := make([]string, 0)
+	info_lines := []string{"CLASP.Go Examples", "", ":version:", ""}
 
 	usage_params_base := clasp.UsageParams{
 
@@ -413,22 +428,33 @@ func Test_ShowUsage_5_a(t *testing.T) {
 	result, err := call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
+		t.Fail()
 	} else {
 
-		check_num_nonblank_lines(t, result, 11)
-		check_num_lines(t, result, 17)
+		check_num_nonblank_lines(t, result, 13)
+		check_num_lines(t, result, 21)
 
-		check_line_equal(t, result[0], "USAGE: myprogram [ flags/options ]")
-		check_line_equal(t, result[2], "flags/options:")
-		check_stripped_line_equal(t, result[4], "verbosity:")
-		check_stripped_line_equal(t, result[6], "-v --verbosity=high")
-		check_stripped_line_equal(t, result[7], "--verbosity=<value>")
-		check_stripped_line_equal(t, result[8], "Specifies the verbosity")
-		check_stripped_line_equal(t, result[9], "where <value> one of:")
-		check_stripped_line_equal(t, result[10], "low")
-		check_stripped_line_equal(t, result[11], "medium")
-		check_stripped_line_equal(t, result[12], "high")
-		check_stripped_line_equal(t, result[14], "--debug")
+		check_line_equal(t, result[0], "CLASP.Go Examples")
+		check_line_equal(t, result[1], "")
+		check_line_equal(t, result[2], "myprogram v0.1.2")
+		check_line_equal(t, result[3], "")
+		check_line_equal(t, result[4], "USAGE: myprogram [ flags/options ]")
+		check_line_equal(t, result[5], "")
+		check_line_equal(t, result[6], "flags/options:")
+		check_line_equal(t, result[7], "")
+		check_stripped_line_equal(t, result[8], "verbosity:")
+		check_line_equal(t, result[9], "")
+		check_stripped_line_equal(t, result[10], "-v --verbosity=high")
+		check_stripped_line_equal(t, result[11], "--verbosity=<value>")
+		check_stripped_line_equal(t, result[12], "Specifies the verbosity")
+		check_stripped_line_equal(t, result[13], "where <value> one of:")
+		check_stripped_line_equal(t, result[14], "low")
+		check_stripped_line_equal(t, result[15], "medium")
+		check_stripped_line_equal(t, result[16], "high")
+		check_line_equal(t, result[17], "")
+		check_stripped_line_equal(t, result[18], "--debug")
+		check_line_equal(t, result[19], "")
+		check_line_equal(t, result[20], "")
 	}
 }
 
@@ -460,6 +486,7 @@ func Test_ShowUsage_5_b(t *testing.T) {
 	result, err := call_ShowUsage_(t, specifications, usage_params_base)
 	if err != nil {
 
+		t.Fail()
 	} else {
 
 		check_num_nonblank_lines(t, result, 11)

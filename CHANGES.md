@@ -1,6 +1,12 @@
 # **CLASP.Go** Changes <!-- omit in toc -->
 
 
+## 0.16.2 - 28th February 2025
+
+* ~ `Version` additionally accepts type `[]uint16`;
+* ~ changed some tests to exercise the ability of `Version` to be array of numbers;
+
+
 ## 0.16.2-alpha2 - 28th February 2025
 
 * ~ boilerplate;
