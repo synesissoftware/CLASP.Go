@@ -29,6 +29,7 @@ type ParseFlag int
 const (
 	ParseTreatSingleHyphenAsValue               ParseFlag = 1 << iota
 	ParseDontRecogniseDoubleHyphenToStartValues ParseFlag = 1 << iota
+	Parse_DontMergeBitmaskIntoBitmask64                   // Suppresses the default behaviour to mix into the `int64` result matched `int` bitmasks (see [Specification.SetBitmask]) when no matched `int64` bitmasks (see [Specification.SetBitmask64]) are specified.
 )
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -56,6 +57,9 @@ type Specification struct {
 	ValueSet []string
 	BitFlags int
 	Extras   map[string]interface{}
+
+	bitmask     int
+	bitmask64   int64
 }
 
 type Argument struct {
@@ -79,6 +83,9 @@ type Arguments struct {
 	Argv           []string
 	ProgramName    string
 	specifications []*Specification
+
+	intFlags   int
+	int64Flags int64
 }
 
 type ParseParams struct {
@@ -89,13 +96,15 @@ type ParseParams struct {
 // Obtains, by value, a specification containing a stock specification of a '--help' flag.
 func HelpFlag() Specification {
 
-	return Specification{FlagType, "--help", nil, "Shows this help and exits", nil, 0, nil}
+	// TODO: reimplement in terms of [Flag] ??
+	return Specification{FlagType, "--help", nil, "Shows this help and exits", nil, 0, nil, nil, nil}
 }
 
 // Obtains, by value, a specification containing a stock specification of a '--version' flag.
 func VersionFlag() Specification {
 
-	return Specification{FlagType, "--version", nil, "Shows version information and exits", nil, 0, nil}
+	// TODO: reimplement in terms of [Flag] ??
+	return Specification{FlagType, "--version", nil, "Shows version information and exits", nil, 0, nil,  nil,  nil}
 }
 
 func (at ArgType) String() string {
@@ -177,6 +186,22 @@ func AliasesFor(actual string, alias0 string, other_aliases ...string) (result S
 	result.Aliases = append([]string{alias0}, other_aliases...)
 
 	return
+}
+
+// T.B.C.
+func (specification Specification) SetBitmask(bitmask int, flags_var *int) (result Specification) {
+
+	specification.bitmask = bitmask
+
+	return specification
+}
+
+// T.B.C.
+func (specification Specification) SetBitmask64(bitmask64 int64, flags_var64 *int64) (result Specification) {
+
+	specification.bitmask64 = bitmask64
+
+	return specification
 }
 
 // Builder method to set the help for a specification.
@@ -523,7 +548,44 @@ func Parse(argv []string, params ParseParams) *Arguments {
 		args.specifications[i] = p
 	}
 
+	// now process the bitmasks
+
+	{
+		for _, arg := range args.Flags {
+
+			if nil != arg.ArgumentSpecification {
+
+				var bitmask int = arg.ArgumentSpecification.bitmask
+				var bitmask64 int64 = arg.ArgumentSpecification.bitmask64
+
+				if 0 != bitmask64 {
+					args.int64Flags |= bitmask64
+				} else {
+					if 0 != bitmask {
+						args.intFlags |= bitmask
+						if 0 != (Parse_DontMergeBitmaskIntoBitmask64 & params.Flags) {
+
+							args.int64Flags |= int64(bitmask)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	return args
+}
+
+// T.B.C.
+func (args Arguments) CheckAllBitFlags() int {
+
+	return args.intFlags
+}
+
+// T.B.C.
+func (args Arguments) CheckAllBit64Flags() int64 {
+
+	return args.int64Flags
 }
 
 func (args *Arguments) FlagIsSpecified(id interface{}) bool {
