@@ -2,7 +2,7 @@
 
 ## Summary
 
-Simple example supporting ```--help``` and ```--version```.
+Simple example supporting `--help` and `--version`.
 
 ## Source
 
@@ -12,58 +12,60 @@ Simple example supporting ```--help``` and ```--version```.
 package main
 
 import (
+	clasp "github.com/synesissoftware/CLASP.Go"
 
-    clasp "github.com/synesissoftware/CLASP.Go"
-
-    "fmt"
-    "os"
+	"fmt"
+	"os"
 )
 
 const (
-
-    ProgramVersion  =   "0.0.1"
+	ProgramVersion = "0.0.2"
 )
 
 func main() {
 
-    // Specify specifications, parse, and checking standard flags
+	// Specify specifications, parse, and checking standard flags
 
-    specifications := []clasp.Alias {
+	specifications := []clasp.Specification{
 
-        clasp.HelpFlag(),
-        clasp.VersionFlag(),
-    }
+		clasp.Section("standard:"),
+		clasp.HelpFlag(),
+		clasp.VersionFlag(),
+	}
 
-    args := clasp.Parse(os.Args, clasp.ParseParams{ Specifications: specifications })
+	args := clasp.Parse(os.Args, clasp.ParseParams{Specifications: specifications})
 
-    if args.FlagIsSpecified(clasp.HelpFlag()) {
+	if args.FlagIsSpecified(clasp.HelpFlag()) {
 
-        clasp.ShowUsage(specifications, clasp.UsageParams{
+		clasp.ShowUsage(specifications, clasp.UsageParams{
 
-            Version: ProgramVersion,
-            InfoLines: []string { "CLASP.Go Examples", "", ":version:", "" }
-        })
-    }
+			Version: ProgramVersion,
+			InfoLines: []string{
+				"CLASP.Go Examples",
+				"Simple example supporting --help and --version.",
+				":version:",
+				"",
+			},
+		})
+	}
 
-    if args.FlagIsSpecified(clasp.VersionFlag()) {
+	if args.FlagIsSpecified(clasp.VersionFlag()) {
 
-        clasp.ShowVersion(specifications, clasp.UsageParams{ Version: ProgramVersion })
-    }
+		clasp.ShowVersion(specifications, clasp.UsageParams{Version: ProgramVersion})
+	}
 
+	// Check for any unrecognised flags or options
 
-    // Check for any unrecognised flags or options
+	if unused := args.GetUnusedFlagsAndOptions(); 0 != len(unused) {
 
-    if unused := args.GetUnusedFlagsAndOptions(); 0 != len(unused) {
+		fmt.Fprintf(os.Stderr, "%s: unrecognised flag/option: %s\n", args.ProgramName, unused[0].Str())
 
-        fmt.Fprintf(os.Stderr, "%s: unrecognised flag/option: %s\n", args.ProgramName, unused[0].Str())
+		os.Exit(1)
+	}
 
-        os.Exit(1)
-    }
+	// Finish normal processing
 
-
-    // Finish normal processing
-
-    fmt.Printf("no flags specified\n")
+	fmt.Printf("no flags specified\n")
 }
 ```
 
@@ -73,8 +75,8 @@ func main() {
 
 If executed with no arguments
 
-```
-    go run examples/show_usage_and_version.go
+```bash
+go run examples/show_usage_and_version.go
 ```
 
 it gives the output:
@@ -87,48 +89,48 @@ no flags specified
 
 If executed with the arguments
 
-```
-    go run examples/show_usage_and_version.go --help
+```bash
+go run examples/show_usage_and_version.go --help
 ```
 
 it gives the output:
 
 ```
 CLASP.Go Examples
-
-show_usage_and_version 0.0.1
+Simple example supporting --help and --version.
+show_usage_and_version 0.0.2
 
 USAGE: show_usage_and_version [ ... flags and options ... ]
 
 flags/options:
 
-    --help
-        Shows this help and exits
+	--help
+		Shows this help and exits
 
-    --version
-        Shows version information and exits
+	--version
+		Shows version information and exits
 ```
 
 ### Show version
 
 If executed with the arguments
 
-```
-    go run examples/show_usage_and_version.go --version
+```bash
+go run examples/show_usage_and_version.go --version
 ```
 
 it gives the output:
 
 ```
-show_usage_and_version 0.0.1
+show_usage_and_version 0.0.2
 ```
 
 ### Unknown option
 
 If executed with the arguments
 
-```
-    go run examples/show_usage_and_version.go --unknown=value
+```bash
+go run examples/show_usage_and_version.go --unknown=value
 ```
 
 it gives the output (on the standard error stream):
@@ -138,4 +140,7 @@ show_usage_and_version: unrecognised flag/option: --unknown=value
 ```
 
 with an exit code of 1
+
+
+<!-- ########################### end of file ########################### -->
 

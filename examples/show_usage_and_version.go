@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	ProgramVersion = "0.0.1"
+	ProgramVersion = "0.0.2"
 )
 
 func main() {
@@ -19,6 +19,7 @@ func main() {
 
 	specifications := []clasp.Specification{
 
+		clasp.Section("standard:"),
 		clasp.HelpFlag(),
 		clasp.VersionFlag(),
 	}
@@ -29,8 +30,13 @@ func main() {
 
 		clasp.ShowUsage(specifications, clasp.UsageParams{
 
-			Version:   ProgramVersion,
-			InfoLines: []string{"CLASP.Go Examples", "", ":version:", ""},
+			Version: ProgramVersion,
+			InfoLines: []string{
+				"CLASP.Go Examples",
+				"Simple example supporting --help and --version.",
+				":version:",
+				"",
+			},
 		})
 	}
 

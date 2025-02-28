@@ -5,7 +5,7 @@
 
 /*
  * Created: 15th August 2015
- * Updated: 26th February 2025
+ * Updated: 28th February 2025
  */
 
 package clasp
@@ -14,8 +14,8 @@ import "github.com/synesissoftware/ver2go"
 
 const (
 	VersionMajor uint16 = 0
-	VersionMinor uint16 = 16
-	VersionPatch uint16 = 3
+	VersionMinor uint16 = 17
+	VersionPatch uint16 = 0
 	VersionAB    uint16 = 0x4001
 	Version      uint64 = (uint64(VersionMajor) << 48) + (uint64(VersionMinor) << 32) + (uint64(VersionPatch) << 16) + (uint64(VersionAB) << 0)
 )
