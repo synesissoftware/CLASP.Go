@@ -30,12 +30,15 @@ const (
 	Parse_None ParseFlag = 0
 )
 
-// TODO: rename the following with `Pars_` prefix
+const (
+	Parse_TreatSingleHyphenAsValue               ParseFlag = 1 << iota // T.B.C.
+	Parse_DontRecogniseDoubleHyphenToStartValues                       // T.B.C.
+	Parse_DontMergeBitFlagsIntoBitFlags64                              // Suppresses the default behaviour to mix into the `int64` result matched `int` bitFlagss (see [Specification.SetBitFlags]) when no matched `int64` bitFlagss (see [Specification.SetBitFlags64]) are specified.
+)
 
 const (
-	ParseTreatSingleHyphenAsValue               ParseFlag = 1 << iota // T.B.C.
-	ParseDontRecogniseDoubleHyphenToStartValues                       // T.B.C.
-	Parse_DontMergeBitFlagsIntoBitFlags64                             // Suppresses the default behaviour to mix into the `int64` result matched `int` bitFlagss (see [Specification.SetBitFlags]) when no matched `int64` bitFlagss (see [Specification.SetBitFlags64]) are specified.
+	ParseTreatSingleHyphenAsValue               = Parse_TreatSingleHyphenAsValue               // Deprecated: Instead use [Parse_TreatSingleHyphenAsValue].
+	ParseDontRecogniseDoubleHyphenToStartValues = Parse_DontRecogniseDoubleHyphenToStartValues // Deprecated: Instead use [Parse_DontRecogniseDoubleHyphenToStartValues].
 )
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -379,7 +382,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 	for i, s := range argv[1:] {
 
-		if !treatingAsValues && "--" == s && (0 == (params.Flags & ParseDontRecogniseDoubleHyphenToStartValues)) {
+		if !treatingAsValues && "--" == s && (0 == (params.Flags & Parse_DontRecogniseDoubleHyphenToStartValues)) {
 
 			treatingAsValues = true
 			continue

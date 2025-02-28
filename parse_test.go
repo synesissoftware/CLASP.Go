@@ -270,7 +270,7 @@ func Test_several_values_with_double_hyphen_suppressed(t *testing.T) {
 
 	argv := []string{"path/blah", "abc", "def", "--", "-g", "--hi"}
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{Flags: clasp.ParseDontRecogniseDoubleHyphenToStartValues})
+	args1 := clasp.Parse(argv, clasp.ParseParams{Flags: clasp.Parse_DontRecogniseDoubleHyphenToStartValues})
 
 	if expected, actual := 5, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
@@ -590,7 +590,7 @@ func Test_single_hyphen_as_value(t *testing.T) {
 
 	argv := []string{"path/blah", "-"}
 
-	args1 := clasp.Parse(argv, clasp.ParseParams{Flags: clasp.ParseTreatSingleHyphenAsValue})
+	args1 := clasp.Parse(argv, clasp.ParseParams{Flags: clasp.Parse_TreatSingleHyphenAsValue})
 
 	if expected, actual := 1, len(args1.Arguments); check(t, expected == actual, "arguments object has wrong number of Arguments: expected %v; actual %v", expected, actual) {
 
