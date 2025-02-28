@@ -72,13 +72,13 @@ type Argument struct {
 }
 
 type Arguments struct {
-	Arguments       []*Argument
-	Flags           []*Argument
-	Options         []*Argument
-	Values          []*Argument
-	Argv            []string
-	ProgramName     string
-	specifications_ []*Specification
+	Arguments      []*Argument
+	Flags          []*Argument
+	Options        []*Argument
+	Values         []*Argument
+	Argv           []string
+	ProgramName    string
+	specifications []*Specification
 }
 
 type ParseParams struct {
@@ -512,7 +512,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 		}
 	}
 
-	args.specifications_ = make([]*Specification, len(params.Specifications))
+	args.specifications = make([]*Specification, len(params.Specifications))
 
 	for i, spec := range params.Specifications {
 
@@ -520,7 +520,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 		*p = spec
 
-		args.specifications_[i] = p
+		args.specifications[i] = p
 	}
 
 	return args
@@ -731,7 +731,7 @@ func check_flag_bits(args *Arguments, flags *int, only_unused bool) int {
 
 		if !only_unused || 0 == arg.used_ {
 
-			for _, al := range args.specifications_ {
+			for _, al := range args.specifications {
 
 				if al.Name == arg.ResolvedName {
 
