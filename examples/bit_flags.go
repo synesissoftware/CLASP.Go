@@ -1,4 +1,4 @@
-// examples/bit_mask_flag.go
+// examples/bit_flags.go
 
 package main
 

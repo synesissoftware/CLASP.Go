@@ -1,6 +1,14 @@
 # **CLASP.Go** Changes <!-- omit in toc -->
 
 
+## 0.17.0-alpha1 - 28th February 2025
+
+* + added `Specification#SetBitFlags()` / `Specification#SetBitFlags64()`, for associating a given flag specification with a bit-flags value and, optionally, a bitmask variable, to be applied automatically when detected from the command-line during parsing;
+* ~ improved (internal) field names
+* ~ formatting;
+* ~ simplification of markdown;
+
+
 ## 0.16.3-alpha1 - 28th February 2025
 
 * - removed unncessary use of `iota`;

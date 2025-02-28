@@ -1,13 +1,13 @@
-# CLASP.Go Example - **bit_mask_flag**
+# CLASP.Go Example - **bit_flags**
 
 ## Summary
 
-Example illustrating use of bit-mask flags.
+Example illustrating use of `BitFlags()` / `BitFlags64()` for associating a given flag specification with a bit-flags value and, optionally, a bitmask variable, to be applied automatically when detected from the command-line during parsing
 
 ## Source
 
 ```Go
-// examples/bit_mask_flag.go
+// examples/bit_flags.go
 
 package main
 
@@ -85,7 +85,7 @@ func main() {
 If executed with no arguments
 
 ```bash
-go run examples/bit_mask_flag.go
+go run examples/bit_flags.go
 ```
 
 it gives the output:
@@ -99,7 +99,7 @@ running in default mode
 If executed with the arguments
 
 ```bash
-go run examples/bit_mask_flag.go --help
+go run examples/bit_flags.go --help
 ```
 
 it gives the output:
@@ -107,9 +107,9 @@ it gives the output:
 ```
 CLASP.Go Examples
 Example illustrating use of bit-mask flags
-bit_mask_flag 0.0.1
+bit_flags 0.0.1
 
-USAGE: bit_mask_flag [ ... flags and options ... ]
+USAGE: bit_flags [ ... flags and options ... ]
 
 flags/options:
 
@@ -137,7 +137,7 @@ flags/options:
 If executed with the arguments
 
 ```bash
-go run examples/bit_mask_flag.go --enable-sound
+go run examples/bit_flags.go --enable-sound
 ```
 
 it gives the output:
@@ -151,7 +151,7 @@ running with sound
 If executed with the arguments
 
 ```bash
-go run examples/bit_mask_flag.go -v
+go run examples/bit_flags.go -v
 ```
 
 it gives the (same) output:
@@ -165,7 +165,7 @@ running with vision
 If executed with the arguments
 
 ```bash
-go run examples/bit_mask_flag.go -sv
+go run examples/bit_flags.go -sv
 ```
 
 it gives the (same) output:
