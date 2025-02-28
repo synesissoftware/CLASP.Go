@@ -662,7 +662,7 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 		_ = i
 		if name == f.ResolvedName {
 
-			f.used_ = 1
+			f.Use()
 			return true
 		}
 	}
@@ -707,7 +707,7 @@ func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
 		_ = i
 		if name == o.ResolvedName {
 
-			o.used_ = 1
+			o.Use()
 			return o, true
 		}
 	}
@@ -752,7 +752,7 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 		_ = i
 		if name == o.ResolvedName {
 
-			o.used_ = 1
+			o.Use()
 			return o, true
 		}
 	}
@@ -839,7 +839,7 @@ func check_flag_bits(args *Arguments, flags *int, only_unused bool) int {
 					*flags |= al.BitFlags
 					if only_unused {
 
-						arg.used_ = 1
+						arg.Use()
 					}
 				}
 			}
