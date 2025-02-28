@@ -905,20 +905,47 @@ func Test_BitFlags64_WITH_RECEIVER_1(t *testing.T) {
 
 func Test_BitFlags_AND_BitFlags64_WITH_RECEIVER_1(t *testing.T) {
 
-	flags := 0
-	flags64 := int64(0)
+	{
+		flags := 0
+		flags64 := int64(0)
 
-	specifications := []clasp.Specification{
+		specifications := []clasp.Specification{
 
-		clasp.Flag("-f1").SetBitFlags64(0x01, &flags),
-		clasp.Flag("-f2").SetBitFlags64(0x02, &flags),
-		clasp.Flag("-f4").SetBitFlags64(0x04, &flags),
+			clasp.Flag("-f1").SetBitFlags(0x01, &flags),
+			clasp.Flag("-f2").SetBitFlags(0x02, &flags),
+			clasp.Flag("-f4").SetBitFlags64(0x04, &flags64),
+		}
+
+		argv1 := []string{"path/blah", "-f2", "-f4"}
+		args := clasp.Parse(argv1, clasp.ParseParams{Specifications: specifications})
+
+		require.Equal(t, int(0x02), flags)
+		require.Equal(t, int64(0x04), flags64)
+
+		require.Equal(t, int(0x02), args.CheckAllBitFlags())
+		require.Equal(t, int64(0x06), args.CheckAllBit64Flags())
 	}
 
-	argv1 := []string{"path/blah", "-f2", "-f4"}
-	_ = clasp.Parse(argv1, clasp.ParseParams{Specifications: specifications})
+	{
+		flags := 0
+		flags64 := int64(0)
 
-	require.Equal(t, int64(0x06), flags)
+		specifications := []clasp.Specification{
+
+			clasp.Flag("-f1").SetBitFlags(0x01, &flags),
+			clasp.Flag("-f2").SetBitFlags(0x02, &flags),
+			clasp.Flag("-f4").SetBitFlags64(0x04, &flags64),
+		}
+
+		argv1 := []string{"path/blah", "-f2", "-f4"}
+		args := clasp.Parse(argv1, clasp.ParseParams{Specifications: specifications, Flags: clasp.Parse_DontMergeBitFlagsIntoBitFlags64})
+
+		require.Equal(t, int(0x02), flags)
+		require.Equal(t, int64(0x04), flags64)
+
+		require.Equal(t, int(0x02), args.CheckAllBitFlags())
+		require.Equal(t, int64(0x04), args.CheckAllBit64Flags())
+	}
 }
 
 func Test_groupedFlags_1(t *testing.T) {
