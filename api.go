@@ -881,56 +881,6 @@ func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
 	return unused
 }
 
-func check_flag_bits(args *Arguments, flags *int, only_unused bool) int {
-
-	var dummy_ int
-
-	if nil == flags {
-
-		flags = &dummy_
-	}
-
-	*flags = 0
-
-	for _, arg := range args.Flags {
-
-		if !only_unused || arg.isUnused() {
-
-			for _, al := range args.specifications {
-
-				if al.Name == arg.ResolvedName {
-
-					*flags |= al.BitFlags
-					if only_unused {
-
-						arg.Use()
-					}
-				}
-			}
-		}
-	}
-
-	return *flags
-}
-
-// Examines the unused parsed flags held by the Arguments instance and
-// combines the BitFlags values of their corresponding aliases.
-//
-// NOTE: Marks any of the flags as used.
-func (args *Arguments) CheckUnusedFlagBits(flags *int) int {
-
-	return check_flag_bits(args, flags, true)
-}
-
-// Examines all parsed flags held by the Arguments instance and combines
-// the BitFlags values of their corresponding aliases.
-//
-// NOTE: Does NOT mark any of the flags as used.
-func (args *Arguments) CheckAllFlagBits(flags *int) int {
-
-	return check_flag_bits(args, flags, false)
-}
-
 // T.B.C.
 func Aliases(aliases ...string) []string {
 
