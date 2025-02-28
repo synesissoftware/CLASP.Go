@@ -3,7 +3,6 @@
 package main
 
 import (
-
 	clasp "github.com/synesissoftware/CLASP.Go"
 
 	"fmt"
@@ -11,19 +10,18 @@ import (
 )
 
 const (
-
-	ProgramVersion	=	"0.1.0"
+	ProgramVersion = "0.1.0"
 )
 
 func main() {
 
 	// Specify specifications, parse, and checking standard flags
 
-	flag_Debug			:=	clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d").End()
-	option_Verbosity	:=	clasp.Option("--verbosity").SetHelp("specifies the verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty").End()
-	flag_Chatty			:=	clasp.AliasesFor("--verbosity=chatty", "-c")
+	flag_Debug := clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d").End()
+	option_Verbosity := clasp.Option("--verbosity").SetHelp("specifies the verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty").End()
+	flag_Chatty := clasp.AliasesFor("--verbosity=chatty", "-c")
 
-	specifications	:= []clasp.Specification {
+	specifications := []clasp.Specification{
 
 		clasp.Section("behaviour:"),
 		flag_Debug,
@@ -36,22 +34,26 @@ func main() {
 		clasp.VersionFlag(),
 	}
 
-	args := clasp.Parse(os.Args, clasp.ParseParams{ Specifications: specifications })
+	args := clasp.Parse(os.Args, clasp.ParseParams{Specifications: specifications})
 
 	if args.FlagIsSpecified(clasp.HelpFlag()) {
 
 		clasp.ShowUsage(specifications, clasp.UsageParams{
 
 			Version: ProgramVersion,
-			InfoLines: []string { "CLASP.Go Examples", "", ":version:", "" },
+			InfoLines: []string{
+				"CLASP.Go Examples",
+				"Example illustrating various kinds of flag and option specifications, including the combination of short-names",
+				":version:",
+				"",
+			},
 		})
 	}
 
 	if args.FlagIsSpecified(clasp.VersionFlag()) {
 
-		clasp.ShowVersion(specifications, clasp.UsageParams{ Version: ProgramVersion })
+		clasp.ShowVersion(specifications, clasp.UsageParams{Version: ProgramVersion})
 	}
-
 
 	// Program-specific processing of flags/options
 
@@ -65,7 +67,6 @@ func main() {
 		fmt.Printf("Debug mode is specified\n")
 	}
 
-
 	// Check for any unrecognised flags or options
 
 	if unused := args.GetUnusedFlagsAndOptions(); 0 != len(unused) {
@@ -75,9 +76,7 @@ func main() {
 		os.Exit(1)
 	}
 
-
 	// Finish normal processing
 
 	return
 }
-

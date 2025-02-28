@@ -12,81 +12,82 @@ Example illustrating various kinds of *flag* and *option* specifications, includ
 package main
 
 import (
+	clasp "github.com/synesissoftware/CLASP.Go"
 
-    clasp "github.com/synesissoftware/CLASP.Go"
-
-    "fmt"
-    "os"
+	"fmt"
+	"os"
 )
 
 const (
-
-    ProgramVersion  =   "0.1.0"
+	ProgramVersion = "0.1.0"
 )
 
 func main() {
 
-    // Specify specifications, parse, and checking standard flags
+	// Specify specifications, parse, and checking standard flags
 
-    flag_Debug          :=  clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d")
-    option_Verbosity    :=  clasp.Option("--verbosity").SetHelp("specifies the verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty")
-    flag_Chatty         :=  clasp.AliasesFor("--verbosity=chatty", "-c")
+	flag_Debug := clasp.Flag("--debug").SetHelp("runs in Debug mode").SetAlias("-d").End()
+	option_Verbosity := clasp.Option("--verbosity").SetHelp("specifies the verbosity").SetAlias("-v").SetValues("terse", "quiet", "silent", "chatty").End()
+	flag_Chatty := clasp.AliasesFor("--verbosity=chatty", "-c")
 
-    specifications := []clasp.Specification {
+	specifications := []clasp.Specification{
 
-        clasp.Section("behaviour:"),
-        flag_Debug,
-        option_Verbosity,
-        flag_Chatty,
+		clasp.Section("behaviour:"),
+		flag_Debug,
+		option_Verbosity,
+		flag_Chatty,
 
-        clasp.Section("standard:"),
-        clasp.HelpFlag(),
-        clasp.VersionFlag(),
-    }
+		clasp.Section("standard:"),
+		flag_Debug,
+		clasp.HelpFlag(),
+		clasp.VersionFlag(),
+	}
 
-    args := clasp.Parse(os.Args, clasp.ParseParams{ Specifications: specifications })
+	args := clasp.Parse(os.Args, clasp.ParseParams{Specifications: specifications})
 
-    if args.FlagIsSpecified(clasp.HelpFlag()) {
+	if args.FlagIsSpecified(clasp.HelpFlag()) {
 
-        clasp.ShowUsage(specifications, clasp.UsageParams{
+		clasp.ShowUsage(specifications, clasp.UsageParams{
 
-            Version: ProgramVersion,
-            InfoLines: []string { "CLASP.Go Examples", "", ":version:", "" },
-        })
-    }
+			Version:   ProgramVersion,
+			InfoLines: []string{
+				"CLASP.Go Examples",
+				"Example illustrating various kinds of flag and option specifications, including the combination of short-names",
+				":version:",
+				"",
+			},
+		})
+	}
 
-    if args.FlagIsSpecified(clasp.VersionFlag()) {
+	if args.FlagIsSpecified(clasp.VersionFlag()) {
 
-        clasp.ShowVersion(specifications, clasp.UsageParams{ Version: ProgramVersion })
-    }
+		clasp.ShowVersion(specifications, clasp.UsageParams{Version: ProgramVersion})
+	}
 
+	// Program-specific processing of flags/options
 
-    // Program-specific processing of flags/options
+	if opt, found := args.LookupOption("--verbosity"); found {
 
-    if opt, found := args.LookupOption("--verbosity"); found {
+		fmt.Printf("verbosity is specified as: %s\n", opt.Value)
+	}
 
-        fmt.Printf("verbosity is specified as: %s\n", opt.Value)
-    }
+	if args.FlagIsSpecified("--debug") {
 
-    if args.FlagIsSpecified("--debug") {
+		fmt.Printf("Debug mode is specified\n")
+	}
 
-        fmt.Printf("Debug mode is specified\n")
-    }
+	// Check for any unrecognised flags or options
 
+	if unused := args.GetUnusedFlagsAndOptions(); 0 != len(unused) {
 
-    // Check for any unrecognised flags or options
+		fmt.Fprintf(os.Stderr, "%s: unrecognised flag/option: %s\n", args.ProgramName, unused[0].Str())
 
-    if unused := args.GetUnusedFlagsAndOptions(); 0 != len(unused) {
+		os.Exit(1)
+	}
 
-        fmt.Fprintf(os.Stderr, "%s: unrecognised flag/option: %s\n", args.ProgramName, unused[0].Str())
+	// Finish normal processing
 
-        os.Exit(1)
-    }
-
-
-    // Finish normal processing
-
-    return
+	return
 }
 ```
 
