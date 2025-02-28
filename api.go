@@ -31,9 +31,10 @@ const (
 )
 
 const (
-	Parse_TreatSingleHyphenAsValue               ParseFlag = 1 << iota // T.B.C.
-	Parse_DontRecogniseDoubleHyphenToStartValues                       // T.B.C.
-	Parse_DontMergeBitFlagsIntoBitFlags64                              // Suppresses the default behaviour to mix into the `int64` result matched `int` bitFlagss (see [Specification.SetBitFlags]) when no matched `int64` bitFlagss (see [Specification.SetBitFlags64]) are specified.
+	Parse_TreatSingleHyphenAsValue                    ParseFlag = 1 << iota // T.B.C.
+	Parse_DontRecogniseDoubleHyphenToStartValues                            // T.B.C.
+	Parse_DontMergeBitFlagsIntoBitFlags64                                   // Suppresses the default behaviour to mix into the `int64` result matched `int` bitFlagss (see [Specification.SetBitFlags]) when no matched `int64` bitFlagss (see [Specification.SetBitFlags64]) are specified.
+	Parse_DontMarkUsedDuringParseWhenMatchingBitFlags                       // Suppresses the default behaviour to mark as used (see [Argument.Use]) flags that have been provided receiver variables in [Specification.SetBitFlags] or [Specification.SetBitFlags64].
 )
 
 const (
@@ -627,6 +628,11 @@ func Parse(argv []string, params ParseParams) *Arguments {
 					if nil != spec.flags64_receiver {
 
 						*spec.flags64_receiver |= spec.BitFlags64
+
+						if 0 == (Parse_DontMarkUsedDuringParseWhenMatchingBitFlags & params.Flags) {
+
+							arg.Use()
+						}
 					}
 
 					args.bitFlags64 |= spec.BitFlags64
@@ -636,6 +642,11 @@ func Parse(argv []string, params ParseParams) *Arguments {
 						if nil != spec.flags_receiver {
 
 							*spec.flags_receiver |= spec.BitFlags
+
+							if 0 == (Parse_DontMarkUsedDuringParseWhenMatchingBitFlags & params.Flags) {
+
+								arg.Use()
+							}
 						}
 
 						args.bitFlags |= spec.BitFlags
@@ -645,6 +656,11 @@ func Parse(argv []string, params ParseParams) *Arguments {
 							if nil != spec.flags64_receiver {
 
 								*spec.flags64_receiver |= spec.BitFlags64
+
+								if 0 == (Parse_DontMarkUsedDuringParseWhenMatchingBitFlags & params.Flags) {
+
+									arg.Use()
+								}
 							}
 
 							args.bitFlags64 |= int64(spec.BitFlags)
