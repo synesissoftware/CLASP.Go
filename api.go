@@ -29,7 +29,7 @@ type ParseFlag int
 const (
 	ParseTreatSingleHyphenAsValue               ParseFlag = 1 << iota
 	ParseDontRecogniseDoubleHyphenToStartValues ParseFlag = 1 << iota
-	Parse_DontMergeBitmaskIntoBitmask64                   // Suppresses the default behaviour to mix into the `int64` result matched `int` bitmasks (see [Specification.SetBitmask]) when no matched `int64` bitmasks (see [Specification.SetBitmask64]) are specified.
+	Parse_DontMergeBitFlagsIntoBitFlags64                 // Suppresses the default behaviour to mix into the `int64` result matched `int` bitFlagss (see [Specification.SetBitFlags]) when no matched `int64` bitFlagss (see [Specification.SetBitFlags64]) are specified.
 )
 
 /* /////////////////////////////////////////////////////////////////////////
@@ -50,17 +50,16 @@ const (
 )
 
 type Specification struct {
-	Type     ArgType
-	Name     string
-	Aliases  []string
-	Help     string
-	ValueSet []string
-	BitFlags int
-	Extras   map[string]interface{}
+	Type       ArgType
+	Name       string
+	Aliases    []string
+	Help       string
+	ValueSet   []string
+	BitFlags   int
+	BitFlags64 int64
+	Extras     map[string]interface{}
 
-	bitmask     int
 	flags_var   *int
-	bitmask64   int64
 	flags_var64 *int64
 }
 
@@ -86,8 +85,8 @@ type Arguments struct {
 	ProgramName    string
 	specifications []*Specification
 
-	intFlags   int
-	int64Flags int64
+	bitFlags   int
+	bitFlags64 int64
 }
 
 type ParseParams struct {
@@ -99,14 +98,14 @@ type ParseParams struct {
 func HelpFlag() Specification {
 
 	// TODO: reimplement in terms of [Flag] ??
-	return Specification{FlagType, "--help", nil, "Shows this help and exits", nil, 0, nil, 0, nil, 0, nil}
+	return Specification{FlagType, "--help", nil, "Shows this help and exits", nil, 0, 0, nil, nil, nil}
 }
 
 // Obtains, by value, a specification containing a stock specification of a '--version' flag.
 func VersionFlag() Specification {
 
 	// TODO: reimplement in terms of [Flag] ??
-	return Specification{FlagType, "--version", nil, "Shows version information and exits", nil, 0, nil, 0, nil, 0, nil}
+	return Specification{FlagType, "--version", nil, "Shows version information and exits", nil, 0, 0, nil, nil, nil}
 }
 
 func (at ArgType) String() string {
@@ -191,18 +190,18 @@ func AliasesFor(actual string, alias0 string, other_aliases ...string) (result S
 }
 
 // T.B.C.
-func (specification Specification) SetBitmask(bitmask int, flags_var *int) (result Specification) {
+func (specification Specification) SetBitFlags(bitFlags int, flags_var *int) (result Specification) {
 
-	specification.bitmask = bitmask
+	specification.BitFlags = bitFlags
 	specification.flags_var = flags_var
 
 	return specification
 }
 
 // T.B.C.
-func (specification Specification) SetBitmask64(bitmask64 int64, flags_var64 *int64) (result Specification) {
+func (specification Specification) SetBitFlags64(bitFlags64 int64, flags_var64 *int64) (result Specification) {
 
-	specification.bitmask64 = bitmask64
+	specification.BitFlags64 = bitFlags64
 	specification.flags_var64 = flags_var64
 
 	return specification
@@ -552,7 +551,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 		args.specifications[i] = p
 	}
 
-	// now process the bitmasks
+	// now process the bit flags
 
 	{
 		for _, arg := range args.Flags {
@@ -561,32 +560,32 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 			if nil != spec {
 
-				if 0 != spec.bitmask64 {
+				if 0 != spec.BitFlags64 {
 
 					if nil != spec.flags_var64 {
 
-						*spec.flags_var64 |= spec.bitmask64
+						*spec.flags_var64 |= spec.BitFlags64
 					}
 
-					args.int64Flags |= spec.bitmask64
+					args.bitFlags64 |= spec.BitFlags64
 				} else {
-					if 0 != spec.bitmask {
+					if 0 != spec.BitFlags {
 
 						if nil != spec.flags_var {
 
-							*spec.flags_var |= spec.bitmask
+							*spec.flags_var |= spec.BitFlags
 						}
 
-						args.intFlags |= spec.bitmask
+						args.bitFlags |= spec.BitFlags
 
-						if 0 != (Parse_DontMergeBitmaskIntoBitmask64 & params.Flags) {
+						if 0 != (Parse_DontMergeBitFlagsIntoBitFlags64 & params.Flags) {
 
 							if nil != spec.flags_var64 {
 
-								*spec.flags_var64 |= spec.bitmask64
+								*spec.flags_var64 |= spec.BitFlags64
 							}
 
-							args.int64Flags |= int64(spec.bitmask)
+							args.bitFlags64 |= int64(spec.BitFlags)
 						}
 					}
 				}
@@ -600,13 +599,13 @@ func Parse(argv []string, params ParseParams) *Arguments {
 // T.B.C.
 func (args Arguments) CheckAllBitFlags() int {
 
-	return args.intFlags
+	return args.bitFlags
 }
 
 // T.B.C.
 func (args Arguments) CheckAllBit64Flags() int64 {
 
-	return args.int64Flags
+	return args.bitFlags64
 }
 
 func (args *Arguments) FlagIsSpecified(id interface{}) bool {

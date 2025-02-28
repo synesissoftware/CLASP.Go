@@ -28,6 +28,7 @@ func main() {
 
 	specifications := []clasp.Specification{
 
+		clasp.Section("standard:"),
 		clasp.HelpFlag(),
 		clasp.VersionFlag(),
 	}
