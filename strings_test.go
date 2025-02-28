@@ -2,6 +2,7 @@ package clasp_test
 
 import (
 	clasp "github.com/synesissoftware/CLASP.Go"
+	stegol "github.com/synesissoftware/STEGoL"
 
 	"testing"
 )
@@ -62,30 +63,84 @@ func Test_String_of_ArgType_unknown(t *testing.T) {
 
 // Specification
 
-func Test_String_of_Specification_1(t *testing.T) {
+func Test_String_OF_UNINITIALISED_Specification(t *testing.T) {
 
 	specification := clasp.Specification{}
 
-	expected := "<clasp.Specification{ Type=<clasp.ArgType 0>, Name=\"\", Aliases=[], Help=\"\", ValueSet=[], BitFlags=0x0, Extras=map[] }>"
+	expected := "<clasp.Specification{ Type=<clasp.ArgType 0>, Name=\"\", Aliases=[], Help=\"\", ValueSet=[], BitFlags=0x0, BitFlags64=0x0, Extras=map[] }>"
 	actual := specification.String()
 
-	if expected != actual {
-
-		t.Errorf("expected '%s' does not equal '%s'", expected, actual)
-	}
+	stegol.CheckStringEqual(t, expected, actual)
 }
 
-func Test_String_of_Specification_2(t *testing.T) {
+func Test_String_OF_Flag_Specification_1(t *testing.T) {
 
-	specification := clasp.Specification{Help: "help, plz", BitFlags: 0x1234, Name: "--flagpole", Type: clasp.OptionType}
+	specification := clasp.Specification{
+		Type:     clasp.FlagType,
+		Name:     "--flagpole",
+		Help:     "help, plz",
+		BitFlags: 0x1234,
 
-	expected := "<clasp.Specification{ Type=Option, Name=\"--flagpole\", Aliases=[], Help=\"help, plz\", ValueSet=[], BitFlags=0x1234, Extras=map[] }>"
+		// following fields not used by `Option` so should not appear
+		ValueSet: []string{"one", "two"},
+	}
+
+	expected := "<clasp.Specification{ Type=Flag, Name=\"--flagpole\", Aliases=[], Help=\"help, plz\", BitFlags=0x1234, flags_receiver=0x0, BitFlags64=0x0, flags64_receiver=0x0, Extras=map[] }>"
 	actual := specification.String()
 
-	if expected != actual {
+	stegol.CheckStringEqual(t, expected, actual)
+}
 
-		t.Errorf("expected '%s' does not equal '%s'", expected, actual)
+func Test_String_OF_Flag_Specification_2(t *testing.T) {
+
+	specification := clasp.Specification{
+		Type:       clasp.FlagType,
+		Name:       "--flagpole",
+		Help:       "help, plz",
+		BitFlags64: 0x5678,
+
+		// following fields not used by `Option` so should not appear
+		ValueSet: []string{"one", "two"},
 	}
+
+	expected := "<clasp.Specification{ Type=Flag, Name=\"--flagpole\", Aliases=[], Help=\"help, plz\", BitFlags=0x0, flags_receiver=0x0, BitFlags64=0x5678, flags64_receiver=0x0, Extras=map[] }>"
+	actual := specification.String()
+
+	stegol.CheckStringEqual(t, expected, actual)
+}
+
+func Test_String_OF_Option_Specification_1(t *testing.T) {
+
+	specification := clasp.Specification{
+		Type: clasp.OptionType,
+		Name: "--count",
+		Help: "number of things",
+		ValueSet: []string{
+			"one", "two",
+		},
+
+		// following fields not used by `Option` so should not appear
+		BitFlags:   0x1234,
+		BitFlags64: 0x5678,
+	}
+
+	expected := "<clasp.Specification{ Type=Option, Name=\"--count\", Aliases=[], Help=\"number of things\", ValueSet=[\"one\", \"two\"], Extras=map[] }>"
+	actual := specification.String()
+
+	stegol.CheckStringEqual(t, expected, actual)
+}
+
+func Test_String_OF_Section_Specification_1(t *testing.T) {
+
+	specification := clasp.Specification{
+		Type: clasp.SectionType,
+		Name: "standard elements:",
+	}
+
+	expected := "<clasp.Specification{ Type=Section, Name=\"standard elements:\" }>"
+	actual := specification.String()
+
+	stegol.CheckStringEqual(t, expected, actual)
 }
 
 // Argument

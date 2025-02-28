@@ -141,9 +141,35 @@ func (at ArgType) String() string {
 	}
 }
 
+func valueSetString(vs []string) string {
+
+	elems := make([]string, len(vs))
+
+	for ix, elem := range vs {
+		elems[ix] = fmt.Sprintf(`"%s"`, elem)
+	}
+
+	return "[" + strings.Join(elems, ", ") + "]"
+}
+
 func (specification Specification) String() string {
 
-	return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, ValueSet=%v, BitFlags=0x%x, Extras=%v }>", specification, specification.Type, specification.Name, specification.Aliases, specification.Help, specification.ValueSet, specification.BitFlags, specification.Extras)
+	switch specification.Type {
+	case FlagType:
+		return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, BitFlags=0x%x, flags_receiver=%p, BitFlags64=0x%x, flags64_receiver=%p, Extras=%v }>", specification, specification.Type, specification.Name, specification.Aliases, specification.Help, specification.BitFlags, specification.flags_receiver, specification.BitFlags64, specification.flags64_receiver, specification.Extras)
+
+	case OptionType, optionViaAlias:
+		return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, ValueSet=%v, Extras=%v }>", specification, specification.Type, specification.Name, specification.Aliases, specification.Help, valueSetString(specification.ValueSet), specification.Extras)
+
+	case ValueType:
+		return fmt.Sprintf("<%T{ Type=%v, Extras=%v }>", specification, specification.Type, specification.Extras)
+
+	case SectionType:
+		return fmt.Sprintf("<%T{ Type=%v, Name=%q }>", specification, specification.Type, specification.Name)
+
+	default:
+		return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, ValueSet=%v, BitFlags=0x%x, BitFlags64=0x%x, Extras=%v }>", specification, specification.Type, specification.Name, specification.Aliases, specification.Help, valueSetString(specification.ValueSet), specification.BitFlags, specification.BitFlags64, specification.Extras)
+	}
 }
 
 func (argument Argument) String() string {
