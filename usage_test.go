@@ -1,6 +1,7 @@
 package clasp_test
 
 import (
+	"github.com/stretchr/testify/require"
 	angols "github.com/synesissoftware/ANGoLS"
 	clasp "github.com/synesissoftware/CLASP.Go"
 
@@ -10,6 +11,10 @@ import (
 	"strings"
 	"testing"
 )
+
+/* /////////////////////////////////////////////////////////////////////////
+ * helper functions
+ */
 
 func check_num_lines(t *testing.T, result []string, num_lines int) {
 
@@ -123,6 +128,20 @@ func test_ShowVersion_(t *testing.T, expected string, specifications []clasp.Spe
 			}
 		}
 	}
+}
+
+/* /////////////////////////////////////////////////////////////////////////
+ * test functions
+ */
+
+func Test_USAGE_Flags_1(t *testing.T) {
+	require.Equal(t, int(0), int(clasp.Usage_None))
+
+	require.NotEqual(t, clasp.SkipBlanksBetweenLines, clasp.DontCallExit)
+	require.NotEqual(t, clasp.DontCallExit, clasp.DontCallExitIfZero)
+	require.NotEqual(t, clasp.DontCallExitIfZero, clasp.SkipBlanksBetweenLines)
+
+	require.Equal(t, int(0), int(clasp.SkipBlanksBetweenLines&clasp.DontCallExit&clasp.DontCallExitIfZero))
 }
 
 func Test_ShowVersion_with_int_array_version(t *testing.T) {

@@ -1,6 +1,14 @@
 # **CLASP.Go** Changes <!-- omit in toc -->
 
 
+## 0.16.3-alpha1 - 28th February 2025
+
+* - removed unncessary use of `iota`;
+* + added more test cases;
+* ~ tidying / doc-markup;
+* ~ formatting;
+
+
 ## 0.16.2 - 28th February 2025
 
 * ~ `Version` additionally accepts type `[]uint16`;
