@@ -67,8 +67,8 @@ type Specification struct {
 	BitFlags64 int64
 	Extras     map[string]interface{}
 
-	flags_var   *int
-	flags_var64 *int64
+	flags_receiver   *int
+	flags64_receiver *int64
 }
 
 // T.B.C.
@@ -201,19 +201,26 @@ func AliasesFor(actual string, alias0 string, other_aliases ...string) (result S
 }
 
 // T.B.C.
-func (specification Specification) SetBitFlags(bitFlags int, flags_var *int) (result Specification) {
+func (specification Specification) SetBitFlags(bitFlags int, flags_receiver *int) (result Specification) {
 
 	specification.BitFlags = bitFlags
-	specification.flags_var = flags_var
+	specification.flags_receiver = flags_receiver
 
 	return specification
 }
 
-// T.B.C.
-func (specification Specification) SetBitFlags64(bitFlags64 int64, flags_var64 *int64) (result Specification) {
+// Specifies bit flag(s) and, optionally, a flags receiver variable to be
+// associated with the specification. If a flags receiver variable is given
+// then a matching [Argument] will be marked as used automationally during
+// parsing ([Parse]).
+//
+// NOTE: This is meaningful only to specifications that describes [Type] is
+// [FlagType]. A future version may issue a panic if called on another
+// argument type.
+func (specification Specification) SetBitFlags64(bitFlags int64, flags_receiver *int64) (result Specification) {
 
-	specification.BitFlags64 = bitFlags64
-	specification.flags_var64 = flags_var64
+	specification.BitFlags64 = bitFlags
+	specification.flags64_receiver = flags_receiver
 
 	return specification
 }
@@ -576,27 +583,27 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 				if 0 != spec.BitFlags64 {
 
-					if nil != spec.flags_var64 {
+					if nil != spec.flags64_receiver {
 
-						*spec.flags_var64 |= spec.BitFlags64
+						*spec.flags64_receiver |= spec.BitFlags64
 					}
 
 					args.bitFlags64 |= spec.BitFlags64
 				} else {
 					if 0 != spec.BitFlags {
 
-						if nil != spec.flags_var {
+						if nil != spec.flags_receiver {
 
-							*spec.flags_var |= spec.BitFlags
+							*spec.flags_receiver |= spec.BitFlags
 						}
 
 						args.bitFlags |= spec.BitFlags
 
 						if 0 != (Parse_DontMergeBitFlagsIntoBitFlags64 & params.Flags) {
 
-							if nil != spec.flags_var64 {
+							if nil != spec.flags64_receiver {
 
-								*spec.flags_var64 |= spec.BitFlags64
+								*spec.flags64_receiver |= spec.BitFlags64
 							}
 
 							args.bitFlags64 |= int64(spec.BitFlags)
