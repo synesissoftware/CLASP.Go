@@ -345,8 +345,16 @@ func (params *ParseParams) findSpecification(name string) (found bool, specifica
  * API
  */
 
-// T.B.C.
+// Marks an argument as used, such that it will not be obtained in a call to
+// [Arguments.GetUnusedFlags] / [Arguments.GetUnusedOptions] /
+// [Arguments.GetUnusedFlagsAndOptions].
+//
+// NOTE: This is meaningful only to arguments whose [Argument.Type] is
+// [FlagType] or [OptionType]. A future version may issue a panic if called
+// on another argument type.
 func (arg *Argument) Use() {
+
+	// TODO: switch on `FlagType` / `OptionType` and warn in other cases
 
 	arg.used_ = 1
 }
