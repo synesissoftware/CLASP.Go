@@ -1,6 +1,7 @@
 package clasp_test
 
 import (
+	"github.com/stretchr/testify/require"
 	clasp "github.com/synesissoftware/CLASP.Go"
 
 	"fmt"
@@ -866,6 +867,58 @@ func Test_CheckAllFlagBits(t *testing.T) {
 	args2 := clasp.Parse(argv2, clasp.ParseParams{Specifications: specifications})
 	if expected, actual := 0x5, args2.CheckAllFlagBits(nil); check(t, expected == actual, "flags not as expected: expected %x; actual %x", expected, actual) {
 	}
+}
+
+func Test_BitFlags_WITH_RECEIVER_1(t *testing.T) {
+
+	flags := 0
+
+	specifications := []clasp.Specification{
+
+		clasp.Flag("-f1").SetBitFlags(0x01, &flags),
+		clasp.Flag("-f2").SetBitFlags(0x02, &flags),
+		clasp.Flag("-f4").SetBitFlags(0x04, &flags),
+	}
+
+	argv1 := []string{"path/blah", "-f1", "-f4"}
+	_ = clasp.Parse(argv1, clasp.ParseParams{Specifications: specifications})
+
+	require.Equal(t, 0x05, flags)
+}
+
+func Test_BitFlags64_WITH_RECEIVER_1(t *testing.T) {
+
+	flags := int64(0)
+
+	specifications := []clasp.Specification{
+
+		clasp.Flag("-f1").SetBitFlags64(0x01, &flags),
+		clasp.Flag("-f2").SetBitFlags64(0x02, &flags),
+		clasp.Flag("-f4").SetBitFlags64(0x04, &flags),
+	}
+
+	argv1 := []string{"path/blah", "-f2", "-f4"}
+	_ = clasp.Parse(argv1, clasp.ParseParams{Specifications: specifications})
+
+	require.Equal(t, int64(0x06), flags)
+}
+
+func Test_BitFlags_AND_BitFlags64_WITH_RECEIVER_1(t *testing.T) {
+
+	flags := 0
+	flags64 := int64(0)
+
+	specifications := []clasp.Specification{
+
+		clasp.Flag("-f1").SetBitFlags64(0x01, &flags),
+		clasp.Flag("-f2").SetBitFlags64(0x02, &flags),
+		clasp.Flag("-f4").SetBitFlags64(0x04, &flags),
+	}
+
+	argv1 := []string{"path/blah", "-f2", "-f4"}
+	_ = clasp.Parse(argv1, clasp.ParseParams{Specifications: specifications})
+
+	require.Equal(t, int64(0x06), flags)
 }
 
 func Test_groupedFlags_1(t *testing.T) {

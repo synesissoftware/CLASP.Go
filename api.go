@@ -599,7 +599,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 						args.bitFlags |= spec.BitFlags
 
-						if 0 != (Parse_DontMergeBitFlagsIntoBitFlags64 & params.Flags) {
+						if 0 == (Parse_DontMergeBitFlagsIntoBitFlags64 & params.Flags) {
 
 							if nil != spec.flags64_receiver {
 
