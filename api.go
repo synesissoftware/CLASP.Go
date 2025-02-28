@@ -59,7 +59,9 @@ type Specification struct {
 	Extras   map[string]interface{}
 
 	bitmask     int
+	flags_var   *int
 	bitmask64   int64
+	flags_var64 *int64
 }
 
 type Argument struct {
@@ -97,14 +99,14 @@ type ParseParams struct {
 func HelpFlag() Specification {
 
 	// TODO: reimplement in terms of [Flag] ??
-	return Specification{FlagType, "--help", nil, "Shows this help and exits", nil, 0, nil, nil, nil}
+	return Specification{FlagType, "--help", nil, "Shows this help and exits", nil, 0, nil, 0, nil, 0, nil}
 }
 
 // Obtains, by value, a specification containing a stock specification of a '--version' flag.
 func VersionFlag() Specification {
 
 	// TODO: reimplement in terms of [Flag] ??
-	return Specification{FlagType, "--version", nil, "Shows version information and exits", nil, 0, nil,  nil,  nil}
+	return Specification{FlagType, "--version", nil, "Shows version information and exits", nil, 0, nil, 0, nil, 0, nil}
 }
 
 func (at ArgType) String() string {
@@ -192,6 +194,7 @@ func AliasesFor(actual string, alias0 string, other_aliases ...string) (result S
 func (specification Specification) SetBitmask(bitmask int, flags_var *int) (result Specification) {
 
 	specification.bitmask = bitmask
+	specification.flags_var = flags_var
 
 	return specification
 }
@@ -200,6 +203,7 @@ func (specification Specification) SetBitmask(bitmask int, flags_var *int) (resu
 func (specification Specification) SetBitmask64(bitmask64 int64, flags_var64 *int64) (result Specification) {
 
 	specification.bitmask64 = bitmask64
+	specification.flags_var64 = flags_var64
 
 	return specification
 }
@@ -553,19 +557,36 @@ func Parse(argv []string, params ParseParams) *Arguments {
 	{
 		for _, arg := range args.Flags {
 
-			if nil != arg.ArgumentSpecification {
+			spec := arg.ArgumentSpecification
 
-				var bitmask int = arg.ArgumentSpecification.bitmask
-				var bitmask64 int64 = arg.ArgumentSpecification.bitmask64
+			if nil != spec {
 
-				if 0 != bitmask64 {
-					args.int64Flags |= bitmask64
+				if 0 != spec.bitmask64 {
+
+					if nil != spec.flags_var64 {
+
+						*spec.flags_var64 |= spec.bitmask64
+					}
+
+					args.int64Flags |= spec.bitmask64
 				} else {
-					if 0 != bitmask {
-						args.intFlags |= bitmask
+					if 0 != spec.bitmask {
+
+						if nil != spec.flags_var {
+
+							*spec.flags_var |= spec.bitmask
+						}
+
+						args.intFlags |= spec.bitmask
+
 						if 0 != (Parse_DontMergeBitmaskIntoBitmask64 & params.Flags) {
 
-							args.int64Flags |= int64(bitmask)
+							if nil != spec.flags_var64 {
+
+								*spec.flags_var64 |= spec.bitmask64
+							}
+
+							args.int64Flags |= int64(spec.bitmask)
 						}
 					}
 				}
