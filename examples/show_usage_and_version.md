@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	ProgramVersion = "0.0.1"
+	ProgramVersion = "0.0.2"
 )
 
 func main() {
@@ -38,8 +38,13 @@ func main() {
 
 		clasp.ShowUsage(specifications, clasp.UsageParams{
 
-			Version:   ProgramVersion,
-			InfoLines: []string{"CLASP.Go Examples", "", ":version:", ""},
+			Version: ProgramVersion,
+			InfoLines: []string{
+				"CLASP.Go Examples",
+				"Simple example supporting --help and --version.",
+				":version:",
+				"",
+			},
 		})
 	}
 
@@ -69,8 +74,8 @@ func main() {
 
 If executed with no arguments
 
-```
-    go run examples/show_usage_and_version.go
+```bash
+go run examples/show_usage_and_version.go
 ```
 
 it gives the output:
@@ -83,48 +88,48 @@ no flags specified
 
 If executed with the arguments
 
-```
-    go run examples/show_usage_and_version.go --help
+```bash
+go run examples/show_usage_and_version.go --help
 ```
 
 it gives the output:
 
 ```
 CLASP.Go Examples
-
-show_usage_and_version 0.0.1
+Simple example supporting --help and --version.
+show_usage_and_version 0.0.2
 
 USAGE: show_usage_and_version [ ... flags and options ... ]
 
 flags/options:
 
-    --help
-        Shows this help and exits
+	--help
+		Shows this help and exits
 
-    --version
-        Shows version information and exits
+	--version
+		Shows version information and exits
 ```
 
 ### Show version
 
 If executed with the arguments
 
-```
-    go run examples/show_usage_and_version.go --version
+```bash
+go run examples/show_usage_and_version.go --version
 ```
 
 it gives the output:
 
 ```
-show_usage_and_version 0.0.1
+show_usage_and_version 0.0.2
 ```
 
 ### Unknown option
 
 If executed with the arguments
 
-```
-    go run examples/show_usage_and_version.go --unknown=value
+```bash
+go run examples/show_usage_and_version.go --unknown=value
 ```
 
 it gives the output (on the standard error stream):
@@ -134,4 +139,7 @@ show_usage_and_version: unrecognised flag/option: --unknown=value
 ```
 
 with an exit code of 1
+
+
+<!-- ########################### end of file ########################### -->
 

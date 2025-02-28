@@ -111,3 +111,7 @@ These are **destructive changes** and will not be compatible with any code depen
 ## 0.10.2 - 8th March 2019
 
 FIRST PUBLIC RELEASE
+
+
+<!-- ########################### end of file ########################### -->
+

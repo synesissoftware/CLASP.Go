@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	ProgramVersion = "0.1.0"
+	ProgramVersion = "0.1.1"
 )
 
 func main() {

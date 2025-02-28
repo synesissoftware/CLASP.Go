@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	ProgramVersion = "0.1.0"
+	ProgramVersion = "0.1.1"
 )
 
 func main() {
@@ -49,7 +49,7 @@ func main() {
 
 		clasp.ShowUsage(specifications, clasp.UsageParams{
 
-			Version:   ProgramVersion,
+			Version: ProgramVersion,
 			InfoLines: []string{
 				"CLASP.Go Examples",
 				"Example illustrating various kinds of flag and option specifications, including the combination of short-names",
@@ -97,8 +97,8 @@ func main() {
 
 If executed with no arguments
 
-```
-    go run examples/flag_and_option_specifications.go
+```bash
+go run examples/flag_and_option_specifications.go
 ```
 
 it gives the output:
@@ -110,16 +110,16 @@ it gives the output:
 
 If executed with the arguments
 
-```
-    go run examples/flag_and_option_specifications.go --help
+```bash
+go run examples/flag_and_option_specifications.go --help
 ```
 
 it gives the output:
 
 ```
 CLASP.Go Examples
-
-flag_and_option_specifications 0.1.0
+Example illustrating various kinds of flag and option specifications, including the combination of short-names
+flag_and_option_specifications 0.1.1
 
 USAGE: flag_and_option_specifications [ ... flags and options ... ]
 
@@ -158,8 +158,8 @@ flags/options:
 
 If executed with the arguments
 
-```
-    go run examples/flag_and_option_specifications.go --debug --verbosity=silent
+```bash
+go run examples/flag_and_option_specifications.go --debug --verbosity=silent
 ```
 
 it gives the output:
@@ -173,8 +173,8 @@ Debug mode is specified
 
 If executed with the arguments
 
-```
-    go run examples/flag_and_option_specifications.go -v silent -d
+```bash
+go run examples/flag_and_option_specifications.go -v silent -d
 ```
 
 it gives the (same) output:
@@ -188,8 +188,8 @@ Debug mode is specified
 
 If executed with the arguments
 
-```
-    go run examples/flag_and_option_specifications.go -c -d
+```bash
+go run examples/flag_and_option_specifications.go -c -d
 ```
 
 it gives the output:
@@ -203,8 +203,8 @@ Debug mode is specified
 
 If executed with the arguments
 
-```
-    go run examples/flag_and_option_specifications.go -dc
+```bash
+go run examples/flag_and_option_specifications.go -dc
 ```
 
 it gives the (same) output:
@@ -213,3 +213,7 @@ it gives the (same) output:
 verbosity is specified as: chatty
 Debug mode is specified
 ```
+
+
+<!-- ########################### end of file ########################### -->
+
