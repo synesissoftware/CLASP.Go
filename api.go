@@ -359,6 +359,10 @@ func (arg *Argument) Use() {
 	arg.used_ = 1
 }
 
+func (arg Argument) isUnused() bool {
+	return 0 == arg.used_
+}
+
 // T.B.C.
 func (arg Argument) Str() string {
 
@@ -811,7 +815,7 @@ func (args *Arguments) GetUnusedFlags() []*Argument {
 
 	for _, f := range args.Flags {
 
-		if 0 == f.used_ {
+		if f.isUnused() {
 
 			unused = append(unused, f)
 		}
@@ -827,7 +831,7 @@ func (args *Arguments) GetUnusedOptions() []*Argument {
 
 	for _, o := range args.Options {
 
-		if 0 == o.used_ {
+		if o.isUnused() {
 
 			unused = append(unused, o)
 		}
@@ -841,18 +845,18 @@ func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
 
 	var unused []*Argument
 
-	for _, spec := range args.Arguments {
+	for _, arg := range args.Arguments {
 
-		switch spec.Type {
+		switch arg.Type {
 
 		case FlagType:
 
 			fallthrough
 		case OptionType:
 
-			if 0 == spec.used_ {
+			if arg.isUnused() {
 
-				unused = append(unused, spec)
+				unused = append(unused, arg)
 			}
 			break
 		}
@@ -874,7 +878,7 @@ func check_flag_bits(args *Arguments, flags *int, only_unused bool) int {
 
 	for _, arg := range args.Flags {
 
-		if !only_unused || 0 == arg.used_ {
+		if !only_unused || arg.isUnused() {
 
 			for _, al := range args.specifications {
 
