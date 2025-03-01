@@ -392,203 +392,211 @@ func Parse(argv []string, params ParseParams) *Arguments {
 	args.Options = make([]*Argument, 0)
 	args.Values = make([]*Argument, 0)
 	args.Argv = argv
-	args.ProgramName = path.Base(argv[0])
+	if len(argv) > 0 {
+
+		args.ProgramName = path.Base(argv[0])
+	} else {
+
+		args.ProgramName = ""
+	}
 
 	treatingAsValues := false
 	nextIsOptValue := false
 
-	for i, s := range argv[1:] {
+	if len(argv) > 0 {
+		for i, s := range argv[1:] {
 
-		if !treatingAsValues && "--" == s && (0 == (params.Flags & Parse_DontRecogniseDoubleHyphenToStartValues)) {
+			if !treatingAsValues && "--" == s && (0 == (params.Flags & Parse_DontRecogniseDoubleHyphenToStartValues)) {
 
-			treatingAsValues = true
-			continue
-		}
-
-		if nextIsOptValue {
-
-			nextIsOptValue = false
-			args.Arguments[len(args.Arguments)-1].Value = s
-			continue
-		}
-
-		arg := new(Argument)
-
-		arg.CmdLineIndex = i + 1
-		arg.Flags = int(params.Flags)
-		arg.ArgumentSpecification = nil
-
-		numHyphens := 0
-		isSingle := false
-
-		if !treatingAsValues {
-
-			l := len(s)
-			if 1 == l && "-" == s {
-
-				numHyphens = 1
-				isSingle = true
-			} else if 2 == l && "--" == s {
-
-				numHyphens = 2
-			} else {
-
-				numHyphens = strings.IndexFunc(s, func(c rune) bool { return '-' != c })
+				treatingAsValues = true
+				continue
 			}
-		}
 
-		arg.NumGivenHyphens = numHyphens
+			if nextIsOptValue {
 
-		switch numHyphens {
+				nextIsOptValue = false
+				args.Arguments[len(args.Arguments)-1].Value = s
+				continue
+			}
 
-		case 0:
+			arg := new(Argument)
 
-			arg.Type = ValueType
-			arg.Value = s
-		default:
+			arg.CmdLineIndex = i + 1
+			arg.Flags = int(params.Flags)
+			arg.ArgumentSpecification = nil
 
-			nv := strings.SplitN(s, "=", 2)
-			if len(nv) > 1 {
+			numHyphens := 0
+			isSingle := false
 
-				arg.Type = OptionType
-				arg.GivenName = nv[0]
-				arg.ResolvedName = nv[0]
-				arg.Value = nv[1]
+			if !treatingAsValues {
 
-				if found, specification, _ := params.findSpecification(arg.ResolvedName); found {
+				l := len(s)
+				if 1 == l && "-" == s {
 
-					arg.ResolvedName = specification.Name
-					arg.ArgumentSpecification = specification
+					numHyphens = 1
+					isSingle = true
+				} else if 2 == l && "--" == s {
+
+					numHyphens = 2
 				} else {
 
+					numHyphens = strings.IndexFunc(s, func(c rune) bool { return '-' != c })
 				}
-			} else {
+			}
 
-				// Here we have to be flexible, and examine
-				// whether the apparent flag is, in fact, an
-				// option
+			arg.NumGivenHyphens = numHyphens
 
-				resolvedName := s
-				argType := FlagType
+			switch numHyphens {
 
-				if found, specification, _ := params.findSpecification(s); found {
+			case 0:
 
-					resolvedName = specification.Name
-					argType = specification.Type
-					arg.ArgumentSpecification = specification
+				arg.Type = ValueType
+				arg.Value = s
+			default:
 
-					if ix_equals := strings.Index(resolvedName, "="); ix_equals >= 0 {
-
-						res_nm := resolvedName[:ix_equals]
-						value := resolvedName[ix_equals+1:]
-
-						argType = optionViaAlias
-						s = resolvedName
-						resolvedName = res_nm
-						arg.Value = value
-
-						// Now need to look up the actual underlying specification
-
-						if actualFound, actualSpecification, _ := params.findSpecification(res_nm); actualFound {
-
-							arg.ArgumentSpecification = actualSpecification
-						}
-					}
-				} else {
-
-					// Now we test to see whether every character yields
-					// a specification. If so, we convert all, add them in, then
-					// skip to the next input
-
-					validCompoundFlag := len(s) > 1
-
-					compoundArguments := make([]*Argument, 0, len(s)-1)
-
-					for j, c := range s {
-
-						if 0 == j {
-
-							continue
-						}
-
-						testAlias := fmt.Sprintf("-%c", c)
-
-						if compoundFound, compoundSpec, _ := params.findSpecification(testAlias); compoundFound && compoundSpec.Type == FlagType {
-
-							var compoundArg Argument
-
-							compoundArg.ResolvedName = compoundSpec.Name
-							compoundArg.GivenName = s
-							compoundArg.Value = ""
-							compoundArg.Type = FlagType
-							compoundArg.CmdLineIndex = arg.CmdLineIndex
-							compoundArg.ArgumentSpecification = compoundSpec
-							compoundArg.Flags = arg.Flags
-
-							if ix_equals := strings.Index(compoundArg.ResolvedName, "="); ix_equals >= 0 {
-
-								res_nm := compoundArg.ResolvedName[:ix_equals]
-								value := compoundArg.ResolvedName[ix_equals+1:]
-
-								compoundArg.Type = OptionType
-								s = compoundArg.ResolvedName
-								compoundArg.ResolvedName = res_nm
-								compoundArg.Value = value
-
-								// Now need to look up the actual underlying specification
-
-								if actualFound, actualSpecification, _ := params.findSpecification(res_nm); actualFound {
-
-									compoundArg.ArgumentSpecification = actualSpecification
-								}
-							}
-
-							compoundArguments = append(compoundArguments, &compoundArg)
-						} else {
-
-							validCompoundFlag = false
-							break
-						}
-					}
-
-					if validCompoundFlag {
-
-						args.Arguments = append(args.Arguments, compoundArguments...)
-						continue
-					}
-				}
-
-				switch argType {
-
-				case optionViaAlias:
+				nv := strings.SplitN(s, "=", 2)
+				if len(nv) > 1 {
 
 					arg.Type = OptionType
-				default:
+					arg.GivenName = nv[0]
+					arg.ResolvedName = nv[0]
+					arg.Value = nv[1]
 
-					arg.Type = argType
-				}
+					if found, specification, _ := params.findSpecification(arg.ResolvedName); found {
 
-				arg.GivenName = s
-				arg.ResolvedName = resolvedName
+						arg.ResolvedName = specification.Name
+						arg.ArgumentSpecification = specification
+					} else {
 
-				if OptionType == arg.Type {
-
-					if optionViaAlias != argType {
-
-						nextIsOptValue = true
 					}
 				} else {
 
-					if isSingle && (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
+					// Here we have to be flexible, and examine
+					// whether the apparent flag is, in fact, an
+					// option
 
-						arg.Type = ValueType
-						arg.Value = s
+					resolvedName := s
+					argType := FlagType
+
+					if found, specification, _ := params.findSpecification(s); found {
+
+						resolvedName = specification.Name
+						argType = specification.Type
+						arg.ArgumentSpecification = specification
+
+						if ix_equals := strings.Index(resolvedName, "="); ix_equals >= 0 {
+
+							res_nm := resolvedName[:ix_equals]
+							value := resolvedName[ix_equals+1:]
+
+							argType = optionViaAlias
+							s = resolvedName
+							resolvedName = res_nm
+							arg.Value = value
+
+							// Now need to look up the actual underlying specification
+
+							if actualFound, actualSpecification, _ := params.findSpecification(res_nm); actualFound {
+
+								arg.ArgumentSpecification = actualSpecification
+							}
+						}
+					} else {
+
+						// Now we test to see whether every character yields
+						// a specification. If so, we convert all, add them in, then
+						// skip to the next input
+
+						validCompoundFlag := len(s) > 1
+
+						compoundArguments := make([]*Argument, 0, len(s)-1)
+
+						for j, c := range s {
+
+							if 0 == j {
+
+								continue
+							}
+
+							testAlias := fmt.Sprintf("-%c", c)
+
+							if compoundFound, compoundSpec, _ := params.findSpecification(testAlias); compoundFound && compoundSpec.Type == FlagType {
+
+								var compoundArg Argument
+
+								compoundArg.ResolvedName = compoundSpec.Name
+								compoundArg.GivenName = s
+								compoundArg.Value = ""
+								compoundArg.Type = FlagType
+								compoundArg.CmdLineIndex = arg.CmdLineIndex
+								compoundArg.ArgumentSpecification = compoundSpec
+								compoundArg.Flags = arg.Flags
+
+								if ix_equals := strings.Index(compoundArg.ResolvedName, "="); ix_equals >= 0 {
+
+									res_nm := compoundArg.ResolvedName[:ix_equals]
+									value := compoundArg.ResolvedName[ix_equals+1:]
+
+									compoundArg.Type = OptionType
+									s = compoundArg.ResolvedName
+									compoundArg.ResolvedName = res_nm
+									compoundArg.Value = value
+
+									// Now need to look up the actual underlying specification
+
+									if actualFound, actualSpecification, _ := params.findSpecification(res_nm); actualFound {
+
+										compoundArg.ArgumentSpecification = actualSpecification
+									}
+								}
+
+								compoundArguments = append(compoundArguments, &compoundArg)
+							} else {
+
+								validCompoundFlag = false
+								break
+							}
+						}
+
+						if validCompoundFlag {
+
+							args.Arguments = append(args.Arguments, compoundArguments...)
+							continue
+						}
+					}
+
+					switch argType {
+
+					case optionViaAlias:
+
+						arg.Type = OptionType
+					default:
+
+						arg.Type = argType
+					}
+
+					arg.GivenName = s
+					arg.ResolvedName = resolvedName
+
+					if OptionType == arg.Type {
+
+						if optionViaAlias != argType {
+
+							nextIsOptValue = true
+						}
+					} else {
+
+						if isSingle && (0 != (params.Flags & ParseTreatSingleHyphenAsValue)) {
+
+							arg.Type = ValueType
+							arg.Value = s
+						}
 					}
 				}
 			}
-		}
 
-		args.Arguments = append(args.Arguments, arg)
+			args.Arguments = append(args.Arguments, arg)
+		}
 	}
 
 	for _, arg := range args.Arguments {
