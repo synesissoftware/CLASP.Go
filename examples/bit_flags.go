@@ -55,6 +55,15 @@ func main() {
 		})
 	}
 
+	// Check for any unrecognised flags or options
+
+	if unused := args.GetUnusedFlagsAndOptions(); 0 != len(unused) {
+
+		fmt.Fprintf(os.Stderr, "%s: unrecognised flag/option: %s\n", args.ProgramName, unused[0].Str())
+
+		os.Exit(1)
+	}
+
 	// Program logic
 
 	if 0 != (BF_Sound & flags) {
