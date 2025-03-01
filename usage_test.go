@@ -4,6 +4,7 @@ import (
 	"github.com/stretchr/testify/require"
 	angols "github.com/synesissoftware/ANGoLS"
 	clasp "github.com/synesissoftware/CLASP.Go"
+	stegol "github.com/synesissoftware/STEGoL"
 
 	"bytes"
 	"os"
@@ -122,10 +123,7 @@ func test_ShowVersion_(t *testing.T, expected string, specifications []clasp.Spe
 
 			actual := buf.String()
 
-			if expected != actual {
-
-				t.Errorf("expected '%s' does not equal actual '%s'", expected, actual)
-			}
+			stegol.CheckStringEqual(t, expected, actual)
 		}
 	}
 }

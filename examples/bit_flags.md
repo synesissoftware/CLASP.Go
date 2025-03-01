@@ -12,15 +12,14 @@ Example illustrating use of `BitFlags()` / `BitFlags64()` for associating a give
 package main
 
 import (
-	"fmt"
-
 	clasp "github.com/synesissoftware/CLASP.Go"
 
 	"os"
+	"fmt"
 )
 
 const (
-	ProgramVersion = "0.0.1"
+	ProgramVersion = "0.0.2"
 )
 
 const (

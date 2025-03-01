@@ -26,12 +26,12 @@ import (
 // T.B.C.
 type UsageFlag int
 
-// T.B.C.
+// Protocol for exiting process.
 type Exiter interface {
 	Exit(exitCode int)
 }
 
-// T.B.C.
+// Defines options for usage (see [ShowUsage]).
 type UsageParams struct {
 	Stream        io.Writer
 	ProgramName   string
