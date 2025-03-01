@@ -680,7 +680,7 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 // Obtains the combined bit-flags of all flag arguments with associated
 // [Specification.BitFlags] that are observed during parsing.
-func (args Arguments) CheckAllBitFlags() int {
+func (args Arguments) AllBitFlags() int {
 
 	return args.bitFlags
 }
@@ -690,7 +690,7 @@ func (args Arguments) CheckAllBitFlags() int {
 // [Parse_DontMergeBitFlagsIntoBitFlags64] was specified to [Parse],
 // combined with any occurrences of arguments associated with
 // [Specification.BitFlags].
-func (args Arguments) CheckAllBit64Flags() int64 {
+func (args Arguments) AllBit64Flags() int64 {
 
 	return args.bitFlags64
 }

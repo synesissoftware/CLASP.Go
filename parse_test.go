@@ -846,7 +846,7 @@ func Test_find_unused_options_1(t *testing.T) {
 	}
 }
 
-func Test_CheckAllFlagBits(t *testing.T) {
+func Test_CheckAllFlagBits_1(t *testing.T) {
 
 	specifications := []clasp.Specification{
 
@@ -855,12 +855,84 @@ func Test_CheckAllFlagBits(t *testing.T) {
 		clasp.Flag("-f4").SetBitFlags(0x04, nil),
 	}
 
+	// empty array
 	{
-	}
-	{
+		argv := []string{}
+		args := clasp.Parse(argv, clasp.ParseParams{Specifications: specifications})
+
+		{
+			expected := int(0)
+			actual := args.AllBitFlags()
+
+			require.Equal(t, expected, actual)
+		}
+
+		{
+			expected := int64(0)
+			actual := args.AllBit64Flags()
+
+			require.Equal(t, expected, actual)
+		}
 	}
 
+	// no arguments
 	{
+		argv := []string{"myprogram"}
+		args := clasp.Parse(argv, clasp.ParseParams{Specifications: specifications})
+
+		{
+			expected := int(0)
+			actual := args.AllBitFlags()
+
+			require.Equal(t, expected, actual)
+		}
+
+		{
+			expected := int64(0)
+			actual := args.AllBit64Flags()
+
+			require.Equal(t, expected, actual)
+		}
+	}
+
+	// "-f1"
+	{
+		argv := []string{"myprogram", "-f1"}
+		args := clasp.Parse(argv, clasp.ParseParams{Specifications: specifications})
+
+		{
+			expected := int(0x01)
+			actual := args.AllBitFlags()
+
+			require.Equal(t, expected, actual)
+		}
+
+		{
+			expected := int64(0x01)
+			actual := args.AllBit64Flags()
+
+			require.Equal(t, expected, actual)
+		}
+	}
+
+	// "-f1", "-f4"
+	{
+		argv := []string{"myprogram", "-f1", "-f4"}
+		args := clasp.Parse(argv, clasp.ParseParams{Specifications: specifications})
+
+		{
+			expected := int(0x05)
+			actual := args.AllBitFlags()
+
+			require.Equal(t, expected, actual)
+		}
+
+		{
+			expected := int64(0x05)
+			actual := args.AllBit64Flags()
+
+			require.Equal(t, expected, actual)
+		}
 	}
 }
 
@@ -917,8 +989,8 @@ func Test_BitFlags_AND_BitFlags64_WITH_RECEIVER_1(t *testing.T) {
 		require.Equal(t, int(0x02), flags)
 		require.Equal(t, int64(0x04), flags64)
 
-		require.Equal(t, int(0x02), args.CheckAllBitFlags())
-		require.Equal(t, int64(0x06), args.CheckAllBit64Flags())
+		require.Equal(t, int(0x02), args.AllBitFlags())
+		require.Equal(t, int64(0x06), args.AllBit64Flags())
 	}
 
 	{
@@ -938,8 +1010,8 @@ func Test_BitFlags_AND_BitFlags64_WITH_RECEIVER_1(t *testing.T) {
 		require.Equal(t, int(0x02), flags)
 		require.Equal(t, int64(0x04), flags64)
 
-		require.Equal(t, int(0x02), args.CheckAllBitFlags())
-		require.Equal(t, int64(0x04), args.CheckAllBit64Flags())
+		require.Equal(t, int(0x02), args.AllBitFlags())
+		require.Equal(t, int64(0x04), args.AllBit64Flags())
 	}
 }
 

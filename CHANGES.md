@@ -3,6 +3,8 @@
 
 ## 0.17.0-alpha2 - 1st March 2025
 
+* ~ renamed `Arguments#CheckAllBitFlags()` => `Arguments#AllBitFlags()`;
+* ~ renamed `Arguments#CheckAllBit64Flags()` => `Arguments#AllBit64Flags()`;
 * - removed `Arguments#CheckAllFlagBits()` and `Arguments#CheckUnusedFlagBits()`;
 * ~ fixed defect in handling of `Parse_DontMergeBitFlagsIntoBitFlags64`;
 * ~ flags with bit-flags receiver variables should be marked used during `Parse()` (except when suppressed);
