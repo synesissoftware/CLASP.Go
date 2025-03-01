@@ -31,8 +31,8 @@ const (
 )
 
 const (
-	Parse_TreatSingleHyphenAsValue                    ParseFlag = 1 << iota // T.B.C.
-	Parse_DontRecogniseDoubleHyphenToStartValues                            // T.B.C.
+	Parse_TreatSingleHyphenAsValue                    ParseFlag = 1 << iota // Causes a single hyphen command-line argument - `"-"` - to be treated as a value. This is commonly used to indicate reading/writing from/to standard input/output streams.
+	Parse_DontRecogniseDoubleHyphenToStartValues                            // Recognises a double hyphen command-line argument - `"--"` - as an instruction to treat all remaining arguments as values.
 	Parse_DontMergeBitFlagsIntoBitFlags64                                   // Suppresses the default behaviour to mix into the `int64` result matched `int` bitFlagss (see [Specification.SetBitFlags]) when no matched `int64` bitFlagss (see [Specification.SetBitFlags64]) are specified.
 	Parse_DontMarkUsedDuringParseWhenMatchingBitFlags                       // Suppresses the default behaviour to mark as used (see [Argument.Use]) flags that have been provided receiver variables in [Specification.SetBitFlags] or [Specification.SetBitFlags64].
 )
@@ -46,21 +46,20 @@ const (
  * types
  */
 
-// T.B.C.
+// Enumeration type that defines the nature of arguments.
 type ArgType int
 
 const (
-	FlagType   ArgType = 1 // T.B.C.
-	OptionType ArgType = 2 // T.B.C.
-	ValueType  ArgType = 3 // T.B.C.
-
-	SectionType ArgType = 21 // T.B.C.
+	FlagType    ArgType = 1  // Defines a flag.
+	OptionType  ArgType = 2  // Defines an option.
+	ValueType   ArgType = 3  // Defines a value.
+	SectionType ArgType = 21 // Defines a section.
 
 	optionViaAlias ArgType = -98
 	int_1_         ArgType = -99
 )
 
-// T.B.C.
+// Structure that defines a specification for an argument.
 type Specification struct {
 	Type       ArgType
 	Name       string
@@ -75,7 +74,7 @@ type Specification struct {
 	flags64_receiver *int64
 }
 
-// T.B.C.
+// Structure that defines a parsed argument.
 type Argument struct {
 	ResolvedName          string
 	GivenName             string
@@ -89,21 +88,21 @@ type Argument struct {
 	used_ int
 }
 
-// T.B.C.
+// Structure that defines result of parsing (see [Parse]).
 type Arguments struct {
-	Arguments      []*Argument
-	Flags          []*Argument
-	Options        []*Argument
-	Values         []*Argument
-	Argv           []string
-	ProgramName    string
-	specifications []*Specification
+	Arguments   []*Argument // Array of all arguments.
+	Flags       []*Argument // Array of all flags.
+	Options     []*Argument // Array of all options.
+	Values      []*Argument // Array of all values.
+	Argv        []string    // The original argument string array passed to [Parse].
+	ProgramName string      // The program name.
 
-	bitFlags   int
-	bitFlags64 int64
+	specifications []*Specification
+	bitFlags       int
+	bitFlags64     int64
 }
 
-// T.B.C.
+// Structure that defines parse options (see [Parse]).
 type ParseParams struct {
 	Specifications []Specification
 	Flags          ParseFlag
@@ -211,7 +210,7 @@ func Option(name string) (result Specification) {
 	return
 }
 
-// Creates a flag specification, with the given name.
+// Creates a section specification, with the given name.
 func Section(name string) (result Specification) {
 
 	result.Type = SectionType
@@ -230,7 +229,11 @@ func AliasesFor(actual string, alias0 string, other_aliases ...string) (result S
 	return
 }
 
-// T.B.C.
+// Builder method that specifies bit flag(s) ([Specification.BitFlags]) and,
+// optionally, a flags receiver variable to be associated with the
+// specification. If a flags receiver variable is given then a matching
+// [Argument] will be marked as used automationally during parsing
+// ([Parse]).
 func (specification Specification) SetBitFlags(bitFlags int, flags_receiver *int) (result Specification) {
 
 	specification.BitFlags = bitFlags
@@ -239,10 +242,11 @@ func (specification Specification) SetBitFlags(bitFlags int, flags_receiver *int
 	return specification
 }
 
-// Specifies bit flag(s) and, optionally, a flags receiver variable to be
-// associated with the specification. If a flags receiver variable is given
-// then a matching [Argument] will be marked as used automationally during
-// parsing ([Parse]).
+// Builder method that specifies bit flag(s) ([Specification.BitFlags64])
+// and, optionally, a flags receiver variable to be associated with the
+// specification. If a flags receiver variable is given then a matching
+// [Argument] will be marked as used automationally during parsing
+// ([Parse]).
 //
 // NOTE: This is meaningful only to specifications that describes [Type] is
 // [FlagType]. A future version may issue a panic if called on another
@@ -255,7 +259,7 @@ func (specification Specification) SetBitFlags64(bitFlags int64, flags_receiver 
 	return specification
 }
 
-// Builder method to set the help for a specification.
+// Builder method to set the help string for a specification.
 func (specification Specification) SetHelp(help string) Specification {
 
 	specification.Help = help
@@ -674,18 +678,27 @@ func Parse(argv []string, params ParseParams) *Arguments {
 	return args
 }
 
-// T.B.C.
+// Obtains the combined bit-flags of all flag arguments with associated
+// [Specification.BitFlags] that are observed during parsing.
 func (args Arguments) CheckAllBitFlags() int {
 
 	return args.bitFlags
 }
 
-// T.B.C.
+// Obtains the combined bit-flags of all flag arguments with associated
+// [Specification.BitFlags64] that are observed during parsing, and, unless
+// [Parse_DontMergeBitFlagsIntoBitFlags64] was specified to [Parse],
+// combined with any occurrences of arguments associated with
+// [Specification.BitFlags].
 func (args Arguments) CheckAllBit64Flags() int64 {
 
 	return args.bitFlags64
 }
 
+// Indicates whether the given argument - specified either as `string` or
+// [Specification] - was observed during parsing.
+//
+// If an argument is found, then it is marked used.
 func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 
 	name := ""
@@ -734,7 +747,10 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 	return false
 }
 
-// T.B.C.
+// Looks for given flag argument - specified either as `string` or
+// [Specification] - in the parsed arguments.
+//
+// If an argument is found, then it is marked used.
 func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
 
 	name := ""
@@ -779,7 +795,10 @@ func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
 	return nil, false
 }
 
-// T.B.C.
+// Looks for given option argument - specified either as `string` or
+// [Specification] - in the parsed arguments.
+//
+// If an argument is found, then it is marked used.
 func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 
 	name := ""
@@ -824,7 +843,7 @@ func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
 	return nil, false
 }
 
-// T.B.C.
+// Obtains a sequence of all unused flag arguments.
 func (args *Arguments) GetUnusedFlags() []*Argument {
 
 	var unused []*Argument
@@ -840,7 +859,7 @@ func (args *Arguments) GetUnusedFlags() []*Argument {
 	return unused
 }
 
-// T.B.C.
+// Obtains a sequence of all unused option arguments.
 func (args *Arguments) GetUnusedOptions() []*Argument {
 
 	var unused []*Argument
@@ -856,7 +875,7 @@ func (args *Arguments) GetUnusedOptions() []*Argument {
 	return unused
 }
 
-// T.B.C.
+// Obtains a sequence of all unused flag and option arguments.
 func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
 
 	var unused []*Argument
@@ -881,7 +900,8 @@ func (args *Arguments) GetUnusedFlagsAndOptions() []*Argument {
 	return unused
 }
 
-// T.B.C.
+// Simple helper function to convert a variable number of alias string
+// arguments into a string array.
 func Aliases(aliases ...string) []string {
 
 	r := make([]string, len(aliases))
