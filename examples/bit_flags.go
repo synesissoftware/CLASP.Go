@@ -3,15 +3,14 @@
 package main
 
 import (
-	"fmt"
-
 	clasp "github.com/synesissoftware/CLASP.Go"
 
+	"fmt"
 	"os"
 )
 
 const (
-	ProgramVersion = "0.0.1"
+	ProgramVersion = "0.0.2"
 )
 
 const (
