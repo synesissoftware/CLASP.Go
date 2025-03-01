@@ -1,6 +1,21 @@
 # **CLASP.Go** Changes <!-- omit in toc -->
 
 
+## 0.17.0-alpha2 - 1st March 2025
+
+* - removed `Arguments#CheckAllFlagBits()` and `Arguments#CheckUnusedFlagBits()`;
+* ~ fixed defect in handling of `Parse_DontMergeBitFlagsIntoBitFlags64`;
+* ~ flags with bit-flags receiver variables should be marked used during `Parse()` (except when suppressed);
+* + more testing of `Parse_DontMergeBitFlagsIntoBitFlags64`;
+* ~ standardised names of `ParseFlag` constants;
+* ~ refactored `#String()` form of `Specification`;
+* ~ updated dependencies;
+* ~ applied STEGoL to various test cases;
+* ~ simplification;
+* ~ preparatory refactoring;
+* + documentation markup;
+
+
 ## 0.17.0-alpha1 - 28th February 2025
 
 * + added `Specification#SetBitFlags()` / `Specification#SetBitFlags64()`, for associating a given flag specification with a bit-flags value and, optionally, a bitmask variable, to be applied automatically when detected from the command-line during parsing;
