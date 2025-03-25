@@ -1,4 +1,7 @@
 # CLASP.Go <!-- omit in toc -->
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/synesissoftware/CLASP.Go.svg)](https://pkg.go.dev/github.com/synesissoftware/CLASP.Go)
+
 **C**ommand-**L**ine **A**rgument **S**orting and **P**arsing for Go
 
 
