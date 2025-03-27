@@ -1,6 +1,11 @@
 # **CLASP.Go** Changes <!-- omit in toc -->
 
 
+## 0.17.0 - 27th March 2025
+
+* 0.17.0;
+
+
 ## 0.17.0-alpha2 - 1st March 2025
 
 * ~ renamed `Arguments#CheckAllBitFlags()` => `Arguments#AllBitFlags()`;
