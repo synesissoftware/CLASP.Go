@@ -68,7 +68,7 @@ type Specification struct {
 	ValueSet   []string
 	BitFlags   int
 	BitFlags64 int64
-	Extras     map[string]interface{}
+	Extras     map[string]any
 
 	flags_receiver   *int
 	flags64_receiver *int64
@@ -292,11 +292,11 @@ func (specification Specification) SetAliases(aliases ...string) Specification {
 }
 
 // Builder method to set an Extras entry.
-func (specification Specification) SetExtra(key string, value interface{}) Specification {
+func (specification Specification) SetExtra(key string, value any) Specification {
 
 	if specification.Extras == nil {
 
-		specification.Extras = make(map[string]interface{})
+		specification.Extras = make(map[string]any)
 	}
 
 	specification.Extras[key] = value
@@ -707,7 +707,7 @@ func (args Arguments) AllBit64Flags() int64 {
 // [Specification] - was observed during parsing.
 //
 // If an argument is found, then it is marked used.
-func (args *Arguments) FlagIsSpecified(id interface{}) bool {
+func (args *Arguments) FlagIsSpecified(id any) bool {
 
 	name := ""
 	found := false
@@ -759,7 +759,7 @@ func (args *Arguments) FlagIsSpecified(id interface{}) bool {
 // [Specification] - in the parsed arguments.
 //
 // If an argument is found, then it is marked used.
-func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
+func (args *Arguments) LookupFlag(id any) (*Argument, bool) {
 
 	name := ""
 	found := false
@@ -807,7 +807,7 @@ func (args *Arguments) LookupFlag(id interface{}) (*Argument, bool) {
 // [Specification] - in the parsed arguments.
 //
 // If an argument is found, then it is marked used.
-func (args *Arguments) LookupOption(id interface{}) (*Argument, bool) {
+func (args *Arguments) LookupOption(id any) (*Argument, bool) {
 
 	name := ""
 	found := false

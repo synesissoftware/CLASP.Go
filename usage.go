@@ -38,7 +38,7 @@ type UsageParams struct {
 	UsageFlags    UsageFlag
 	ExitCode      int
 	Exiter        Exiter
-	Version       interface{}
+	Version       any
 	VersionPrefix string
 	InfoLines     []string
 	ValuesString  string
@@ -99,7 +99,7 @@ func should_call_Exit(params UsageParams) bool {
 	return true
 }
 
-func collect_array_as_strings(a []interface{}) []string {
+func collect_array_as_strings(a []any) []string {
 
 	r := make([]string, len(a))
 

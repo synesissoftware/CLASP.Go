@@ -93,7 +93,7 @@ func call_ShowUsage_(t *testing.T, specifications []clasp.Specification, ups cla
 	return
 }
 
-func test_ShowVersion_(t *testing.T, expected string, specifications []clasp.Specification, program_name string, version interface{}, version_prefix string) {
+func test_ShowVersion_(t *testing.T, expected string, specifications []clasp.Specification, program_name string, version any, version_prefix string) {
 
 	t.Helper()
 
