@@ -3,10 +3,10 @@ module github.com/synesissoftware/CLASP.Go
 go 1.23.6
 
 require (
-	github.com/stretchr/testify v1.10.0
-	github.com/synesissoftware/ANGoLS v0.0.0-20190330004400-955d82dbf73b
-	github.com/synesissoftware/STEGoL v0.2.0
-	github.com/synesissoftware/ver2go v0.0.0-alpha3
+	github.com/stretchr/testify v1.11.0
+	github.com/synesissoftware/ANGoLS v0.7.0-alpha1
+	github.com/synesissoftware/STEGoL v0.2.2
+	github.com/synesissoftware/ver2go v0.1.2
 )
 
 require (

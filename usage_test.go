@@ -2,7 +2,7 @@ package clasp_test
 
 import (
 	"github.com/stretchr/testify/require"
-	angols "github.com/synesissoftware/ANGoLS"
+	slices "github.com/synesissoftware/ANGoLS/slices"
 	clasp "github.com/synesissoftware/CLASP.Go"
 	stegol "github.com/synesissoftware/STEGoL"
 
@@ -31,7 +31,7 @@ func check_num_nonblank_lines(t *testing.T, result []string, num_lines int) {
 
 	t.Helper()
 
-	nb_lines, _ := angols.SelectSliceOfString(result, func(index int, line string) (bool, error) {
+	nb_lines, _ := slices.SelectSliceOfString(result, func(index int, line string) (bool, error) {
 
 		return 0 != len(line), nil
 	})

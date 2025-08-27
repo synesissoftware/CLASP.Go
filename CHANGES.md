@@ -1,6 +1,11 @@
 # **CLASP.Go** Changes <!-- omit in toc -->
 
 
+## 0.17.1 - 27th August 2025
+
+* 0.17.1;
+
+
 ## 0.17.1-beta1 - 27th March 2025
 
 * GitHub Actions;
