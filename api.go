@@ -70,8 +70,8 @@ type Specification struct {
 	BitFlags64 int64
 	Extras     map[string]any
 
-	flags_receiver   *int
-	flags64_receiver *int64
+	flagsReceiver   *int
+	flags64Receiver *int64
 }
 
 // Structure that defines a parsed argument.
@@ -159,7 +159,7 @@ func (specification Specification) String() string {
 
 	switch specification.Type {
 	case FlagType:
-		return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, BitFlags=0x%x, flags_receiver=%p, BitFlags64=0x%x, flags64_receiver=%p, Extras=%v }>", specification, specification.Type, specification.Name, specification.Aliases, specification.Help, specification.BitFlags, specification.flags_receiver, specification.BitFlags64, specification.flags64_receiver, specification.Extras)
+		return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, BitFlags=0x%x, flagsReceiver=%p, BitFlags64=0x%x, flags64Receiver=%p, Extras=%v }>", specification, specification.Type, specification.Name, specification.Aliases, specification.Help, specification.BitFlags, specification.flagsReceiver, specification.BitFlags64, specification.flags64Receiver, specification.Extras)
 
 	case OptionType, optionViaAlias:
 		return fmt.Sprintf("<%T{ Type=%v, Name=%q, Aliases=%v, Help=%q, ValueSet=%v, Extras=%v }>", specification, specification.Type, specification.Name, specification.Aliases, specification.Help, valueSetString(specification.ValueSet), specification.Extras)
@@ -234,10 +234,10 @@ func AliasesFor(actual string, alias0 string, other_aliases ...string) (result S
 // specification. If a flags receiver variable is given then a matching
 // [Argument] will be marked as used automationally during parsing
 // ([Parse]).
-func (specification Specification) SetBitFlags(bitFlags int, flags_receiver *int) (result Specification) {
+func (specification Specification) SetBitFlags(bitFlags int, flagsReceiver *int) (result Specification) {
 
 	specification.BitFlags = bitFlags
-	specification.flags_receiver = flags_receiver
+	specification.flagsReceiver = flagsReceiver
 
 	return specification
 }
@@ -251,10 +251,10 @@ func (specification Specification) SetBitFlags(bitFlags int, flags_receiver *int
 // NOTE: This is meaningful only to specifications that describes [Type] is
 // [FlagType]. A future version may issue a panic if called on another
 // argument type.
-func (specification Specification) SetBitFlags64(bitFlags int64, flags_receiver *int64) (result Specification) {
+func (specification Specification) SetBitFlags64(bitFlags int64, flagsReceiver *int64) (result Specification) {
 
 	specification.BitFlags64 = bitFlags
-	specification.flags64_receiver = flags_receiver
+	specification.flags64Receiver = flagsReceiver
 
 	return specification
 }
@@ -637,9 +637,9 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 				if 0 != spec.BitFlags64 {
 
-					if nil != spec.flags64_receiver {
+					if nil != spec.flags64Receiver {
 
-						*spec.flags64_receiver |= spec.BitFlags64
+						*spec.flags64Receiver |= spec.BitFlags64
 
 						if 0 == (Parse_DontMarkUsedDuringParseWhenMatchingBitFlags & params.Flags) {
 
@@ -651,9 +651,9 @@ func Parse(argv []string, params ParseParams) *Arguments {
 				} else {
 					if 0 != spec.BitFlags {
 
-						if nil != spec.flags_receiver {
+						if nil != spec.flagsReceiver {
 
-							*spec.flags_receiver |= spec.BitFlags
+							*spec.flagsReceiver |= spec.BitFlags
 
 							if 0 == (Parse_DontMarkUsedDuringParseWhenMatchingBitFlags & params.Flags) {
 
@@ -665,9 +665,9 @@ func Parse(argv []string, params ParseParams) *Arguments {
 
 						if 0 == (Parse_DontMergeBitFlagsIntoBitFlags64 & params.Flags) {
 
-							if nil != spec.flags64_receiver {
+							if nil != spec.flags64Receiver {
 
-								*spec.flags64_receiver |= spec.BitFlags64
+								*spec.flags64Receiver |= spec.BitFlags64
 
 								if 0 == (Parse_DontMarkUsedDuringParseWhenMatchingBitFlags & params.Flags) {
 
