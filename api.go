@@ -85,7 +85,7 @@ type Argument struct {
 	ArgumentSpecification *Specification
 	Flags                 int
 
-	used_ int
+	hasBeenUsed int
 }
 
 // Structure that defines result of parsing (see [Parse]).
@@ -177,7 +177,7 @@ func (specification Specification) String() string {
 
 func (argument Argument) String() string {
 
-	return fmt.Sprintf("<%T{ ResolvedName=%q, GivenName=%q, Value=%q, Type=%v, CmdLineIndex=%d, NumGivenHyphens=%d, ArgumentSpecification=%v, Flags=0x%x, used=%t }>", argument, argument.ResolvedName, argument.GivenName, argument.Value, argument.Type, argument.CmdLineIndex, argument.NumGivenHyphens, argument.ArgumentSpecification, argument.Flags, argument.used_ != 0)
+	return fmt.Sprintf("<%T{ ResolvedName=%q, GivenName=%q, Value=%q, Type=%v, CmdLineIndex=%d, NumGivenHyphens=%d, ArgumentSpecification=%v, Flags=0x%x, used=%t }>", argument, argument.ResolvedName, argument.GivenName, argument.Value, argument.Type, argument.CmdLineIndex, argument.NumGivenHyphens, argument.ArgumentSpecification, argument.Flags, argument.hasBeenUsed != 0)
 }
 
 func (arguments Arguments) String() string {
@@ -361,11 +361,11 @@ func (arg *Argument) Use() {
 
 	// TODO: switch on `FlagType` / `OptionType` and warn in other cases
 
-	arg.used_ = 1
+	arg.hasBeenUsed = 1
 }
 
 func (arg Argument) isUnused() bool {
-	return 0 == arg.used_
+	return 0 == arg.hasBeenUsed
 }
 
 // T.B.C.
