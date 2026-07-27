@@ -1,6 +1,11 @@
 # **CLASP.Go** Changes <!-- omit in toc -->
 
 
+## 0.17.2 - 27th July 2026
+
+* update dependencies;
+
+
 ## 0.17.1 - 27th August 2025
 
 * 0.17.1;
