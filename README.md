@@ -7,7 +7,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/synesissoftware/CLASP.Go)](https://goreportcard.com/report/github.com/synesissoftware/CLASP.Go)
 [![Go Reference](https://pkg.go.dev/badge/github.com/synesissoftware/CLASP.Go.svg)](https://pkg.go.dev/github.com/synesissoftware/CLASP.Go)
 
-**C**ommand-**L**ine **A**rgument **S**orting and **P**arsing for Go
+**C**ommand-**L**ine **A**rgument **S**orting and **P**arsing, for Go
 
 
 ## Introduction
@@ -25,12 +25,12 @@ Go version.
 - [Components](#components)
 - [Examples](#examples)
 - [Project Information](#project-information)
-	- [Where to get help](#where-to-get-help)
-	- [Contribution guidelines](#contribution-guidelines)
-	- [Dependencies](#dependencies)
-		- [Development/Testing Dependencies](#developmenttesting-dependencies)
-	- [Related projects](#related-projects)
-	- [License](#license)
+  - [Where to get help](#where-to-get-help)
+  - [Contribution guidelines](#contribution-guidelines)
+  - [Dependencies](#dependencies)
+    - [Development/Testing Dependencies](#developmenttesting-dependencies)
+  - [Related projects](#related-projects)
+  - [License](#license)
 
 
 ## Installation
@@ -92,9 +92,9 @@ None
 
 **CLASP.Ruby** is inspired by the [C/C++ CLASP library](https://github.com/synesissoftware/CLASP), which is documented in the articles:
 
- * _An Introduction to \CLASP_, Matthew Wilson, [CVu](http://accu.org/index.php/journals/c77/), January 2012;
- * _[Anatomy of a CLI Program written in C](http://synesis.com.au/publishing/software-anatomies/anatomy-of-a-cli-program-written-in-c.html)_, Matthew Wilson, [CVu](http://accu.org/index.php/journals/c77/), September 2012; and
- * _[Anatomy of a CLI Program written in C++](http://synesis.com.au/publishing/software-anatomies/anatomy-of-a-cli-program-written-in-c++.html)_, Matthew Wilson, [CVu](http://accu.org/index.php/journals/c77/), September 2015.
+* _An Introduction to \CLASP_, Matthew Wilson, [CVu](http://accu.org/index.php/journals/c77/), January 2012;
+* _[Anatomy of a CLI Program written in C](http://synesis.com.au/publishing/software-anatomies/anatomy-of-a-cli-program-written-in-c.html)_, Matthew Wilson, [CVu](http://accu.org/index.php/journals/c77/), September 2012; and
+* _[Anatomy of a CLI Program written in C++](http://synesis.com.au/publishing/software-anatomies/anatomy-of-a-cli-program-written-in-c++.html)_, Matthew Wilson, [CVu](http://accu.org/index.php/journals/c77/), September 2015.
 
 Other CLASP libraries include:
 

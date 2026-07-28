@@ -12,68 +12,68 @@ Example illustrating use of `BitFlags()` / `BitFlags64()` for associating a give
 package main
 
 import (
-	clasp "github.com/synesissoftware/CLASP.Go"
+  clasp "github.com/synesissoftware/CLASP.Go"
 
-	"os"
-	"fmt"
+  "os"
+  "fmt"
 )
 
 const (
-	ProgramVersion = "0.0.2"
+  ProgramVersion = "0.0.2"
 )
 
 const (
-	BF_Sound int64 = 1 << iota
-	BF_Vision
+  BF_Sound int64 = 1 << iota
+  BF_Vision
 )
 
 func main() {
 
-	// Specify specifications, parse, and checking standard flags
+  // Specify specifications, parse, and checking standard flags
 
-	var flags int64 = 0
+  var flags int64 = 0
 
-	flag_Sound := clasp.Flag("--enable-sound").SetAlias("-s").SetHelp("Enables sound").SetBitFlags64(BF_Sound, &flags)
-	flag_Vision := clasp.Flag("--enable-vision").SetAlias("-v").SetHelp("Enables vision").SetBitFlags64(BF_Vision, &flags)
+  flag_Sound := clasp.Flag("--enable-sound").SetAlias("-s").SetHelp("Enables sound").SetBitFlags64(BF_Sound, &flags)
+  flag_Vision := clasp.Flag("--enable-vision").SetAlias("-v").SetHelp("Enables vision").SetBitFlags64(BF_Vision, &flags)
 
-	specifications := []clasp.Specification{
+  specifications := []clasp.Specification{
 
-		clasp.Section("behaviour:"),
-		flag_Sound,
-		flag_Vision,
+    clasp.Section("behaviour:"),
+    flag_Sound,
+    flag_Vision,
 
-		clasp.Section("standard:"),
-		clasp.HelpFlag(),
-		clasp.VersionFlag(),
-	}
+    clasp.Section("standard:"),
+    clasp.HelpFlag(),
+    clasp.VersionFlag(),
+  }
 
-	args := clasp.Parse(os.Args, clasp.ParseParams{Specifications: specifications})
+  args := clasp.Parse(os.Args, clasp.ParseParams{Specifications: specifications})
 
-	if args.FlagIsSpecified(clasp.HelpFlag()) {
+  if args.FlagIsSpecified(clasp.HelpFlag()) {
 
-		clasp.ShowUsage(specifications, clasp.UsageParams{
+    clasp.ShowUsage(specifications, clasp.UsageParams{
 
-			Version: ProgramVersion,
-			InfoLines: []string{
-				"CLASP.Go Examples",
-				"Example illustrating use of bit-mask flags",
-				":version:",
-				"",
-			},
-		})
-	}
+      Version: ProgramVersion,
+      InfoLines: []string{
+        "CLASP.Go Examples",
+        "Example illustrating use of bit-mask flags",
+        ":version:",
+        "",
+      },
+    })
+  }
 
-	// Program logic
+  // Program logic
 
-	if 0 != (BF_Sound & flags) {
-		fmt.Println("running with sound")
-	}
-	if 0 != (BF_Vision & flags) {
-		fmt.Println("running with vision")
-	}
-	if 0 == flags {
-		fmt.Println("running in default mode")
-	}
+  if 0 != (BF_Sound & flags) {
+    fmt.Println("running with sound")
+  }
+  if 0 != (BF_Vision & flags) {
+    fmt.Println("running with vision")
+  }
+  if 0 == flags {
+    fmt.Println("running in default mode")
+  }
 }
 ```
 
@@ -112,23 +112,23 @@ USAGE: bit_flags [ ... flags and options ... ]
 
 flags/options:
 
-	behaviour:
+  behaviour:
 
-	-s
-	--enable-sound
-		Enables sound
+  -s
+  --enable-sound
+    Enables sound
 
-	-v
-	--enable-vision
-		Enables vision
+  -v
+  --enable-vision
+    Enables vision
 
-	standard:
+  standard:
 
-	--help
-		Shows this help and exits
+  --help
+    Shows this help and exits
 
-	--version
-		Shows version information and exits
+  --version
+    Shows version information and exits
 ```
 
 ### Specify flags and options in long-form
