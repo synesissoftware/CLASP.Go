@@ -1,4 +1,4 @@
-# **CLASP.Go** TODO <!-- omit in toc -->
+# CLASP.Go - TODO <!-- omit in toc -->
 
 
 ## **CLASP.Go** 0.17.x TODOs:

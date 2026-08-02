@@ -1,4 +1,4 @@
-# **CLASP.Go** Changes <!-- omit in toc -->
+# CLASP.Go - CHANGES <!-- omit in toc -->
 
 
 ## 0.17.2 - 27th July 2026

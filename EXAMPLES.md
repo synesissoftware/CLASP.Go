@@ -1,4 +1,4 @@
-# CLASP.Go Examples
+# CLASP.Go - Examples <!-- omit in toc -->
 
 |Name|Source & Description|Summary|
 |---|---|---|
