@@ -6,7 +6,7 @@ require (
 	github.com/stretchr/testify v1.11.0
 	github.com/synesissoftware/ANGoLS v0.7.0-alpha1
 	github.com/synesissoftware/STEGoL v0.2.2
-	github.com/synesissoftware/ver2go v0.1.2
+	github.com/synesissoftware/ver2go v0.1.3
 )
 
 require (

@@ -73,7 +73,7 @@ func Test_String_OF_Flag_Specification_1(t *testing.T) {
 		ValueSet: []string{"one", "two"},
 	}
 
-	expected := "<clasp.Specification{ Type=Flag, Name=\"--flagpole\", Aliases=[], Help=\"help, plz\", BitFlags=0x1234, flags_receiver=0x0, BitFlags64=0x0, flags64_receiver=0x0, Extras=map[] }>"
+	expected := "<clasp.Specification{ Type=Flag, Name=\"--flagpole\", Aliases=[], Help=\"help, plz\", BitFlags=0x1234, flagsReceiver=0x0, BitFlags64=0x0, flags64Receiver=0x0, Extras=map[] }>"
 	actual := specification.String()
 
 	stegol.CheckStringEqual(t, expected, actual)
@@ -91,7 +91,7 @@ func Test_String_OF_Flag_Specification_2(t *testing.T) {
 		ValueSet: []string{"one", "two"},
 	}
 
-	expected := "<clasp.Specification{ Type=Flag, Name=\"--flagpole\", Aliases=[], Help=\"help, plz\", BitFlags=0x0, flags_receiver=0x0, BitFlags64=0x5678, flags64_receiver=0x0, Extras=map[] }>"
+	expected := "<clasp.Specification{ Type=Flag, Name=\"--flagpole\", Aliases=[], Help=\"help, plz\", BitFlags=0x0, flagsReceiver=0x0, BitFlags64=0x5678, flags64Receiver=0x0, Extras=map[] }>"
 	actual := specification.String()
 
 	stegol.CheckStringEqual(t, expected, actual)
