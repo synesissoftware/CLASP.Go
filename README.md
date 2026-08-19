@@ -57,7 +57,17 @@ import "github.com/synesissoftware/CLASP.Go"
 
 ## Components
 
-T.B.C.
+### Command-line parsing
+
+All **CLASP** libraries discriminate between *flags*, *options*, and *values*. **CLASP.Go** provides types and functions to specify arguments (`Flag()`, `Option()`, `Section()`, …), parse the command line (`Parse()`), and inspect the results (`Argument`, `Arguments`).
+
+### Declarative specification of flags and options
+
+`Specification` describes each command-line element (name, aliases, help, value sets, bit-flags receivers). See [EXAMPLES.md](./EXAMPLES.md) for worked examples.
+
+### Utility functions for displaying usage and version information
+
+`ShowUsage()` and `ShowVersion()` display help and version information and may terminate the process. Standard `--help` and `--version` specifications are available via `HelpFlag()` and `VersionFlag()`.
 
 
 ## Examples
