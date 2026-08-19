@@ -11,14 +11,6 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/synesissoftware/CLASP.Go.svg)](https://pkg.go.dev/github.com/synesissoftware/CLASP.Go)
 
 
-## Introduction
-
-**CLASP** stands for **C**ommand-**L**ine **A**rgument **S**orting and
-**P**arsing. The first CLASP library was a C library with a C++ wrapper. There
-have been [several implementations in other languages](#related-projects). **CLASP.Go** is the
-Go version.
-
-
 ## Table of Contents <!-- omit in toc -->
 
 - [Introduction](#introduction)
@@ -32,6 +24,14 @@ Go version.
     - [Development/Testing Dependencies](#developmenttesting-dependencies)
   - [Related projects](#related-projects)
   - [License](#license)
+
+
+## Introduction
+
+**CLASP** stands for **C**ommand-**L**ine **A**rgument **S**orting and
+**P**arsing. The first CLASP library was a C library with a C++ wrapper. There
+have been [several implementations in other languages](#related-projects). **CLASP.Go** is the
+Go version.
 
 
 ## Installation

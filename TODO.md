@@ -7,7 +7,8 @@
 * [x] Standardise format of all (public) constants;
 * [ ] Flesh out all documentation;
 * [ ] Flags with bit-flags receiver variables should be marked used during `Parse()` (except when suppressed);
-* [ ] T.B.C.;
+* [ ] Ensure all documentation markup is adequate;
+* [ ] 
 
 
 ## CLASP 0.18+ TODOs:

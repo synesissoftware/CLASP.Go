@@ -1,4 +1,4 @@
-# CLASP.Go Example - **show_usage_and_version**
+# CLASP.Go - Example - **show_usage_and_version**
 
 ## Summary
 

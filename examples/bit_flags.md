@@ -1,4 +1,4 @@
-# CLASP.Go Example - **bit_flags**
+# CLASP.Go - Example - **bit_flags**
 
 ## Summary
 

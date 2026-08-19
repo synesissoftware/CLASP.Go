@@ -1,4 +1,4 @@
-# CLASP.Go Example - **flag_and_option_specifications**
+# CLASP.Go - Example - **flag_and_option_specifications**
 
 ## Summary
 
