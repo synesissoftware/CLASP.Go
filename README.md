@@ -7,16 +7,7 @@
 [![GitHub release](https://img.shields.io/github/v/release/synesissoftware/CLASP.Go.svg)](https://github.com/synesissoftware/CLASP.Go/releases/latest)
 [![Last Commit](https://img.shields.io/github/last-commit/synesissoftware/CLASP.Go)](https://github.com/synesissoftware/CLASP.Go/commits/master)
 [![Go](https://github.com/synesissoftware/CLASP.Go/actions/workflows/go.yml/badge.svg)](https://github.com/synesissoftware/CLASP.Go/actions/workflows/go.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/synesissoftware/CLASP.Go)](https://goreportcard.com/report/github.com/synesissoftware/CLASP.Go)
 [![Go Reference](https://pkg.go.dev/badge/github.com/synesissoftware/CLASP.Go.svg)](https://pkg.go.dev/github.com/synesissoftware/CLASP.Go)
-
-
-## Introduction
-
-**CLASP** stands for **C**ommand-**L**ine **A**rgument **S**orting and
-**P**arsing. The first CLASP library was a C library with a C++ wrapper. There
-have been [several implementations in other languages](#related-projects). **CLASP.Go** is the
-Go version.
 
 
 ## Table of Contents <!-- omit in toc -->
@@ -24,6 +15,10 @@ Go version.
 - [Introduction](#introduction)
 - [Installation](#installation)
 - [Components](#components)
+  - [Command-line parsing](#command-line-parsing)
+  - [Declarative specification of flags and options](#declarative-specification-of-flags-and-options)
+  - [Utility functions for displaying usage and version information](#utility-functions-for-displaying-usage-and-version-information)
+  - [Version](#version)
 - [Examples](#examples)
 - [Project Information](#project-information)
   - [Where to get help](#where-to-get-help)
@@ -32,6 +27,14 @@ Go version.
     - [Development/Testing Dependencies](#developmenttesting-dependencies)
   - [Related projects](#related-projects)
   - [License](#license)
+
+
+## Introduction
+
+**CLASP** stands for **C**ommand-**L**ine **A**rgument **S**orting and
+**P**arsing. The first CLASP library was a C library with a C++ wrapper. There
+have been [several implementations in other languages](#related-projects). **CLASP.Go** is the
+Go version.
 
 
 ## Installation
@@ -57,7 +60,31 @@ import "github.com/synesissoftware/CLASP.Go"
 
 ## Components
 
-T.B.C.
+### Command-line parsing
+
+All **CLASP** libraries discriminate between *flags*, *options*, and *values*. **CLASP.Go** provides types and functions to specify arguments (`Flag()`, `Option()`, `Section()`, …), parse the command line (`Parse()`), and inspect the results (`Argument`, `Arguments`).
+
+### Declarative specification of flags and options
+
+`Specification` describes each command-line element (name, aliases, help, value sets, bit-flags receivers). See [EXAMPLES.md](./EXAMPLES.md) for worked examples.
+
+### Utility functions for displaying usage and version information
+
+`ShowUsage()` and `ShowVersion()` display help and version information and may terminate the process. Standard `--help` and `--version` specifications are available via `HelpFlag()` and `VersionFlag()`.
+
+### Version
+
+```Go
+const (
+	VersionMajor uint16 = /* ... */
+	VersionMinor uint16 = /* ... */
+	VersionPatch uint16 = /* ... */
+	VersionAB    uint16 = /* ... */
+)
+
+func Version() uint64
+func VersionString() string
+```
 
 
 ## Examples
@@ -80,13 +107,14 @@ Defect reports, feature requests, and pull requests are welcome on https://githu
 
 ### Dependencies
 
-None
+* [**ver2go**](https://github.com/synesissoftware/ver2go/);
 
 
 #### Development/Testing Dependencies
 
 * [**ANGoLS**](https://github.com/synesissoftware/ANGoLS/);
-* [**ver2go**](https://github.com/synesissoftware/ver2go/);
+* [**require**](https://github.com/stretchr/testify/);
+* [**STEGoL**](https://github.com/synesissoftware/STEGoL/);
 
 
 ### Related projects

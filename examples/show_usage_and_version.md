@@ -1,4 +1,4 @@
-# CLASP.Go Example - **show_usage_and_version**
+# CLASP.Go - Example - **show_usage_and_version**
 
 ## Summary
 
@@ -7,7 +7,7 @@ Simple example supporting `--help` and `--version`.
 ## Source
 
 ```Go
-// examples/show_usage_and_version.go
+// examples/show_usage_and_version/main.go
 
 package main
 
@@ -76,7 +76,7 @@ func main() {
 If executed with no arguments
 
 ```bash
-go run examples/show_usage_and_version.go
+go run ./examples/show_usage_and_version
 ```
 
 it gives the output:
@@ -90,7 +90,7 @@ no flags specified
 If executed with the arguments
 
 ```bash
-go run examples/show_usage_and_version.go --help
+go run ./examples/show_usage_and_version --help
 ```
 
 it gives the output:
@@ -116,7 +116,7 @@ flags/options:
 If executed with the arguments
 
 ```bash
-go run examples/show_usage_and_version.go --version
+go run ./examples/show_usage_and_version --version
 ```
 
 it gives the output:
@@ -130,7 +130,7 @@ show_usage_and_version 0.0.2
 If executed with the arguments
 
 ```bash
-go run examples/show_usage_and_version.go --unknown=value
+go run ./examples/show_usage_and_version --unknown=value
 ```
 
 it gives the output (on the standard error stream):

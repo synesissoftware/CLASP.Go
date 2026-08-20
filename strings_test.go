@@ -2,6 +2,7 @@ package clasp_test
 
 import (
 	clasp "github.com/synesissoftware/CLASP.Go"
+
 	stegol "github.com/synesissoftware/STEGoL"
 
 	"testing"

@@ -1,16 +1,17 @@
 package clasp_test
 
 import (
-	"github.com/stretchr/testify/require"
 	. "github.com/synesissoftware/CLASP.Go"
+
+	"github.com/stretchr/testify/require"
 
 	"testing"
 )
 
 const (
 	Expected_VersionMajor uint16 = 0
-	Expected_VersionMinor uint16 = 17
-	Expected_VersionPatch uint16 = 1
+	Expected_VersionMinor uint16 = 18
+	Expected_VersionPatch uint16 = 0
 	Expected_VersionAB    uint16 = 0xFFFF
 )
 
@@ -22,9 +23,9 @@ func Test_Version_Elements(t *testing.T) {
 }
 
 func Test_Version(t *testing.T) {
-	require.Equal(t, uint64(0x0000_0011_0001_FFFF), Version)
+	require.Equal(t, uint64(0x0000_0012_0000_FFFF), Version())
 }
 
 func Test_Version_String(t *testing.T) {
-	require.Equal(t, "0.17.1", VersionString())
+	require.Equal(t, "0.18.0", VersionString())
 }

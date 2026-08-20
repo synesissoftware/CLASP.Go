@@ -1,9 +1,10 @@
 package clasp_test
 
 import (
+	clasp "github.com/synesissoftware/CLASP.Go"
+
 	"github.com/stretchr/testify/require"
 	slices "github.com/synesissoftware/ANGoLS/slices"
-	clasp "github.com/synesissoftware/CLASP.Go"
 	stegol "github.com/synesissoftware/STEGoL"
 
 	"bytes"

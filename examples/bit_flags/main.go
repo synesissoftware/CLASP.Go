@@ -1,4 +1,4 @@
-// examples/show_usage_and_version.go
+// examples/bit_flags/main.go
 
 package main
 
@@ -13,11 +13,25 @@ const (
 	ProgramVersion = "0.0.2"
 )
 
+const (
+	BF_Sound int64 = 1 << iota
+	BF_Vision
+)
+
 func main() {
 
 	// Specify specifications, parse, and checking standard flags
 
+	var flags int64 = 0
+
+	flag_Sound := clasp.Flag("--enable-sound").SetAlias("-s").SetHelp("Enables sound").SetBitFlags64(BF_Sound, &flags)
+	flag_Vision := clasp.Flag("--enable-vision").SetAlias("-v").SetHelp("Enables vision").SetBitFlags64(BF_Vision, &flags)
+
 	specifications := []clasp.Specification{
+
+		clasp.Section("behaviour:"),
+		flag_Sound,
+		flag_Vision,
 
 		clasp.Section("standard:"),
 		clasp.HelpFlag(),
@@ -33,16 +47,11 @@ func main() {
 			Version: ProgramVersion,
 			InfoLines: []string{
 				"CLASP.Go Examples",
-				"Simple example supporting --help and --version.",
+				"Example illustrating use of bit-mask flags",
 				":version:",
 				"",
 			},
 		})
-	}
-
-	if args.FlagIsSpecified(clasp.VersionFlag()) {
-
-		clasp.ShowVersion(specifications, clasp.UsageParams{Version: ProgramVersion})
 	}
 
 	// Check for any unrecognised flags or options
@@ -54,7 +63,15 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Finish normal processing
+	// Program logic
 
-	fmt.Printf("no flags specified\n")
+	if 0 != (BF_Sound & flags) {
+		fmt.Println("running with sound")
+	}
+	if 0 != (BF_Vision & flags) {
+		fmt.Println("running with vision")
+	}
+	if 0 == flags {
+		fmt.Println("running in default mode")
+	}
 }
