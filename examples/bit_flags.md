@@ -7,7 +7,7 @@ Example illustrating use of `BitFlags()` / `BitFlags64()` for associating a give
 ## Source
 
 ```Go
-// examples/bit_flags.go
+// examples/bit_flags/main.go
 
 package main
 
@@ -84,7 +84,7 @@ func main() {
 If executed with no arguments
 
 ```bash
-go run examples/bit_flags.go
+go run ./examples/bit_flags
 ```
 
 it gives the output:
@@ -98,7 +98,7 @@ running in default mode
 If executed with the arguments
 
 ```bash
-go run examples/bit_flags.go --help
+go run ./examples/bit_flags --help
 ```
 
 it gives the output:
@@ -136,7 +136,7 @@ flags/options:
 If executed with the arguments
 
 ```bash
-go run examples/bit_flags.go --enable-sound
+go run ./examples/bit_flags --enable-sound
 ```
 
 it gives the output:
@@ -150,7 +150,7 @@ running with sound
 If executed with the arguments
 
 ```bash
-go run examples/bit_flags.go -v
+go run ./examples/bit_flags -v
 ```
 
 it gives the (same) output:
@@ -164,7 +164,7 @@ running with vision
 If executed with the arguments
 
 ```bash
-go run examples/bit_flags.go -sv
+go run ./examples/bit_flags -sv
 ```
 
 it gives the (same) output:

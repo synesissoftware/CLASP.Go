@@ -1,4 +1,4 @@
-// examples/flag_and_option_specifications.go
+// examples/flag_and_option_specifications/main.go
 
 package main
 

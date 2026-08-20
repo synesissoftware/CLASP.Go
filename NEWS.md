@@ -3,7 +3,7 @@
 
 | Date               | News Item                                                                                         |
 | ------------------ | ------------------------------------------------------------------------------------------------- |
-| 23rd August 2026   | Release of [**CLASP.Go** 0.17.3](https://github.com/synesissoftware/CLASP.Go/releases/tag/0.17.3) |
+| 20th August 2026   | Release of [**CLASP.Go** 0.18.0](https://github.com/synesissoftware/CLASP.Go/releases/tag/0.18.0) |
 | 27th July 2026     | Release of [**CLASP.Go** 0.17.2](https://github.com/synesissoftware/CLASP.Go/releases/tag/0.17.2) |
 | 27th August 2025   | Release of **CLASP.Go** 0.17.1                                                                    |
 | 27th March 2025    | Release of **CLASP.Go** 0.17.1-beta1                                                              |

@@ -7,7 +7,7 @@ Example illustrating various kinds of *flag* and *option* specifications, includ
 ## Source
 
 ```Go
-// examples/flag_and_option_specifications.go
+// examples/flag_and_option_specifications/main.go
 
 package main
 
@@ -98,7 +98,7 @@ func main() {
 If executed with no arguments
 
 ```bash
-go run examples/flag_and_option_specifications.go
+go run ./examples/flag_and_option_specifications
 ```
 
 it gives the output:
@@ -111,7 +111,7 @@ it gives the output:
 If executed with the arguments
 
 ```bash
-go run examples/flag_and_option_specifications.go --help
+go run ./examples/flag_and_option_specifications --help
 ```
 
 it gives the output:
@@ -159,7 +159,7 @@ flags/options:
 If executed with the arguments
 
 ```bash
-go run examples/flag_and_option_specifications.go --debug --verbosity=silent
+go run ./examples/flag_and_option_specifications --debug --verbosity=silent
 ```
 
 it gives the output:
@@ -174,7 +174,7 @@ Debug mode is specified
 If executed with the arguments
 
 ```bash
-go run examples/flag_and_option_specifications.go -v silent -d
+go run ./examples/flag_and_option_specifications -v silent -d
 ```
 
 it gives the (same) output:
@@ -189,7 +189,7 @@ Debug mode is specified
 If executed with the arguments
 
 ```bash
-go run examples/flag_and_option_specifications.go -c -d
+go run ./examples/flag_and_option_specifications -c -d
 ```
 
 it gives the output:
@@ -204,7 +204,7 @@ Debug mode is specified
 If executed with the arguments
 
 ```bash
-go run examples/flag_and_option_specifications.go -dc
+go run ./examples/flag_and_option_specifications -dc
 ```
 
 it gives the (same) output:

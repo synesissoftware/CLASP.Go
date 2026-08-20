@@ -1,8 +1,9 @@
 package clasp_test
 
 import (
-	"github.com/stretchr/testify/require"
 	clasp "github.com/synesissoftware/CLASP.Go"
+
+	"github.com/stretchr/testify/require"
 
 	"fmt"
 	"path"
