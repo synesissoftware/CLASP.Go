@@ -10,6 +10,7 @@
 * updated **ANGoLS** to 0.11.0;
 * updated **STEGoL** to 0.4.0;
 * restructured examples into per-program subdirectories (`examples/<name>/main.go`) so `go test ./...` no longer collides on multiple `main`s;
+* added **examples/libver** program;
 * version string updated for the 0.18.0 release;
 
 
